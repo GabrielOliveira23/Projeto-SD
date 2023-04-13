@@ -1,7 +1,6 @@
 package entities;
 
 import java.util.Random;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public class User {

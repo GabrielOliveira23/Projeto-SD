@@ -5,7 +5,6 @@ import java.net.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import entities.Login;
 import utils.Operations;
 
 public class Client implements Operations {
@@ -102,7 +101,7 @@ public class Client implements Operations {
             response = gson.fromJson(in.readLine(), JsonObject.class);
             System.out.println("server return: " + response);
 
-            
+
             if (response.get("codigo").getAsInt() == 200 && isLogin) {
                 System.out.println("Login efetuado com sucesso!");
             } else if (response.get("codigo").getAsInt() == 200) {
