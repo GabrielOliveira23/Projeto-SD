@@ -1,3 +1,4 @@
+package client;
 
 import java.io.*;
 import java.net.*;
@@ -5,6 +6,12 @@ import java.net.*;
 import com.google.gson.Gson;
 
 public class Client {
+    public static final int CADASTRO = 1,
+            ATUALIZAR_CADASTRO = 2,
+            LOGIN = 3,
+            PUT_INCIDENTE = 4,
+            GET_LISTA = 5;
+
     public static void main(String[] args) throws IOException {
 
         String serverHostname = new String("127.0.0.1");
@@ -15,12 +22,12 @@ public class Client {
                 serverHostname + " on port 10008.");
 
         Socket echoSocket = null;
-        PrintWriter server = null;
+        PrintWriter out = null;
         BufferedReader in = null;
 
         try {
             echoSocket = new Socket(serverHostname, 10008);
-            server = new PrintWriter(echoSocket.getOutputStream(), true);
+            out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(
                     echoSocket.getInputStream()));
         } catch (UnknownHostException e) {
@@ -51,14 +58,16 @@ public class Client {
                     System.out.println("-------------LOGIN-------------");
                     Login login = new Login();
 
-                    System.out.println("Email: ");
+                    System.out.print("Email: ");
                     login.setEmail(teclado.readLine());
-                    System.out.println("Senha: ");
+                    System.out.print("Senha: ");
                     login.setSenha(Integer.parseInt(teclado.readLine()));
                     login.setToken("1234");
 
                     Gson gson = new Gson();
-                    server.println(gson.toJson(login));
+
+                    System.out.println("\nsending to server...\n");
+                    out.println(gson.toJson(login));
 
                     break;
                 }
@@ -70,7 +79,6 @@ public class Client {
                     String email = teclado.readLine();
                     System.out.println("Senha: ");
                     Integer senha = Integer.parseInt(teclado.readLine());
-                    System.out.println("-------------------------------");
 
                     Gson gson = new Gson();
                     // saida.println(gson.toJson(new Login(nome, email, senha)));
@@ -81,11 +89,12 @@ public class Client {
             if (userInput.equals("Bye"))
                 break;
 
-            System.out.println("-------------------------------");
-            System.out.println("client: " + in.readLine());
+            System.out.println("retorno do server: " + in.readLine());
+
+            System.out.println("-------------------------------\n");
         }
 
-        server.close();
+        out.close();
         in.close();
         teclado.close();
         echoSocket.close();

@@ -1,10 +1,14 @@
+package server;
+
 import java.net.*;
 import java.io.*;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 public class Server extends Thread {
     protected Socket clientSocket;
-    
+    // protected User usuario;
+
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
 
@@ -40,9 +44,11 @@ public class Server extends Thread {
 
     public void run() {
         System.out.println("New Communication Thread Started");
+        JsonObject json, response = new JsonObject();
+        Gson gson = new Gson();
 
         try {
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
+            PrintWriter client = new PrintWriter(clientSocket.getOutputStream(),
                     true);
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
@@ -50,14 +56,27 @@ public class Server extends Thread {
             String inputLine;
 
             while ((inputLine = in.readLine()) != null) {
-                System.out.println("Server: " + inputLine);
-                out.println(inputLine);
+                System.out.println("\nServer: " + inputLine);
+
+                json = gson.fromJson(inputLine, JsonObject.class);
+                int operation = json.get("idOperacao").getAsInt();
+
+                switch (operation) {
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3: {
+                        User.login(inputLine);
+                        break;
+                    }
+                }
 
                 if (inputLine.equals("Bye"))
                     break;
             }
 
-            out.close();
+            client.close();
             in.close();
             clientSocket.close();
         } catch (IOException e) {
