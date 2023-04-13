@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.net.*;
+
 import com.google.gson.Gson;
 
 public class Client {
@@ -48,14 +49,16 @@ public class Client {
             switch (userInput) {
                 case "1": {
                     System.out.println("-------------LOGIN-------------");
+                    Login login = new Login();
+
                     System.out.println("Email: ");
-                    String email = teclado.readLine();
+                    login.setEmail(teclado.readLine());
                     System.out.println("Senha: ");
-                    Integer senha = Integer.parseInt(teclado.readLine());
-                    String token = "1234";
+                    login.setSenha(Integer.parseInt(teclado.readLine()));
+                    login.setToken("1234");
 
                     Gson gson = new Gson();
-                    server.println(gson.toJson(new Login(email, senha, token)));
+                    server.println(gson.toJson(login));
 
                     break;
                 }
