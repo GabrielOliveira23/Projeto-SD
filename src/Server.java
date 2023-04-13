@@ -1,13 +1,14 @@
-package server;
 
 import java.net.*;
 import java.io.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import entities.User;
+
 public class Server extends Thread {
     protected Socket clientSocket;
-    // protected User usuario;
+    protected User user = new User();
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
@@ -59,7 +60,7 @@ public class Server extends Thread {
                 System.out.println("\nServer: " + inputLine);
 
                 json = gson.fromJson(inputLine, JsonObject.class);
-                int operation = json.get("idOperacao").getAsInt();
+                int operation = json.get("id_operacao").getAsInt();
 
                 switch (operation) {
                     case 1:
@@ -67,9 +68,15 @@ public class Server extends Thread {
                     case 2:
                         break;
                     case 3: {
-                        User.login(inputLine);
+                        String email = json.get("email").getAsString();
+                        int senha = Integer.parseInt(json.get("senha").getAsString());
+                        response = user.login(email, senha);
+                        client.println(response);
                         break;
                     }
+                    default:
+                        client.println("internal error");
+                        break;
                 }
 
                 if (inputLine.equals("Bye"))
