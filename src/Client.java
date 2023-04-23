@@ -20,6 +20,7 @@ public class Client implements Operations {
         Gson gson = new Gson();
         String userInput;
         boolean isLogin = false;
+        boolean shouldStop = false;
 
         if (args.length > 0)
             serverHostname = args[0];
@@ -40,7 +41,7 @@ public class Client implements Operations {
             System.exit(1);
         }
 
-        while (true) {
+        while (!shouldStop) {
 
             System.out.println("Selecione uma opção: ");
             System.out.println("1 - Cadastrar Usuário");
@@ -60,7 +61,7 @@ public class Client implements Operations {
                     json.addProperty("email", teclado.readLine());
 
                     System.out.print("Senha: ");
-                    json.addProperty("senha", Integer.parseInt(teclado.readLine()));
+                    json.addProperty("senha", teclado.readLine());
 
                     // gerar token aleatorio
                     json.addProperty("token", "12345");
@@ -83,7 +84,7 @@ public class Client implements Operations {
                     json.addProperty("email", teclado.readLine());
 
                     System.out.print("Senha: ");
-                    json.addProperty("senha", Integer.parseInt(teclado.readLine()));
+                    json.addProperty("senha", teclado.readLine());
 
                     // gerar token aleatorio
                     json.addProperty("token", "12345");
@@ -93,14 +94,23 @@ public class Client implements Operations {
 
                     break;
                 }
+
+                case "Bye": {
+                    shouldStop = true;
+                    break;
+                }
+
+                default: {
+                    System.out.println("Opção inválida!");
+                    break;
+                }
             }
 
-            if (userInput.equals("Bye"))
+            if (shouldStop)
                 break;
 
             response = gson.fromJson(in.readLine(), JsonObject.class);
             System.out.println("server return: " + response);
-
 
             if (response.get("codigo").getAsInt() == 200 && isLogin) {
                 System.out.println("Login efetuado com sucesso!");

@@ -1,4 +1,3 @@
-
 import java.net.*;
 import java.io.*;
 import com.google.gson.Gson;
@@ -63,14 +62,16 @@ public class Server extends Thread {
                 int operation = json.get("id_operacao").getAsInt();
 
                 switch (operation) {
-                    case 1:
+                    case 1: {
+
                         break;
+                    }
                     case 2:
                         break;
                     case 3: {
                         String email = json.get("email").getAsString();
-                        int senha = Integer.parseInt(json.get("senha").getAsString());
-                        response = user.login(email, senha);
+                        String password = json.get("senha").getAsString();
+                        response = user.login(email, password);
                         client.println(response);
                         break;
                     }
