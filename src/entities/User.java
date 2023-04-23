@@ -6,6 +6,8 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.google.gson.JsonObject;
 
+import database.UserDB;
+
 public class User {
     private int id;
     private String email;
@@ -24,7 +26,7 @@ public class User {
     }
 
     public JsonObject login(String email, String password) {
-        // UserDB.getUserById(1);
+        // System.out.println(UserDB.getUserById(1)); // aplicar isto quanod precisar usar find
         JsonObject json = new JsonObject();
         printLogin(email, password);
         if (this.fakeLogin) {
@@ -47,7 +49,8 @@ public class User {
         } else if (senha == null || senha.length() <= 8 || senha.length() >= 32) {
             json.addProperty("codigo", 500);
             json.addProperty("mensagem", "Email ou senha inválido");
-        } else if (this.email.equals(email) && this.password.getPassword().equals(BCrypt.hashpw(senha, this.password.getSalt()))) {
+        } else if (this.email.equals(email)
+                && this.password.getPassword().equals(BCrypt.hashpw(senha, this.password.getSalt()))) {
             json.addProperty("codigo", 200);
         } else {
             json.addProperty("codigo", 500);
