@@ -5,9 +5,7 @@ import java.net.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import utils.Operations;
-
-public class Client implements Operations {
+public class Client {
     public static void main(String[] args) throws IOException {
         String ip = "127.0.0.1";
         int port = 10008;
@@ -46,7 +44,7 @@ public class Client implements Operations {
 
             System.out.println("Selecione uma opção: ");
             System.out.println("1 - Cadastrar Usuário");
-            System.out.println("2 - Fazer Logout");
+            System.out.println("2 - Atualizar Cadastro");
             System.out.println("3 - Fazer Login");
             System.out.println("\"Bye\" to quit");
 
@@ -76,7 +74,19 @@ public class Client implements Operations {
                     break;
                 }
                 case "2": {
-                    System.out.println("-------------LOGOUT-------------");
+                    System.out.println("-------------ATUALIZAR CADASTRO-------------");
+                    json.addProperty("id_operacao", Integer.parseInt(userInput));
+
+                    System.out.print("Nome: ");
+                    json.addProperty("nome", teclado.readLine());
+
+                    System.out.print("Email: ");
+                    json.addProperty("email", teclado.readLine());
+
+                    System.out.print("Senha: ");
+                    json.addProperty("senha", teclado.readLine());
+
+                    
                     break;
                 }
                 case "3": {

@@ -57,4 +57,17 @@ public class UserDB {
 
         return false;
     }
+
+    public static boolean getUserByEmail(String email) {
+        MongoCursor<Document> cursor = collection.find().iterator();
+
+        while (cursor.hasNext()) {
+            json = gson.fromJson(cursor.next().toJson(), JsonObject.class);
+            if (json.get("email").getAsString().equals(email)) {
+                System.out.println("Usuário encontrado!");
+                return true;
+            }
+        }
+        return false;
+    }
 }

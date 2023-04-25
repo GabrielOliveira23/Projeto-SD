@@ -9,6 +9,7 @@ public class User {
     private String email;
     private String token;
     private Password password;
+    private boolean isLogged = false;
     private boolean fakeLogin = false;
 
     public User() {
@@ -19,12 +20,11 @@ public class User {
     }
 
     public JsonObject login(String email, String password) {
-        // System.out.println(UserDB.getUserById(1)); // aplicar isto quanod precisar
-        // usar find
         JsonObject json = new JsonObject();
         printLogin(email, password);
         if (this.fakeLogin) {
             json.addProperty("codigo", 200);
+            this.isLogged = !this.isLogged;
             return json;
         }
 
@@ -50,41 +50,71 @@ public class User {
             user.addProperty("email", email);
             managePassword(senha, user);
             user.addProperty("token", "abc123abcabc"); // gerar token depois
-
+            
             UserDB.insertUser(user);
         }
-
+        
         return json;
     }
-
+    
     private void managePassword(String senha, JsonObject user) {
         Password password = new Password(senha);
         JsonObject passwordJson = new JsonObject();
-
+        
         passwordJson.addProperty("password", password.getPassword());
         passwordJson.addProperty("salt", password.getSalt());
-
+        
         user.add("senha", passwordJson);
+    }
+
+    private boolean nameChecker(String name) {
+        if (name.length() >= 3 && name.length() <= 32 && !name.matches("[0-9]+"))
+            return true;
+
+        return false;
+    }
+
+    private boolean emailChecker(String email, boolean isRegister) {
+        if (isRegister) {
+            // verificar se o email já existe no banco de dados
+            if(UserDB.getUserByEmail(email)){
+                System.out.println("Email já cadastrado!");
+                return false;
+            }
+        }
+
+        if (email.contains("@") && email.contains(".") && email.length() >= 16
+                && email.length() <= 50) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean passwordChecker(String password) {
+        if (password.length() >= 8 && password.length() <= 32)
+            return true;
+
+        return false;
     }
 
     private JsonObject dataVerify(String nome, String email, String senha) {
         JsonObject json = new JsonObject();
-
-        if (nome.length() <= 3 || nome.length() >= 32 || nome.matches("[0-9]+")) {
-            System.out.println("-------- Erro no nome --------");
+        if (emailChecker(email, true))
+            if (nameChecker(nome))
+                if (passwordChecker(senha))
+                    json.addProperty("codigo", 200);
+                else {
+                    json.addProperty("codigo", 500);
+                    json.addProperty("mensagem", "Senha inválido");
+                }
+            else {
+                json.addProperty("codigo", 500);
+                json.addProperty("mensagem", "Nome inválido");
+            }
+        else {
             json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Nome inválido");
-        } else if (!email.contains("@") || !email.contains(".") || email.length() <= 16
-                || email.length() >= 50) {
-            System.out.println("-------- Erro no email --------");
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Email inválido");
-        } else if (senha.length() < 8 || senha.length() > 32) {
-            System.out.println("-------- Erro na senha --------");
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Senha inválido");
-        } else {
-            json.addProperty("codigo", 200);
+            json.addProperty("mensagem", "Email inválido ou já cadastrado");
         }
 
         return json;
@@ -93,10 +123,11 @@ public class User {
     private JsonObject dataVerify(String email, String senha) {
         JsonObject json = new JsonObject();
 
-        if (email.contains("@") && email.contains(".") && email.length() >= 16 || email.length() <= 50) {
-            if (senha.length() >= 8 && senha.length() <= 32) {
+        if (emailChecker(email, false)) {
+            if (passwordChecker(senha)) {
                 if (UserDB.authUser(email, senha)) {
                     json.addProperty("codigo", 200);
+                    this.isLogged = true;
                 } else {
                     System.out.println("--------- email ou senha incorreto ---------");
                     json.addProperty("codigo", 500);
