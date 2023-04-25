@@ -21,7 +21,6 @@ public class Client implements Operations {
         JsonObject json = new JsonObject(), response = new JsonObject();
         Gson gson = new Gson();
         String userInput;
-        boolean isLogin = false;
         boolean shouldStop = false;
 
         if (args.length > 0)
@@ -81,7 +80,6 @@ public class Client implements Operations {
                     break;
                 }
                 case "3": {
-                    isLogin = true;
                     System.out.println("-------------LOGIN-------------");
                     json.addProperty("id_operacao", Integer.parseInt(userInput));
 
@@ -117,13 +115,13 @@ public class Client implements Operations {
             response = gson.fromJson(in.readLine(), JsonObject.class);
             System.out.println("server return: " + response);
 
-            if (response.get("codigo").getAsInt() == 200 && isLogin) {
-                System.out.println("Procedimento efetuado com sucesso!");
+            if (response.get("codigo").getAsInt() == 200) {
+                System.out.println("======= Sucesso! =======");
             } else if (response.get("codigo").getAsInt() == 500) {
                 System.out.println(response.get("mensagem").getAsString());
             }
 
-            System.out.println("\n-------------------------------\n");
+            System.out.println("\n------------------------------------\n");
         }
 
         out.close();

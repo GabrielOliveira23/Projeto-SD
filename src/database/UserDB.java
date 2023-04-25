@@ -1,6 +1,7 @@
 package database;
 
 import org.bson.Document;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -18,7 +19,6 @@ public class UserDB {
     private static Gson gson = new Gson();
 
     public static boolean getUserById(int userId) {
-        // procura no banco de dados o usuário com o id passado
         MongoCursor<Document> cursor = collection.find().iterator();
 
         while (cursor.hasNext()) {
@@ -38,5 +38,23 @@ public class UserDB {
 
     public static int getCountUsers() {
         return (int) collection.countDocuments();
+    }
+
+    public static boolean authUser(String email, String senha) {
+        // autentica se usuario existe e confirma email e senha
+        MongoCursor<Document> cursor = collection.find().iterator();
+
+        while (cursor.hasNext()) {
+            json = gson.fromJson(cursor.next().toJson(), JsonObject.class);
+            if (json.get("email").getAsString().equals(email)) {
+                senha = BCrypt.hashpw(senha, json.get("senha").getAsJsonObject().get("salt").getAsString());
+                if (senha.equals(json.get("senha").getAsJsonObject().get("password").getAsString()))
+                    return true;
+                
+                break;
+            }
+        }
+
+        return false;
     }
 }

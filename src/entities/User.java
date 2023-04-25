@@ -1,9 +1,5 @@
 package entities;
 
-import java.util.Random;
-
-import org.mindrot.jbcrypt.BCrypt;
-
 import com.google.gson.JsonObject;
 
 import database.UserDB;
@@ -16,11 +12,10 @@ public class User {
     private boolean fakeLogin = false;
 
     public User() {
-        this.email = "gabriel@gmail.com";
-        this.password = new Password("tictac123");
+        this.email = "";
+        this.token = "";
+        this.password = null;
         this.id = UserDB.getCountUsers() + 1;
-        // Random random = new Random();
-        // this.id = random.nextInt(1000);
     }
 
     public JsonObject login(String email, String password) {
@@ -98,22 +93,24 @@ public class User {
     private JsonObject dataVerify(String email, String senha) {
         JsonObject json = new JsonObject();
 
-        if (!email.contains("@") || !email.contains(".") || email.length() <= 16
-                || email.length() >= 50) {
+        if (email.contains("@") && email.contains(".") && email.length() >= 16 || email.length() <= 50) {
+            if (senha.length() >= 8 && senha.length() <= 32) {
+                if (UserDB.authUser(email, senha)) {
+                    json.addProperty("codigo", 200);
+                } else {
+                    System.out.println("--------- email ou senha incorreto ---------");
+                    json.addProperty("codigo", 500);
+                    json.addProperty("mensagem", "Email ou senha incorreto");
+                }
+            } else {
+                System.out.println("--------- senha inválida ---------");
+                json.addProperty("codigo", 500);
+                json.addProperty("mensagem", "Email ou senha inválido");
+            }
+        } else {
             System.out.println("--------- email inválido ---------");
             json.addProperty("codigo", 500);
             json.addProperty("mensagem", "Email ou senha inválido");
-        } else if (senha.length() < 8 || senha.length() > 32) {
-            System.out.println("--------- senha inválida ---------");
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Email ou senha inválido");
-        } else if (this.email.equals(email)
-                && this.password.getPassword().equals(BCrypt.hashpw(senha, this.password.getSalt()))) {
-            json.addProperty("codigo", 200);
-        } else {
-            System.out.println("--------- email ou senha incorreto ---------");
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Email ou senha incorreto");
         }
 
         return json;
