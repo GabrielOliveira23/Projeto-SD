@@ -30,4 +30,13 @@ public class UserDB {
         }
         return false;
     }
+
+    public static void insertUser(JsonObject json) {
+        Document document = Document.parse(json.toString());
+        collection.insertOne(document);
+    }
+
+    public static int getCountUsers() {
+        return (int) collection.countDocuments();
+    }
 }

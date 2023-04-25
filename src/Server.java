@@ -11,13 +11,14 @@ public class Server extends Thread {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
+        int port = 10008;
 
         try {
-            serverSocket = new ServerSocket(10008);
+            serverSocket = new ServerSocket(port);
             System.out.println("Connection Socket Created");
             try {
                 while (true) {
-                    System.out.println("Waiting for Connection");
+                    System.out.println("Waiting for Connection on Port: " + port + "...");
                     new Server(serverSocket.accept());
                 }
             } catch (IOException e) {
@@ -25,13 +26,13 @@ public class Server extends Thread {
                 System.exit(1);
             }
         } catch (IOException e) {
-            System.err.println("Could not listen on port: 10008.");
+            System.err.println("Could not listen on port: " + port);
             System.exit(1);
         } finally {
             try {
                 serverSocket.close();
             } catch (IOException e) {
-                System.err.println("Could not close port: 10008.");
+                System.err.println("Could not close port: " + port);
                 System.exit(1);
             }
         }
@@ -63,7 +64,12 @@ public class Server extends Thread {
 
                 switch (operation) {
                     case 1: {
+                        String name = json.get("nome").getAsString();
+                        String email = json.get("email").getAsString();
+                        String password = json.get("senha").getAsString();
+                        response = user.create(name, email, password);
 
+                        client.println(response);
                         break;
                     }
                     case 2:

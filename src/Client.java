@@ -9,7 +9,9 @@ import utils.Operations;
 
 public class Client implements Operations {
     public static void main(String[] args) throws IOException {
-        String serverHostname = new String("127.0.0.1");
+        String ip = "127.0.0.1";
+        int port = 10008;
+        String serverHostname = new String(ip);
 
         Socket echoSocket = null;
         PrintWriter out = null;
@@ -25,10 +27,10 @@ public class Client implements Operations {
         if (args.length > 0)
             serverHostname = args[0];
         System.out.println("Attemping to connect to host " +
-                serverHostname + " on port 10008.");
+                serverHostname + ":" + port);
 
         try {
-            echoSocket = new Socket(serverHostname, 10008);
+            echoSocket = new Socket(serverHostname, port);
             out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(
                     echoSocket.getInputStream()));
@@ -56,6 +58,9 @@ public class Client implements Operations {
                 case "1": {
                     System.out.println("-------------CADASTRO-------------");
                     json.addProperty("id_operacao", Integer.parseInt(userInput));
+
+                    System.out.print("Nome: ");
+                    json.addProperty("nome", teclado.readLine());
 
                     System.out.print("Email: ");
                     json.addProperty("email", teclado.readLine());
@@ -113,9 +118,7 @@ public class Client implements Operations {
             System.out.println("server return: " + response);
 
             if (response.get("codigo").getAsInt() == 200 && isLogin) {
-                System.out.println("Login efetuado com sucesso!");
-            } else if (response.get("codigo").getAsInt() == 200) {
-                System.out.println(response.get("mensagem").getAsString());
+                System.out.println("Procedimento efetuado com sucesso!");
             } else if (response.get("codigo").getAsInt() == 500) {
                 System.out.println(response.get("mensagem").getAsString());
             }

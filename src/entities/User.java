@@ -17,16 +17,15 @@ public class User {
 
     public User() {
         this.email = "gabriel@gmail.com";
-
-        String salt = BCrypt.gensalt();
-        this.password = new Password(BCrypt.hashpw("tictac123", salt), salt);
-
-        Random random = new Random();
-        this.id = random.nextInt(1000);
+        this.password = new Password("tictac123");
+        this.id = UserDB.getCountUsers() + 1;
+        // Random random = new Random();
+        // this.id = random.nextInt(1000);
     }
 
     public JsonObject login(String email, String password) {
-        // System.out.println(UserDB.getUserById(1)); // aplicar isto quanod precisar usar find
+        // System.out.println(UserDB.getUserById(1)); // aplicar isto quanod precisar
+        // usar find
         JsonObject json = new JsonObject();
         printLogin(email, password);
         if (this.fakeLogin) {
@@ -39,25 +38,94 @@ public class User {
         return json;
     }
 
+    public JsonObject create(String nome, String email, String senha) {
+        JsonObject json = new JsonObject();
+        printRegister(nome, email, senha);
+        if (this.fakeLogin) {
+            json.addProperty("codigo", 200);
+            return json;
+        }
+
+        json = dataVerify(nome, email, senha);
+
+        if (json.get("codigo").getAsInt() == 200) {
+            JsonObject user = new JsonObject();
+            user.addProperty("id_usuario", this.id);
+            user.addProperty("nome", nome);
+            user.addProperty("email", email);
+            managePassword(senha, user);
+            user.addProperty("token", "abc123abcabc"); // gerar token depois
+
+            UserDB.insertUser(user);
+        }
+
+        return json;
+    }
+
+    private void managePassword(String senha, JsonObject user) {
+        Password password = new Password(senha);
+        JsonObject passwordJson = new JsonObject();
+
+        passwordJson.addProperty("password", password.getPassword());
+        passwordJson.addProperty("salt", password.getSalt());
+
+        user.add("senha", passwordJson);
+    }
+
+    private JsonObject dataVerify(String nome, String email, String senha) {
+        JsonObject json = new JsonObject();
+
+        if (nome.length() <= 3 || nome.length() >= 32 || nome.matches("[0-9]+")) {
+            System.out.println("-------- Erro no nome --------");
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Nome inválido");
+        } else if (!email.contains("@") || !email.contains(".") || email.length() <= 16
+                || email.length() >= 50) {
+            System.out.println("-------- Erro no email --------");
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Email inválido");
+        } else if (senha.length() < 8 || senha.length() > 32) {
+            System.out.println("-------- Erro na senha --------");
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Senha inválido");
+        } else {
+            json.addProperty("codigo", 200);
+        }
+
+        return json;
+    }
+
     private JsonObject dataVerify(String email, String senha) {
         JsonObject json = new JsonObject();
 
-        if (email == null || !email.contains("@") || !email.contains(".") || email.length() <= 16
+        if (!email.contains("@") || !email.contains(".") || email.length() <= 16
                 || email.length() >= 50) {
+            System.out.println("--------- email inválido ---------");
             json.addProperty("codigo", 500);
             json.addProperty("mensagem", "Email ou senha inválido");
-        } else if (senha == null || senha.length() <= 8 || senha.length() >= 32) {
+        } else if (senha.length() < 8 || senha.length() > 32) {
+            System.out.println("--------- senha inválida ---------");
             json.addProperty("codigo", 500);
             json.addProperty("mensagem", "Email ou senha inválido");
         } else if (this.email.equals(email)
                 && this.password.getPassword().equals(BCrypt.hashpw(senha, this.password.getSalt()))) {
             json.addProperty("codigo", 200);
         } else {
+            System.out.println("--------- email ou senha incorreto ---------");
             json.addProperty("codigo", 500);
             json.addProperty("mensagem", "Email ou senha incorreto");
         }
 
         return json;
+    }
+
+    private void printRegister(String nome, String email, String senha) {
+        System.out.println("Executando Registro...");
+        System.out.println("Nome: " + nome);
+        System.out.println("Email: " + email);
+        System.out.println("Senha: " + senha);
+        System.out.println("ID: " + this.id);
+        System.out.println();
     }
 
     private void printLogin(String email, String senha) {
