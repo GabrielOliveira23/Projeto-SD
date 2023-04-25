@@ -7,7 +7,6 @@ import entities.User;
 
 public class Server extends Thread {
     protected Socket clientSocket;
-    protected User user = new User();
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
@@ -64,6 +63,7 @@ public class Server extends Thread {
 
                 switch (operation) {
                     case 1: {
+                        User user = new User();
                         String name = json.get("nome").getAsString();
                         String email = json.get("email").getAsString();
                         String password = json.get("senha").getAsString();
@@ -75,6 +75,7 @@ public class Server extends Thread {
                     case 2:
                         break;
                     case 3: {
+                        User user = new User();
                         String email = json.get("email").getAsString();
                         String password = json.get("senha").getAsString();
                         response = user.login(email, password);
