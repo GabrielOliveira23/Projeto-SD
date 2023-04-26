@@ -1,5 +1,7 @@
 package entities;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import com.google.gson.JsonObject;
 
 import database.UserDB;
@@ -8,7 +10,7 @@ public class User {
     private int id;
     private String email;
     private String token;
-    private Password password;
+    private String password;
     private boolean isLogged = false;
     private boolean fakeLogin = false;
 
@@ -57,14 +59,9 @@ public class User {
         return json;
     }
     
-    private void managePassword(String senha, JsonObject user) {
-        Password password = new Password(senha);
-        JsonObject passwordJson = new JsonObject();
-        
-        passwordJson.addProperty("password", password.getPassword());
-        passwordJson.addProperty("salt", password.getSalt());
-        
-        user.add("senha", passwordJson);
+    private void managePassword(String password, JsonObject user) {
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
+        user.addProperty("senha", hashed);
     }
 
     private boolean nameChecker(String name) {
@@ -160,7 +157,6 @@ public class User {
         System.out.println("Executando Login...");
         System.out.println("Email: " + email);
         System.out.println("Senha: " + senha);
-        System.out.println("ID: " + this.id);
         System.out.println();
     }
 
@@ -188,11 +184,11 @@ public class User {
         this.token = token;
     }
 
-    public Password getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(Password senha) {
+    public void setPassword(String senha) {
         this.password = senha;
     }
 

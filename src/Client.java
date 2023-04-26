@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 public class Client {
     public static void main(String[] args) throws IOException {
         String ip = "127.0.0.1";
-        int port = 10008;
+        int port = 24001;
         String serverHostname = new String(ip);
 
         Socket echoSocket = null;
@@ -64,9 +64,6 @@ public class Client {
 
                     System.out.print("Senha: ");
                     json.addProperty("senha", teclado.readLine());
-
-                    // gerar token aleatorio
-                    json.addProperty("token", "12345");
 
                     System.out.println("\nsending to server...\n");
                     out.println(json);

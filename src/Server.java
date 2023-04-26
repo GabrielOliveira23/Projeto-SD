@@ -10,7 +10,7 @@ public class Server extends Thread {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
-        int port = 10008;
+        int port = 24001;
 
         try {
             serverSocket = new ServerSocket(port);
@@ -96,7 +96,6 @@ public class Server extends Thread {
             clientSocket.close();
         } catch (IOException e) {
             System.err.println("Problem with Communication Server");
-            System.exit(1);
         }
     }
 }

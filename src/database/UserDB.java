@@ -47,8 +47,8 @@ public class UserDB {
         while (cursor.hasNext()) {
             json = gson.fromJson(cursor.next().toJson(), JsonObject.class);
             if (json.get("email").getAsString().equals(email)) {
-                senha = BCrypt.hashpw(senha, json.get("senha").getAsJsonObject().get("salt").getAsString());
-                if (senha.equals(json.get("senha").getAsJsonObject().get("password").getAsString()))
+                String pass = json.get("senha").getAsJsonObject().get("password").getAsString();
+                if (BCrypt.checkpw(senha, pass))
                     return true;
                 
                 break;
