@@ -5,9 +5,11 @@ import java.net.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import pages.LoginLayout;
+
 public class Client {
     public static void main(String[] args) throws IOException {
-        String ip = "127.0.0.1";
+        String ip = "127.0.0.1"; // "10.20.8.78";
         int port = 24001;
         String serverHostname = new String(ip);
 
@@ -40,8 +42,9 @@ public class Client {
             System.exit(1);
         }
 
-        while (!shouldStop) {
+        new LoginLayout();
 
+        while (!shouldStop) {
             System.out.println("Selecione uma opção: ");
             System.out.println("1 - Cadastrar Usuário");
             System.out.println("2 - Atualizar Cadastro");
@@ -83,7 +86,6 @@ public class Client {
                     System.out.print("Senha: ");
                     json.addProperty("senha", teclado.readLine());
 
-                    
                     break;
                 }
                 case "3": {
