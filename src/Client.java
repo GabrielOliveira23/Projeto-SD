@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -8,7 +9,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import utils.CriptoCesar;
+import utils.CaesarCrypt;
 
 public class Client {
 
@@ -55,6 +56,7 @@ public class Client {
             System.out.println("1 - Cadastrar Usuário");
             System.out.println("2 - Atualizar Cadastro");
             System.out.println("3 - Fazer Login");
+            System.out.println("12 - Fazer Logout");
             System.out.println("\"Bye\" to quit");
 
             if ((userInput = teclado.readLine()) == null)
@@ -73,8 +75,8 @@ public class Client {
 
                     System.out.print("Senha: ");
                     String senha = teclado.readLine();
-                    json.addProperty("senha", CriptoCesar.encrypt(senha, 5));
-                    // System.out.println(BCrypt.hashpw(senha, "$2a$10$RkZJQ1Z1Z0J1Z0J1Z0J1Z0"));
+                    json.addProperty("senha", CaesarCrypt.encrypt(senha, senha.length()));
+                    senha = "";
 
                     System.out.println("\nsending to server...\n");
                     out.println(json);
@@ -83,6 +85,7 @@ public class Client {
                 }
                 case "2": {
                     System.out.println("-------------ATUALIZAR CADASTRO-------------");
+                    System.out.println("--------------NOT IMPLEMENTED---------------");
                     json.addProperty("id_operacao", Integer.parseInt(userInput));
 
                     System.out.print("Nome: ");
@@ -92,10 +95,13 @@ public class Client {
                     json.addProperty("email", teclado.readLine());
 
                     System.out.print("Senha: ");
-                    json.addProperty("senha", BCrypt.hashpw(teclado.readLine(), BCrypt.gensalt()));
+                    String senha = teclado.readLine();
+                    json.addProperty("senha", CaesarCrypt.encrypt(senha, senha.length()));
+                    senha = "";
 
                     break;
                 }
+
                 case "3": {
                     System.out.println("-------------LOGIN-------------");
                     json.addProperty("id_operacao", Integer.parseInt(userInput));
@@ -104,7 +110,19 @@ public class Client {
                     json.addProperty("email", teclado.readLine());
 
                     System.out.print("Senha: ");
-                    json.addProperty("senha", BCrypt.hashpw(teclado.readLine(), BCrypt.gensalt()));
+                    String senha = teclado.readLine();
+                    json.addProperty("senha", CaesarCrypt.encrypt(senha, senha.length()));
+                    senha = "";
+
+                    System.out.println("\nsending to server...\n");
+                    out.println(json);
+
+                    break;
+                }
+
+                case "12": {
+                    System.out.println("-------------LOGOUT-------------");
+                    json.addProperty("id_operacao", Integer.parseInt(userInput));
 
                     System.out.println("\nsending to server...\n");
                     out.println(json);

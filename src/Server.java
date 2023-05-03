@@ -72,8 +72,10 @@ public class Server extends Thread {
                         client.println(response);
                         break;
                     }
+
                     case 2:
                         break;
+
                     case 3: {
                         User user = new User();
                         String email = json.get("email").getAsString();
@@ -82,6 +84,10 @@ public class Server extends Thread {
                         client.println(response);
                         break;
                     }
+
+                    case 12:
+                        break;
+
                     default:
                         client.println("internal error");
                         break;
