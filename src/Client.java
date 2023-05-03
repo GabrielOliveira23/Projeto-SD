@@ -1,10 +1,7 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
-
-import org.mindrot.jbcrypt.BCrypt;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -26,7 +23,6 @@ public class Client {
         BufferedReader in = null;
         BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 
-        JsonObject response = new JsonObject();
         Gson gson = new Gson();
         String userInput;
         boolean shouldStop = false;
@@ -144,7 +140,7 @@ public class Client {
             if (shouldStop)
                 break;
 
-            response = sendToServer(in, gson);
+            sendToServer(in, gson);
             System.out.println("\n------------------------------------\n");
         }
 
@@ -154,7 +150,7 @@ public class Client {
         echoSocket.close();
     }
 
-    private static JsonObject sendToServer(BufferedReader in, Gson gson) throws IOException {
+    private static void sendToServer(BufferedReader in, Gson gson) throws IOException {
         JsonObject response;
         response = gson.fromJson(in.readLine(), JsonObject.class);
         System.out.println("server return: " + response);
@@ -163,8 +159,8 @@ public class Client {
             System.out.println("======= Sucesso! =======");
         } else if (response.get("codigo").getAsInt() == 500) {
             System.out.println(response.get("mensagem").getAsString());
+        } else {
+            System.out.println("=== Erro Inesperado! ===");
         }
-
-        return response;
     }
 }
