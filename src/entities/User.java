@@ -50,7 +50,8 @@ public class User {
             user.addProperty("id_usuario", this.id);
             user.addProperty("nome", nome);
             user.addProperty("email", email);
-            managePassword(senha, user);
+            user.addProperty("senha", senha);
+            // managePassword(senha, user);
             user.addProperty("token", "abc123abcabc"); // gerar token depois
             
             UserDB.insertUser(user);
@@ -89,7 +90,7 @@ public class User {
     }
 
     private boolean passwordChecker(String password) {
-        if (password.length() >= 8 && password.length() <= 32)
+        if (password.length() >= 8 && password.length() <= 260)
             return true;
 
         return false;

@@ -1,15 +1,22 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.ExecutionException;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import pages.LoginLayout;
+import utils.CriptoCesar;
 
 public class Client {
-    public static void main(String[] args) throws IOException {
-        String ip = "127.0.0.1"; // "10.20.8.78";
+
+    public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
+        new Client();
+        // String ip = "10.20.8.198"; // sauter
+        // String ip = "10.20.8.81"; // lucas
+        String ip = "127.0.0.1"; // localhost
         int port = 24001;
         String serverHostname = new String(ip);
 
@@ -18,7 +25,7 @@ public class Client {
         BufferedReader in = null;
         BufferedReader teclado = new BufferedReader(new InputStreamReader(System.in));
 
-        JsonObject json = new JsonObject(), response = new JsonObject();
+        JsonObject response = new JsonObject();
         Gson gson = new Gson();
         String userInput;
         boolean shouldStop = false;
@@ -42,9 +49,8 @@ public class Client {
             System.exit(1);
         }
 
-        new LoginLayout();
-
         while (!shouldStop) {
+            JsonObject json = new JsonObject();
             System.out.println("Selecione uma opção: ");
             System.out.println("1 - Cadastrar Usuário");
             System.out.println("2 - Atualizar Cadastro");
@@ -66,7 +72,9 @@ public class Client {
                     json.addProperty("email", teclado.readLine());
 
                     System.out.print("Senha: ");
-                    json.addProperty("senha", teclado.readLine());
+                    String senha = teclado.readLine();
+                    json.addProperty("senha", CriptoCesar.encrypt(senha, 5));
+                    // System.out.println(BCrypt.hashpw(senha, "$2a$10$RkZJQ1Z1Z0J1Z0J1Z0J1Z0"));
 
                     System.out.println("\nsending to server...\n");
                     out.println(json);
@@ -84,7 +92,7 @@ public class Client {
                     json.addProperty("email", teclado.readLine());
 
                     System.out.print("Senha: ");
-                    json.addProperty("senha", teclado.readLine());
+                    json.addProperty("senha", BCrypt.hashpw(teclado.readLine(), BCrypt.gensalt()));
 
                     break;
                 }
@@ -96,10 +104,7 @@ public class Client {
                     json.addProperty("email", teclado.readLine());
 
                     System.out.print("Senha: ");
-                    json.addProperty("senha", teclado.readLine());
-
-                    // gerar token aleatorio
-                    json.addProperty("token", "12345");
+                    json.addProperty("senha", BCrypt.hashpw(teclado.readLine(), BCrypt.gensalt()));
 
                     System.out.println("\nsending to server...\n");
                     out.println(json);
@@ -121,15 +126,7 @@ public class Client {
             if (shouldStop)
                 break;
 
-            response = gson.fromJson(in.readLine(), JsonObject.class);
-            System.out.println("server return: " + response);
-
-            if (response.get("codigo").getAsInt() == 200) {
-                System.out.println("======= Sucesso! =======");
-            } else if (response.get("codigo").getAsInt() == 500) {
-                System.out.println(response.get("mensagem").getAsString());
-            }
-
+            response = sendToServer(in, gson);
             System.out.println("\n------------------------------------\n");
         }
 
@@ -137,5 +134,19 @@ public class Client {
         in.close();
         teclado.close();
         echoSocket.close();
+    }
+
+    private static JsonObject sendToServer(BufferedReader in, Gson gson) throws IOException {
+        JsonObject response;
+        response = gson.fromJson(in.readLine(), JsonObject.class);
+        System.out.println("server return: " + response);
+
+        if (response.get("codigo").getAsInt() == 200) {
+            System.out.println("======= Sucesso! =======");
+        } else if (response.get("codigo").getAsInt() == 500) {
+            System.out.println(response.get("mensagem").getAsString());
+        }
+
+        return response;
     }
 }

@@ -11,7 +11,7 @@ public class Database {
         try {
             connection = new MongoClient("localhost", 27017);
             db = connection.getDatabase("projeto-sd");
-            System.out.println("--- Connected to MongoDB ---");
+            // System.out.println("--- Connected to MongoDB ---");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }

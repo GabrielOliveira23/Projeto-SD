@@ -1,7 +1,8 @@
-package pages;
+
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.concurrent.Future;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,7 +12,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class LoginLayout extends JFrame {
+import com.google.gson.JsonObject;
+
+public class LoginPage extends JFrame {
     private JTextField emailField;
     private JPasswordField passwordField;
 
@@ -29,8 +32,13 @@ public class LoginLayout extends JFrame {
     private JPanel emailPanel;
     private JPanel passwordPanel;
 
-    public LoginLayout() {
+    public LoginPage() {
         super("LOGIN");
+
+        initComponents();
+    }
+
+    private void initComponents() {
         this.layout = new BorderLayout(20, 20);
         this.setLayout(this.layout);
 
@@ -38,7 +46,14 @@ public class LoginLayout extends JFrame {
 
         this.emailField = new JTextField();
         this.passwordField = new JPasswordField();
+
         this.submitButton = new JButton("Submit");
+        this.submitButton.addActionListener(e -> {
+
+            System.out.println("Email: " + this.emailField.getText());
+            System.out.println("Password: " + this.passwordField.getPassword().toString());
+        });
+
         this.registerButton = new JButton("Register");
 
         this.titleLabel = new JLabel("Login");
