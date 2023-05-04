@@ -73,8 +73,13 @@ public class Server extends Thread {
                         break;
                     }
 
-                    case 2:
+                    case 2: {
+                        response.addProperty("codigo", 500);
+                        response.addProperty("mensagem", "Operação não implementada");
+                        client.println(response);
+                        response = null;
                         break;
+                    }
 
                     case 3: {
                         User user = new User();
@@ -85,8 +90,13 @@ public class Server extends Thread {
                         break;
                     }
 
-                    case 12:
+                    case 9: {
+                        User user = new User();
+                        String token = json.get("token").getAsString();
+                        int userId = json.get("id_usuario").getAsInt();
+                        response = user.logout(userId, token);
                         break;
+                    }
 
                     default:
                         client.println("internal error");

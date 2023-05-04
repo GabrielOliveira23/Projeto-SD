@@ -11,14 +11,13 @@ public class User {
     private String email;
     private String token;
     private String password;
-    private boolean isLogged = false;
     private boolean fakeLogin = false;
 
     public User() {
         this.email = "";
         this.token = "";
         this.password = null;
-        this.id = UserDB.getCountUsers() + 1;
+        this.id = -1;
     }
 
     public JsonObject login(String email, String password) {
@@ -26,11 +25,11 @@ public class User {
         printLogin(email, password);
         if (this.fakeLogin) {
             json.addProperty("codigo", 200);
-            this.isLogged = !this.isLogged;
+
             return json;
         }
 
-        json = dataVerify(email, password);
+        json = dataVerifyLogin(email, password);
 
         return json;
     }
@@ -43,22 +42,34 @@ public class User {
             return json;
         }
 
-        json = dataVerify(nome, email, senha);
+        json = dataVerifyCreate(nome, email, senha);
 
         if (json.get("codigo").getAsInt() == 200) {
             JsonObject user = new JsonObject();
-            user.addProperty("id_usuario", this.id);
+            user.addProperty("id_usuario", this.createId());
             user.addProperty("nome", nome);
             user.addProperty("email", email);
             managePassword(senha, user);
-            user.addProperty("token", "abc123abcabc"); // gerar token depois
-            
+            user.add("token", null); // gerar token depois
+
             UserDB.insertUser(user);
         }
-        
+
         return json;
     }
-    
+
+    public JsonObject logout(int idUsuario, String token) {
+        JsonObject json = new JsonObject();
+        if (BCrypt.checkpw(token, this.token)) {
+            json.addProperty("codigo", 200);
+        } else {
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Não foi possível realizar logout");
+        }
+
+        return json;
+    }
+
     private void managePassword(String password, JsonObject user) {
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
         user.addProperty("senha", hashed);
@@ -74,7 +85,7 @@ public class User {
     private boolean emailChecker(String email, boolean isRegister) {
         if (isRegister) {
             // verificar se o email já existe no banco de dados
-            if(UserDB.getUserByEmail(email)){
+            if (UserDB.getUserByEmail(email) != null) {
                 System.out.println("Email já cadastrado!");
                 return false;
             }
@@ -91,11 +102,11 @@ public class User {
     private boolean passwordChecker(String password) {
         if (password.length() >= 8 && password.length() <= 32)
             return true;
-
+            
         return false;
     }
 
-    private JsonObject dataVerify(String nome, String email, String senha) {
+    private JsonObject dataVerifyCreate(String nome, String email, String senha) {
         JsonObject json = new JsonObject();
         if (emailChecker(email, true))
             if (nameChecker(nome))
@@ -117,14 +128,16 @@ public class User {
         return json;
     }
 
-    private JsonObject dataVerify(String email, String senha) {
+    private JsonObject dataVerifyLogin(String email, String senha) {
         JsonObject json = new JsonObject();
 
         if (emailChecker(email, false)) {
             if (passwordChecker(senha)) {
                 if (UserDB.authUser(email, senha)) {
                     json.addProperty("codigo", 200);
-                    this.isLogged = true;
+                    json.addProperty("token", this.generateToken());
+                    json.addProperty("id_usuario", this.getId(email));
+                    UserDB.updateToken(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
                 } else {
                     System.out.println("--------- email ou senha incorreto ---------");
                     json.addProperty("codigo", 500);
@@ -144,6 +157,11 @@ public class User {
         return json;
     }
 
+    private String generateToken() {
+        String token = BCrypt.hashpw(this.email, BCrypt.gensalt());
+        return token;
+    }
+
     private void printRegister(String nome, String email, String senha) {
         System.out.println("Executando Registro...");
         System.out.println("Nome: " + nome);
@@ -160,8 +178,17 @@ public class User {
         System.out.println();
     }
 
+    public int createId() {
+        return UserDB.getCountUsers() + 1;
+    }
+
+    public int getId(String email) {
+        return UserDB.getUserByEmail(email).get("id_usuario").getAsInt();
+    }
+
+    // descobrir se pode armazenar tudo no userRepository e usar no cliente
     public int getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(int id) {

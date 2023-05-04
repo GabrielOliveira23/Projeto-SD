@@ -1,11 +1,16 @@
 package database;
 
+import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.mindrot.jbcrypt.BCrypt;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
+import com.mongodb.internal.validator.UpdateFieldNameValidator;
 
 import config.Database;
 
@@ -16,19 +21,20 @@ public class UserDB {
     private static MongoDatabase db = Database.connect();
     private static MongoCollection<Document> collection = db.getCollection("users");
     private static JsonObject json = new JsonObject();
+    private static BsonDocument bson = new BsonDocument();
     private static Gson gson = new Gson();
 
-    public static boolean getUserById(int userId) {
+    public static BsonDocument getUserById(int userId) {
         MongoCursor<Document> cursor = collection.find().iterator();
 
         while (cursor.hasNext()) {
-            json = gson.fromJson(cursor.next().toJson(), JsonObject.class);
-            if (json.get("id_usuario").getAsInt() == userId) {
+            bson = BsonDocument.parse(cursor.next().toJson());
+            if (bson.get("id_usuario").asInt32().getValue() == userId) {
                 System.out.println("Usuário encontrado!");
-                return true;
+                return bson;
             }
         }
-        return false;
+        return null;
     }
 
     public static void insertUser(JsonObject json) {
@@ -50,7 +56,7 @@ public class UserDB {
                 String pass = json.get("senha").getAsString();
                 if (BCrypt.checkpw(senha, pass))
                     return true;
-                
+
                 break;
             }
         }
@@ -58,16 +64,23 @@ public class UserDB {
         return false;
     }
 
-    public static boolean getUserByEmail(String email) {
+    public static JsonObject getUserByEmail(String email) {
         MongoCursor<Document> cursor = collection.find().iterator();
 
         while (cursor.hasNext()) {
             json = gson.fromJson(cursor.next().toJson(), JsonObject.class);
-            if (json.get("email").getAsString().equals(email)) {
-                System.out.println("Usuário encontrado!");
-                return true;
-            }
+            if (json.get("email").getAsString().equals(email))
+                return json;
         }
+        return null;
+    }
+
+    public static boolean updateToken(int idUser, String token) {
+        Bson updates = Updates.set("token", token);
+        BsonDocument user = getUserById(idUser);
+
+        collection.updateOne(user, updates, new UpdateOptions().upsert(true));
+
         return false;
     }
 }

@@ -6,15 +6,19 @@ import java.util.concurrent.ExecutionException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import entities.User;
 import utils.CaesarCrypt;
 
 public class Client {
+    private static User userRepository = new User();
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         new Client();
+        String ip = "127.0.0.1"; // localhost
         // String ip = "10.20.8.198"; // sauter
         // String ip = "10.20.8.81"; // lucas
-        String ip = "127.0.0.1"; // localhost
+        // String ip = "10.20.8.153"; // igor
+        // String ip = "10.20.8.77"; // mairon
         int port = 24001;
         String serverHostname = new String(ip);
 
@@ -52,7 +56,7 @@ public class Client {
             System.out.println("1 - Cadastrar Usuário");
             System.out.println("2 - Atualizar Cadastro");
             System.out.println("3 - Fazer Login");
-            System.out.println("12 - Fazer Logout");
+            System.out.println("9 - Fazer Logout");
             System.out.println("\"Bye\" to quit");
 
             if ((userInput = teclado.readLine()) == null)
@@ -111,14 +115,18 @@ public class Client {
                     senha = "";
 
                     System.out.println("\nsending to server...\n");
+
                     out.println(json);
 
                     break;
                 }
 
-                case "12": {
+                case "9": {
                     System.out.println("-------------LOGOUT-------------");
                     json.addProperty("id_operacao", Integer.parseInt(userInput));
+
+                    json.addProperty("id_usuario", userRepository.getId());
+                    json.addProperty("token", userRepository.getToken());
 
                     System.out.println("\nsending to server...\n");
                     out.println(json);
@@ -140,7 +148,7 @@ public class Client {
             if (shouldStop)
                 break;
 
-            sendToServer(in, gson);
+            sendToServer(in, gson, userInput);
             System.out.println("\n------------------------------------\n");
         }
 
@@ -150,10 +158,17 @@ public class Client {
         echoSocket.close();
     }
 
-    private static void sendToServer(BufferedReader in, Gson gson) throws IOException {
+    private static void sendToServer(BufferedReader in, Gson gson, String operation) throws IOException {
         JsonObject response;
         response = gson.fromJson(in.readLine(), JsonObject.class);
         System.out.println("server return: " + response);
+
+        switch(operation) {
+            case "3": {
+                userRepository.setId(response.get("id_usuario").getAsInt());
+                userRepository.setToken(response.get("token").getAsString());
+            }
+        }
 
         if (response.get("codigo").getAsInt() == 200) {
             System.out.println("======= Sucesso! =======");
