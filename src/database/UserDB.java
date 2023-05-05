@@ -10,7 +10,6 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
-import com.mongodb.internal.validator.UpdateFieldNameValidator;
 
 import config.Database;
 
@@ -30,7 +29,6 @@ public class UserDB {
         while (cursor.hasNext()) {
             bson = BsonDocument.parse(cursor.next().toJson());
             if (bson.get("id_usuario").asInt32().getValue() == userId) {
-                System.out.println("Usuário encontrado!");
                 return bson;
             }
         }

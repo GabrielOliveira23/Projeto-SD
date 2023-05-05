@@ -46,6 +46,7 @@ public class Server extends Thread {
         System.out.println("New Communication Thread Started");
         JsonObject json, response = new JsonObject();
         Gson gson = new Gson();
+        User userLogin = new User();
 
         try {
             PrintWriter client = new PrintWriter(clientSocket.getOutputStream(),
@@ -82,19 +83,18 @@ public class Server extends Thread {
                     }
 
                     case 3: {
-                        User user = new User();
                         String email = json.get("email").getAsString();
                         String password = json.get("senha").getAsString();
-                        response = user.login(email, password);
+                        response = userLogin.login(email, password);
                         client.println(response);
                         break;
                     }
 
                     case 9: {
-                        User user = new User();
-                        String token = json.get("token").getAsString();
                         int userId = json.get("id_usuario").getAsInt();
-                        response = user.logout(userId, token);
+                        String token = json.get("token").getAsString();
+                        response = userLogin.logout(userId, token);
+                        client.println(response);
                         break;
                     }
 

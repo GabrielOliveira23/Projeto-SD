@@ -60,7 +60,9 @@ public class User {
 
     public JsonObject logout(int idUsuario, String token) {
         JsonObject json = new JsonObject();
-        if (BCrypt.checkpw(token, this.token)) {
+
+        if (token.equals(this.getToken())) {
+            UserDB.updateToken(idUsuario, null);
             json.addProperty("codigo", 200);
         } else {
             json.addProperty("codigo", 500);
@@ -137,7 +139,12 @@ public class User {
                     json.addProperty("codigo", 200);
                     json.addProperty("token", this.generateToken());
                     json.addProperty("id_usuario", this.getId(email));
-                    UserDB.updateToken(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
+                    
+                    this.setToken(json.get("token").getAsString());
+                    this.setId(json.get("id_usuario").getAsInt());
+
+                    UserDB.updateToken(this.getId(), this.getToken());
+
                 } else {
                     System.out.println("--------- email ou senha incorreto ---------");
                     json.addProperty("codigo", 500);
