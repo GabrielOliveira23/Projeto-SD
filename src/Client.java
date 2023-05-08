@@ -15,13 +15,13 @@ public class Client {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         new Client();
-        // String ip = "127.0.0.1"; // localhost
+        String ip = "127.0.0.1"; // localhost
         // String ip = "10.20.8.198"; // sauter
         // String ip = "10.20.8.81"; // kenji
         // String ip = "10.20.8.153"; // igor
         // String ip = "10.20.8.77"; // mairon
 
-        String ip = "26.20.133.105"; // radmin kenji
+        // String ip = "26.20.133.105"; // radmin kenji
         // String ip = "26.157.130.119"; // radmin sauter
         // String ip = "26.59.167.57"; // radmin salles
 
