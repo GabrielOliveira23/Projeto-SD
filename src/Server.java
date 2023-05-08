@@ -1,7 +1,9 @@
 import java.net.*;
 import java.io.*;
 import com.google.gson.Gson;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import entities.User;
 
@@ -54,57 +56,71 @@ public class Server extends Thread {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
 
-            String inputLine;
+            try {
+                String inputLine;
 
-            while ((inputLine = in.readLine()) != null) {
-                System.out.println("\nServer: " + inputLine);
+                while ((inputLine = in.readLine()) != null) {
+                    System.out.println("\nServer: " + inputLine);
 
-                json = gson.fromJson(inputLine, JsonObject.class);
-                int operation = json.get("id_operacao").getAsInt();
+                    json = gson.fromJson(inputLine, JsonObject.class);
+                    int operation = json.get("id_operacao").getAsInt();
 
-                switch (operation) {
-                    case 1: {
-                        User user = new User();
-                        String name = json.get("nome").getAsString();
-                        String email = json.get("email").getAsString();
-                        String password = json.get("senha").getAsString();
-                        response = user.create(name, email, password);
+                    switch (operation) {
+                        case 1: {
+                            User user = new User();
+                            String name = json.get("nome").getAsString();
+                            String email = json.get("email").getAsString();
+                            String password = json.get("senha").getAsString();
+                            response = user.create(name, email, password);
 
-                        client.println(response);
-                        break;
+                            client.println(response);
+                            break;
+                        }
+
+                        case 2: {
+                            response.addProperty("codigo", 500);
+                            response.addProperty("mensagem", "Operação nao implementada");
+                            client.println(response);
+                            response = null;
+                            break;
+                        }
+
+                        case 3: {
+                            String email = json.get("email").getAsString();
+                            String password = json.get("senha").getAsString();
+                            response = userLogin.login(email, password);
+                            client.println(response);
+                            break;
+                        }
+
+                        case 9: {
+                            int userId = json.get("id_usuario").getAsInt();
+                            String token = json.get("token").getAsString();
+                            response = userLogin.logout(userId, token);
+                            client.println(response);
+                            break;
+                        }
+
+                        default:
+                            client.println("internal error");
+                            break;
                     }
 
-                    case 2: {
-                        response.addProperty("codigo", 500);
-                        response.addProperty("mensagem", "Operação não implementada");
-                        client.println(response);
-                        response = null;
-                        break;
-                    }
-
-                    case 3: {
-                        String email = json.get("email").getAsString();
-                        String password = json.get("senha").getAsString();
-                        response = userLogin.login(email, password);
-                        client.println(response);
-                        break;
-                    }
-
-                    case 9: {
-                        int userId = json.get("id_usuario").getAsInt();
-                        String token = json.get("token").getAsString();
-                        response = userLogin.logout(userId, token);
-                        client.println(response);
-                        break;
-                    }
-
-                    default:
-                        client.println("internal error");
+                    if (inputLine.equals("Bye"))
                         break;
                 }
-
-                if (inputLine.equals("Bye"))
-                    break;
+            } catch (JsonSyntaxException e) {
+                System.err.println("Erro: Retorno inválido!");
+                response = new JsonObject();
+                response.addProperty("codigo", 500);
+                response.addProperty("mensagem", "Conteudo enviado invalido!");
+                client.println(response);
+            } catch (Exception e) {
+                System.err.println("Erro: Retorno nulo!");
+                response = new JsonObject();
+                response.addProperty("codigo", 500);
+                response.addProperty("mensagem", "Erro inesperado!");
+                client.println(response);
             }
 
             client.close();

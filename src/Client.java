@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import entities.User;
 import utils.CaesarCrypt;
@@ -14,11 +15,16 @@ public class Client {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         new Client();
-        String ip = "127.0.0.1"; // localhost
+        // String ip = "127.0.0.1"; // localhost
         // String ip = "10.20.8.198"; // sauter
-        // String ip = "10.20.8.81"; // lucas
+        // String ip = "10.20.8.81"; // kenji
         // String ip = "10.20.8.153"; // igor
         // String ip = "10.20.8.77"; // mairon
+
+        String ip = "26.20.133.105"; // radmin kenji
+        // String ip = "26.157.130.119"; // radmin sauter
+        // String ip = "26.59.167.57"; // radmin salles
+
         int port = 24001;
         String serverHostname = new String(ip);
 
@@ -75,12 +81,13 @@ public class Client {
 
                     System.out.print("Senha: ");
                     String senha = teclado.readLine();
-                    json.addProperty("senha", CaesarCrypt.encrypt(senha, senha.length()));
+                    json.addProperty("senha", CaesarCrypt.encrypt(senha));
                     senha = "";
 
                     System.out.println("\nsending to server...\n");
                     out.println(json);
 
+                    // out.println((String)null);
                     break;
                 }
                 case "2": {
@@ -96,7 +103,7 @@ public class Client {
 
                     System.out.print("Senha: ");
                     String senha = teclado.readLine();
-                    json.addProperty("senha", CaesarCrypt.encrypt(senha, senha.length()));
+                    json.addProperty("senha", CaesarCrypt.encrypt(senha));
                     senha = "";
 
                     break;
@@ -111,7 +118,7 @@ public class Client {
 
                     System.out.print("Senha: ");
                     String senha = teclado.readLine();
-                    json.addProperty("senha", CaesarCrypt.encrypt(senha, senha.length()));
+                    json.addProperty("senha", CaesarCrypt.encrypt(senha));
                     senha = "";
 
                     System.out.println("\nsending to server...\n");
@@ -160,22 +167,36 @@ public class Client {
 
     private static void sendToServer(BufferedReader in, Gson gson, String operation) throws IOException {
         JsonObject response;
-        response = gson.fromJson(in.readLine(), JsonObject.class);
-        System.out.println("server return: " + response);
+        try {
+            response = gson.fromJson(in.readLine(), JsonObject.class);
+            System.out.println("server return: " + response);
 
-        switch(operation) {
-            case "3": {
-                userRepository.setId(response.get("id_usuario").getAsInt());
-                userRepository.setToken(response.get("token").getAsString());
+            switch (operation) {
+                case "3": {
+                    try {
+                        userRepository.setId(response.get("id_usuario").getAsInt());
+                        userRepository.setToken(response.get("token").getAsString());
+                        break;
+                    } catch (NullPointerException e) {
+                        System.out.println("Erro ao fazer login, retorno nulo!");
+                        break;
+                    }
+                }
             }
-        }
 
-        if (response.get("codigo").getAsInt() == 200) {
-            System.out.println("======= Sucesso! =======");
-        } else if (response.get("codigo").getAsInt() == 500) {
-            System.out.println(response.get("mensagem").getAsString());
-        } else {
-            System.out.println("=== Erro Inesperado! ===");
+            if (response.get("codigo").getAsInt() == 200) {
+                System.out.println("======= Sucesso! =======");
+            } else if (response.get("codigo").getAsInt() == 500) {
+                System.out.println(response.get("mensagem").getAsString());
+            } else {
+                System.out.println("=== Erro Inesperado! ===");
+            }
+        } catch (NullPointerException e) {
+            System.err.println("Erro: Retorno nulo!");
+        } catch (JsonSyntaxException e) {
+            System.err.println("Erro: Retorno inválido!");
+        } catch (Exception e) {
+            System.err.println("Erro: " + e.getMessage());
         }
     }
 }

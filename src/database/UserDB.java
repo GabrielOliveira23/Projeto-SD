@@ -77,8 +77,12 @@ public class UserDB {
         Bson updates = Updates.set("token", token);
         BsonDocument user = getUserById(idUser);
 
-        collection.updateOne(user, updates, new UpdateOptions().upsert(true));
+        try {
+            collection.updateOne(user, updates, new UpdateOptions().upsert(true));
+            return true;
+        } catch (Exception e) {
 
-        return false;
+            return false;
+        }
     }
 }

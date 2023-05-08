@@ -25,7 +25,6 @@ public class User {
         printLogin(email, password);
         if (this.fakeLogin) {
             json.addProperty("codigo", 200);
-
             return json;
         }
 
@@ -50,7 +49,7 @@ public class User {
             user.addProperty("nome", nome);
             user.addProperty("email", email);
             managePassword(senha, user);
-            user.add("token", null); // gerar token depois
+            user.add("token", null);
 
             UserDB.insertUser(user);
         }
@@ -62,11 +61,15 @@ public class User {
         JsonObject json = new JsonObject();
 
         if (token.equals(this.getToken())) {
-            UserDB.updateToken(idUsuario, null);
-            json.addProperty("codigo", 200);
+            if(UserDB.updateToken(idUsuario, null))
+                json.addProperty("codigo", 200);
+            else {
+                json.addProperty("codigo", 500);
+                json.addProperty("mensagem", "id nao encontrado ou usuario ja deslogado");
+            }
         } else {
             json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Não foi possível realizar logout");
+            json.addProperty("mensagem", "Nao foi possivel realizar logout");
         }
 
         return json;
@@ -88,12 +91,12 @@ public class User {
         if (isRegister) {
             // verificar se o email já existe no banco de dados
             if (UserDB.getUserByEmail(email) != null) {
-                System.out.println("Email já cadastrado!");
+                System.out.println("Email ja cadastrado!");
                 return false;
             }
         }
 
-        if (email.contains("@") && email.contains(".") && email.length() >= 16
+        if (email.contains("@") && email.length() >= 16 // && email.contains(".")
                 && email.length() <= 50) {
             return true;
         }
@@ -104,7 +107,7 @@ public class User {
     private boolean passwordChecker(String password) {
         if (password.length() >= 8 && password.length() <= 32)
             return true;
-            
+
         return false;
     }
 
@@ -124,7 +127,7 @@ public class User {
             }
         else {
             json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Email inválido ou já cadastrado");
+            json.addProperty("mensagem", "Email invalido ou ja cadastrado");
         }
 
         return json;
@@ -139,7 +142,7 @@ public class User {
                     json.addProperty("codigo", 200);
                     json.addProperty("token", this.generateToken());
                     json.addProperty("id_usuario", this.getId(email));
-                    
+
                     this.setToken(json.get("token").getAsString());
                     this.setId(json.get("id_usuario").getAsInt());
 
@@ -151,14 +154,14 @@ public class User {
                     json.addProperty("mensagem", "Email ou senha incorreto");
                 }
             } else {
-                System.out.println("--------- senha inválida ---------");
+                System.out.println("--------- senha invalida ---------");
                 json.addProperty("codigo", 500);
-                json.addProperty("mensagem", "Email ou senha inválido");
+                json.addProperty("mensagem", "Email ou senha invalido");
             }
         } else {
-            System.out.println("--------- email inválido ---------");
+            System.out.println("--------- email invalido ---------");
             json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Email ou senha inválido");
+            json.addProperty("mensagem", "Email ou senha invalido");
         }
 
         return json;
@@ -193,7 +196,6 @@ public class User {
         return UserDB.getUserByEmail(email).get("id_usuario").getAsInt();
     }
 
-    // descobrir se pode armazenar tudo no userRepository e usar no cliente
     public int getId() {
         return this.id;
     }
