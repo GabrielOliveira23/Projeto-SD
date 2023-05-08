@@ -2,7 +2,6 @@
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.util.concurrent.Future;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,8 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-
-import com.google.gson.JsonObject;
 
 public class LoginPage extends JFrame {
     private JTextField emailField;
