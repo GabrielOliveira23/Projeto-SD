@@ -178,7 +178,6 @@ public class User {
         System.out.println("Nome: " + nome);
         System.out.println("Email: " + email);
         System.out.println("Senha: " + senha);
-        System.out.println("ID: " + this.id);
         System.out.println();
     }
 
