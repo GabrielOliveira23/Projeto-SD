@@ -15,17 +15,23 @@ public class Client {
 
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         new Client();
+        // String ip = "0.0.0.0"; // inet wifi
         String ip = "127.0.0.1"; // localhost
         // String ip = "10.20.8.198"; // sauter
         // String ip = "10.20.8.81"; // kenji
         // String ip = "10.20.8.153"; // igor
         // String ip = "10.20.8.77"; // mairon
+        // String ip = "10.50.3.13"; // mairon 2
+        // String ip = "10.40.11.114"; // edu
+        // String ip = "10.20.8.132"; // pedro
 
         // String ip = "26.20.133.105"; // radmin kenji
         // String ip = "26.157.130.119"; // radmin sauter
         // String ip = "26.59.167.57"; // radmin salles
         // String ip = "26.211.0.15"; // radmin sanches
         // String ip = "26.28.97.231"; // radmin quintero
+
+        // String ip = "10.20.8.196"; // teste
 
         int port = 24001;
         String serverHostname = new String(ip);
@@ -87,7 +93,9 @@ public class Client {
                     json.addProperty("senha", CaesarCrypt.hashed(senha));
                     senha = "";
 
-                    System.out.println("\nsending to server...\n");
+                    System.out.println("\nsending to server...");
+                    System.out.println(json + "\n");
+                    
                     out.println(json);
 
                     // out.println((String)null);
@@ -124,7 +132,8 @@ public class Client {
                     json.addProperty("senha", CaesarCrypt.hashed(senha));
                     senha = "";
 
-                    System.out.println("\nsending to server...\n");
+                    System.out.println("\nsending to server...");
+                    System.out.println(json + "\n");
 
                     out.println(json);
 
@@ -138,7 +147,8 @@ public class Client {
                     json.addProperty("id_usuario", userRepository.getId());
                     json.addProperty("token", userRepository.getToken());
 
-                    System.out.println("\nsending to server...\n");
+                    System.out.println("\nsending to server...");
+                    System.out.println(json + "\n");
                     out.println(json);
 
                     break;
@@ -185,7 +195,11 @@ public class Client {
     private static void responseFromServer(BufferedReader in, Gson gson, String operation) throws IOException {
         JsonObject response;
 
-        response = gson.fromJson(in.readLine(), JsonObject.class);
+        if ((response = gson.fromJson(in.readLine(), JsonObject.class)) == null) {
+            System.out.println("Json retornado nulo");
+            return;
+        }
+
         System.out.println("Json server return: " + response + "\n");
 
         if (response.get("codigo").getAsInt() == 200) {

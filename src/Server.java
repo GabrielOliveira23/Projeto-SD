@@ -15,6 +15,7 @@ public class Server extends Thread {
         int port = 24001;
 
         try {
+            // InetAddress addr = InetAddress.getByName("0.0.0.0"); //
             serverSocket = new ServerSocket(port);
             System.out.println("Connection Socket Created");
             try {
@@ -71,6 +72,14 @@ public class Server extends Thread {
                     break;
                 }
 
+                // if (json.get("id_operacao").equals(JsonNull.INSTANCE)) {
+                //     response.addProperty("codigo", 500);
+                //     response.addProperty("mensagem", "Operacao nao especificada");
+                //     client.println(response);
+                //     run();
+                //     break;
+                // }
+                
                 int operation = json.get("id_operacao").getAsInt();
 
                 switch (operation) {
