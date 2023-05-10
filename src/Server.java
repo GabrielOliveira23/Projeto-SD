@@ -1,6 +1,7 @@
 import java.net.*;
 import java.io.*;
 import com.google.gson.Gson;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
@@ -55,71 +56,100 @@ public class Server extends Thread {
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(clientSocket.getInputStream()));
 
-            try {
-                String inputLine;
+            String inputLine;
 
-                while ((inputLine = in.readLine()) != null) {
-                    System.out.println("\nServer: " + inputLine);
+            while ((inputLine = in.readLine()) != null) {
+                System.out.println("\nServer: " + inputLine);
 
+                try {
                     json = gson.fromJson(inputLine, JsonObject.class);
-                    int operation = json.get("id_operacao").getAsInt();
+                } catch (JsonSyntaxException e) {
+                    response.addProperty("codigo", 500);
+                    response.addProperty("mensagem", "Formato de mensagem invalido");
+                    client.println(response);
+                    run();
+                    break;
+                }
 
-                    switch (operation) {
-                        case 1: {
-                            User user = new User();
-                            String name = json.get("nome").getAsString();
-                            String email = json.get("email").getAsString();
-                            String password = json.get("senha").getAsString();
-                            response = user.create(name, email, password);
+                int operation = json.get("id_operacao").getAsInt();
 
-                            client.println(response);
-                            break;
-                        }
-
-                        case 2: {
+                switch (operation) {
+                    case 1: {
+                        if (json.get("nome").equals(JsonNull.INSTANCE)
+                                || json.get("email").equals(JsonNull.INSTANCE)
+                                || json.get("senha").equals(JsonNull.INSTANCE)) {
                             response.addProperty("codigo", 500);
-                            response.addProperty("mensagem", "Operação nao implementada");
-                            client.println(response);
-                            response = null;
-                            break;
-                        }
-
-                        case 3: {
-                            String email = json.get("email").getAsString();
-                            String password = json.get("senha").getAsString();
-                            response = userLogin.login(email, password);
+                            response.addProperty("mensagem", "Dados insuficientes");
+                            System.out.println("Enviando p/ cliente: " + response);
                             client.println(response);
                             break;
                         }
 
-                        case 9: {
-                            int userId = json.get("id_usuario").getAsInt();
-                            String token = json.get("token").getAsString();
-                            response = userLogin.logout(userId, token);
-                            client.println(response);
-                            break;
-                        }
-
-                        default:
-                            client.println("internal error");
-                            break;
+                        User user = new User();
+                        String name = json.get("nome").getAsString();
+                        String email = json.get("email").getAsString();
+                        String password = json.get("senha").getAsString();
+                        response = user.create(name, email, password);
+                        System.out.println("Enviando p/ cliente: " + response);
+                        client.println(response);
+                        break;
                     }
 
-                    if (inputLine.equals("Bye"))
+                    case 2: {
+                        response.addProperty("codigo", 500);
+                        response.addProperty("mensagem", "Operação nao implementada");
+                        client.println(response);
+                        response = null;
+                        break;
+                    }
+
+                    case 3: {
+                        if (json.get("email").equals(JsonNull.INSTANCE)
+                                || json.get("senha").equals(JsonNull.INSTANCE)) {
+                            System.out.println("Algum dos campos nulos.");
+                            response.addProperty("codigo", 500);
+                            response.addProperty("mensagem", "Dados insuficientes");
+                            System.out.println("Enviando p/ cliente: " + response);
+                            client.println(response);
+                            break;
+                        }
+
+                        String email = json.get("email").getAsString();
+                        String password = json.get("senha").getAsString();
+                        response = userLogin.login(email, password);
+                        System.out.println("Enviando p/ cliente: " + response);
+                        client.println(response);
+                        break;
+                    }
+
+                    case 9: {
+                        if (json.get("id_usuario").equals(JsonNull.INSTANCE)
+                                || json.get("token").equals(JsonNull.INSTANCE)) {
+                            System.out.println("Algum dos campos nulos.");
+                            response.addProperty("codigo", 500);
+                            response.addProperty("mensagem", "Dados insuficientes");
+                            System.out.println("Enviando p/ cliente: " + response);
+                            client.println(response);
+                            break;
+                        }
+
+                        int userId = json.get("id_usuario").getAsInt();
+                        String token = json.get("token").getAsString();
+                        response = userLogin.logout(userId, token);
+                        System.out.println("Enviando p/ cliente: " + response);
+                        client.println(response);
+                        break;
+                    }
+
+                    default:
+                        json.addProperty("codigo", 500);
+                        json.addProperty("mensagem", "Operacao nao implementada");
+                        client.println(json);
                         break;
                 }
-            } catch (JsonSyntaxException e) {
-                System.err.println("Erro: Retorno inválido!");
-                response = new JsonObject();
-                response.addProperty("codigo", 500);
-                response.addProperty("mensagem", "Conteudo enviado invalido!");
-                client.println(response);
-            } catch (Exception e) {
-                System.err.println("Erro: Retorno nulo!");
-                response = new JsonObject();
-                response.addProperty("codigo", 500);
-                response.addProperty("mensagem", "Erro inesperado!");
-                client.println(response);
+
+                if (inputLine.equals("Bye"))
+                    break;
             }
 
             client.close();

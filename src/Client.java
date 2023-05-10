@@ -24,6 +24,8 @@ public class Client {
         // String ip = "26.20.133.105"; // radmin kenji
         // String ip = "26.157.130.119"; // radmin sauter
         // String ip = "26.59.167.57"; // radmin salles
+        // String ip = "26.211.0.15"; // radmin sanches
+        // String ip = "26.28.97.231"; // radmin quintero
 
         int port = 24001;
         String serverHostname = new String(ip);
@@ -36,6 +38,7 @@ public class Client {
         Gson gson = new Gson();
         String userInput;
         boolean shouldStop = false;
+        boolean invalidOperation = false;
 
         if (args.length > 0)
             serverHostname = args[0];
@@ -81,7 +84,7 @@ public class Client {
 
                     System.out.print("Senha: ");
                     String senha = teclado.readLine();
-                    json.addProperty("senha", CaesarCrypt.encrypt(senha));
+                    json.addProperty("senha", CaesarCrypt.hashed(senha));
                     senha = "";
 
                     System.out.println("\nsending to server...\n");
@@ -103,7 +106,7 @@ public class Client {
 
                     System.out.print("Senha: ");
                     String senha = teclado.readLine();
-                    json.addProperty("senha", CaesarCrypt.encrypt(senha));
+                    json.addProperty("senha", CaesarCrypt.hashed(senha));
                     senha = "";
 
                     break;
@@ -118,7 +121,7 @@ public class Client {
 
                     System.out.print("Senha: ");
                     String senha = teclado.readLine();
-                    json.addProperty("senha", CaesarCrypt.encrypt(senha));
+                    json.addProperty("senha", CaesarCrypt.hashed(senha));
                     senha = "";
 
                     System.out.println("\nsending to server...\n");
@@ -148,6 +151,7 @@ public class Client {
 
                 default: {
                     System.out.println("Opção inválida!");
+                    invalidOperation = true;
                     break;
                 }
             }
@@ -155,7 +159,20 @@ public class Client {
             if (shouldStop)
                 break;
 
-            sendToServer(in, gson, userInput);
+            if (invalidOperation) {
+                System.out.println("\n------------------------------------\n");
+                invalidOperation = false;
+                continue;
+            }
+
+            try {
+                responseFromServer(in, gson, userInput);
+            } catch (JsonSyntaxException e) {
+                System.err.println("Erro: Json retornado invalido");
+            } catch (Exception e) {
+                System.err.println("Erro: " + e.getMessage());
+            }
+
             System.out.println("\n------------------------------------\n");
         }
 
@@ -165,38 +182,36 @@ public class Client {
         echoSocket.close();
     }
 
-    private static void sendToServer(BufferedReader in, Gson gson, String operation) throws IOException {
+    private static void responseFromServer(BufferedReader in, Gson gson, String operation) throws IOException {
         JsonObject response;
-        try {
-            response = gson.fromJson(in.readLine(), JsonObject.class);
-            System.out.println("server return: " + response);
 
-            switch (operation) {
-                case "3": {
-                    try {
-                        userRepository.setId(response.get("id_usuario").getAsInt());
-                        userRepository.setToken(response.get("token").getAsString());
-                        break;
-                    } catch (NullPointerException e) {
-                        System.out.println("Erro ao fazer login, retorno nulo!");
-                        break;
-                    }
+        response = gson.fromJson(in.readLine(), JsonObject.class);
+        System.out.println("Json server return: " + response + "\n");
+
+        if (response.get("codigo").getAsInt() == 200) {
+            System.out.println("======= Sucesso! =======");
+        } else if (response.get("codigo").getAsInt() == 500) {
+            System.out.println("======== Falha! ========");
+            System.out.println("Mensagem: " + response.get("mensagem").getAsString());
+        } else {
+            System.out.println("=== Erro Inesperado! ===");
+        }
+        switch (operation) {
+            case "3": {
+                try {
+                    userRepository.setId(response.get("id_usuario").getAsInt());
+                    userRepository.setToken(response.get("token").getAsString());
+                    break;
+                } catch (NullPointerException e) {
+                    System.err.println("Login incompleto");
+                    break;
                 }
             }
-
-            if (response.get("codigo").getAsInt() == 200) {
-                System.out.println("======= Sucesso! =======");
-            } else if (response.get("codigo").getAsInt() == 500) {
-                System.out.println(response.get("mensagem").getAsString());
-            } else {
-                System.out.println("=== Erro Inesperado! ===");
+            case "9": {
+                // userRepository.setId(0);
+                // userRepository.setToken("");
+                break;
             }
-        } catch (NullPointerException e) {
-            System.err.println("Erro: Retorno nulo!");
-        } catch (JsonSyntaxException e) {
-            System.err.println("Erro: Retorno inválido!");
-        } catch (Exception e) {
-            System.err.println("Erro: " + e.getMessage());
         }
     }
 }

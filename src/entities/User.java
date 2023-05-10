@@ -61,15 +61,16 @@ public class User {
         JsonObject json = new JsonObject();
 
         if (token.equals(this.getToken())) {
-            if(UserDB.updateToken(idUsuario, null))
+            if (UserDB.updateToken(idUsuario, null)) {
                 json.addProperty("codigo", 200);
-            else {
+                this.setToken(null);
+            } else {
                 json.addProperty("codigo", 500);
-                json.addProperty("mensagem", "id nao encontrado ou usuario ja deslogado");
+                json.addProperty("mensagem", "Id nao encontrado");
             }
         } else {
             json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Nao foi possivel realizar logout");
+            json.addProperty("mensagem", "Token invalido");
         }
 
         return json;
@@ -119,11 +120,11 @@ public class User {
                     json.addProperty("codigo", 200);
                 else {
                     json.addProperty("codigo", 500);
-                    json.addProperty("mensagem", "Senha inválido");
+                    json.addProperty("mensagem", "Senha invalida");
                 }
             else {
                 json.addProperty("codigo", 500);
-                json.addProperty("mensagem", "Nome inválido");
+                json.addProperty("mensagem", "Nome invalido");
             }
         else {
             json.addProperty("codigo", 500);
