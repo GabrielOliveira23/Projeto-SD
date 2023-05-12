@@ -24,6 +24,8 @@ public class Client {
         // String ip = "10.50.3.13"; // mairon 2
         // String ip = "10.40.11.114"; // edu
         // String ip = "10.20.8.132"; // pedro
+        // String ip = "10.20.8.196"; // mitz
+        // String ip = "10.40.11.3"; // mitz 2
 
         // String ip = "26.20.133.105"; // radmin kenji
         // String ip = "26.157.130.119"; // radmin sauter
