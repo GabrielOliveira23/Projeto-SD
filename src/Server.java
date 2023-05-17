@@ -1,4 +1,5 @@
 import java.net.*;
+import java.util.Scanner;
 import java.io.*;
 import com.google.gson.Gson;
 import com.google.gson.JsonNull;
@@ -12,7 +13,12 @@ public class Server extends Thread {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = null;
-        int port = 24001;
+
+        Scanner input = new Scanner(System.in);
+        System.out.println("Porta do servidor: ");
+        int port = input.nextInt();
+        input.nextLine();
+        input.close();
 
         try {
             // InetAddress addr = InetAddress.getByName("0.0.0.0"); //

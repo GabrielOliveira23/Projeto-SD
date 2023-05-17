@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 import com.google.gson.Gson;
@@ -16,7 +17,7 @@ public class Client {
     public static void main(String[] args) throws IOException, InterruptedException, ExecutionException {
         new Client();
         // String ip = "0.0.0.0"; // inet wifi
-        String ip = "127.0.0.1"; // localhost
+        // String ip = "127.0.0.1"; // localhost
         // String ip = "10.20.8.198"; // sauter
         // String ip = "10.20.8.81"; // kenji
         // String ip = "10.20.8.153"; // igor
@@ -26,6 +27,7 @@ public class Client {
         // String ip = "10.20.8.132"; // pedro
         // String ip = "10.20.8.196"; // mitz
         // String ip = "10.40.11.3"; // mitz 2
+        // String ip = "10.20.8.93"; // quintero
 
         // String ip = "26.20.133.105"; // radmin kenji
         // String ip = "26.157.130.119"; // radmin sauter
@@ -35,7 +37,14 @@ public class Client {
 
         // String ip = "10.20.8.196"; // teste
 
-        int port = 24001;
+        Scanner input = new Scanner(System.in);
+        System.out.print("Digite o IP do servidor: ");
+        String ip = input.nextLine();
+        System.out.println("Digite a porta do servidor: ");
+        int port = input.nextInt();
+        input.nextLine();
+        input.close();
+
         String serverHostname = new String(ip);
 
         Socket echoSocket = null;
