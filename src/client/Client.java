@@ -1,4 +1,4 @@
-
+package client;
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
@@ -19,7 +19,7 @@ public class Client {
         // String ip = "0.0.0.0"; // inet wifi
         // String ip = "127.0.0.1"; // localhost
         // String ip = "10.20.8.198"; // sauter
-        String ip = "10.20.8.81"; // kenji
+        // String ip = "10.20.8.81"; // kenji
         // String ip = "10.20.8.153"; // igor
         // String ip = "10.20.8.77"; // mairon
         // String ip = "10.50.3.13"; // mairon 2
@@ -37,16 +37,9 @@ public class Client {
 
         // String ip = "10.20.8.196"; // teste
 
-        // Scanner input = new Scanner(System.in);
-        // System.out.print("Digite o IP do servidor: ");
-        // String ip = input.nextLine();
-        // System.out.println("Digite a porta do servidor: ");
-        // int port = input.nextInt();
-        // input.nextLine();
-        // input.close();
-
-        int port = 24001;
-        String serverHostname = new String(ip);
+        Scanner input = new Scanner(System.in);
+        System.out.print("IP do servidor: ");
+        String serverHostname = new String(input.nextLine());
 
         Socket echoSocket = null;
         PrintWriter out = null;
@@ -61,10 +54,12 @@ public class Client {
         if (args.length > 0)
             serverHostname = args[0];
         System.out.println("Attemping to connect to host " +
-                serverHostname + ":" + port);
+                serverHostname);
 
         try {
-            echoSocket = new Socket(serverHostname, port);
+            System.out.print("Porta do servidor (int): ");
+            echoSocket = new Socket(serverHostname, input.nextInt());
+            input.nextLine();
             out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(
                     echoSocket.getInputStream()));
@@ -107,7 +102,7 @@ public class Client {
 
                     System.out.println("\nsending to server...");
                     System.out.println(json + "\n");
-                    
+
                     out.println(json);
 
                     // out.println((String)null);
@@ -202,6 +197,7 @@ public class Client {
         in.close();
         teclado.close();
         echoSocket.close();
+        input.close();
     }
 
     private static void responseFromServer(BufferedReader in, Gson gson, String operation) throws IOException {
