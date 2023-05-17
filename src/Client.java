@@ -19,7 +19,7 @@ public class Client {
         // String ip = "0.0.0.0"; // inet wifi
         // String ip = "127.0.0.1"; // localhost
         // String ip = "10.20.8.198"; // sauter
-        // String ip = "10.20.8.81"; // kenji
+        String ip = "10.20.8.81"; // kenji
         // String ip = "10.20.8.153"; // igor
         // String ip = "10.20.8.77"; // mairon
         // String ip = "10.50.3.13"; // mairon 2
@@ -37,14 +37,15 @@ public class Client {
 
         // String ip = "10.20.8.196"; // teste
 
-        Scanner input = new Scanner(System.in);
-        System.out.print("Digite o IP do servidor: ");
-        String ip = input.nextLine();
-        System.out.println("Digite a porta do servidor: ");
-        int port = input.nextInt();
-        input.nextLine();
-        input.close();
+        // Scanner input = new Scanner(System.in);
+        // System.out.print("Digite o IP do servidor: ");
+        // String ip = input.nextLine();
+        // System.out.println("Digite a porta do servidor: ");
+        // int port = input.nextInt();
+        // input.nextLine();
+        // input.close();
 
+        int port = 24001;
         String serverHostname = new String(ip);
 
         Socket echoSocket = null;
