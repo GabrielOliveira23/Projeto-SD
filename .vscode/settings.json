@@ -3,10 +3,15 @@
     "src"
   ],
   "java.project.outputPath": "bin",
-  "java.project.referencedLibraries": [
-    "lib/**/*.jar",
-    "c:\\Program Files\\Java\\java-libs\\gson-2.10.1.jar",
-    "c:\\Program Files\\Java\\java-libs\\jbcrypt-0.4.jar",
-    "c:\\Program Files\\Java\\java-libs\\mongo-java-driver-3.10.2.jar"
-  ]
+  "java.project.referencedLibraries": {
+    "include": [
+      "lib/**/*.jar",
+      "c:\\Program Files\\Java\\java-libs\\gson-2.10.1.jar",
+      "c:\\Program Files\\Java\\java-libs\\jbcrypt-0.4.jar",
+      "c:\\Program Files\\Java\\java-libs\\mongo-java-driver-3.10.2.jar"
+    ],
+    "exclude": [
+      "lib/java-json.jar"
+    ]
+  }
 }
