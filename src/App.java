@@ -1,4 +1,4 @@
-import pages.ConnectionPage;
+import client.pages.ConnectionPage;
 
 public class App {
     public static void main(String[] args) throws Exception {

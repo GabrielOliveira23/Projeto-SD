@@ -1,4 +1,4 @@
-package pages;
+package client.pages;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
