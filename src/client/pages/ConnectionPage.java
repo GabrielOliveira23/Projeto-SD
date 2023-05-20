@@ -9,6 +9,10 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 import javax.swing.SwingConstants;
 
 public class ConnectionPage extends JFrame {
@@ -28,8 +32,9 @@ public class ConnectionPage extends JFrame {
 	}
 
 	private void confirmForm() {
+		String serverIp = txtServerIP.getText();
+
 		try {
-			String serverIP = txtServerIP.getText();
 			int port = Integer.parseInt(txtPort.getText());
 
 			if (port < 15000 || port > 65000) {
@@ -39,19 +44,16 @@ public class ConnectionPage extends JFrame {
 			} else {
 				this.lblErro.setVisible(false);
 				
-				if (serverIP.isEmpty())
-					serverIP = "127.0.0.1";
-				LoginPage loginPage = new LoginPage(serverIP, port);
+				if (serverIp.isEmpty())
+					serverIp = "127.0.0.1";
+
+				LoginPage loginPage = new LoginPage(serverIp, port);
 				loginPage.setVisible(true);
 				dispose();
 			}
 		} catch (NumberFormatException e) {
 			System.out.println("Dialog Box - Preencha todos os campos!");
 			this.lblErro.setText("Preencha a Porta!");
-			this.lblErro.setVisible(true);
-		} catch (Exception e) {
-			System.out.println("Dialog Box - Dados invalidos!");
-			this.lblErro.setText("Erro desconhecido!");
 			this.lblErro.setVisible(true);
 		}
 	}

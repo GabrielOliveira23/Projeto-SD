@@ -7,6 +7,10 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.google.gson.JsonObject;
+
+import client.ConnectionLogic;
+
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,12 +25,11 @@ public class LoginPage extends JFrame {
     private JLabel passwordLabel;
     private JPasswordField passwordField;
 
-    public LoginPage(String ServerIp, int port) {
+    public LoginPage(String serverIp, int port) {
         super("IncidentSOS");
         initComponents();
         this.setVisible(true);
-        System.out.println("Server IP: " + ServerIp);
-        System.out.println("Port: " + port);
+        ConnectionLogic.connect(serverIp, port);
     }
 
     private void openRegisterPage() {
@@ -36,11 +39,21 @@ public class LoginPage extends JFrame {
     private void submitLogin() {
         String email = textField.getText();
         String password = CaesarCrypt.hashed(new String(passwordField.getPassword()));
-        
+
         System.out.println("Email: " + email);
         System.out.println("Senha: " + password);
 
+        JsonObject response = ConnectionLogic.login(email, password);
         
+        if (response.get("codigo").getAsInt() == 200) {
+            System.out.println("Login realizado com sucesso!");
+            System.out.println("Token: " + response.get("token").getAsString());
+            System.out.println("Id: " + response.get("id_usuario").getAsInt());
+        } else {
+            System.out.println("Erro ao realizar login!");
+            System.out.println("Status: " + response.get("status").getAsInt());
+            System.out.println("Mensagem: " + response.get("mensagem").getAsString());
+        }
     }
 
     private void initComponents() {

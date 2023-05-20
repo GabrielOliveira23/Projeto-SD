@@ -1,4 +1,5 @@
 package server;
+
 import java.net.*;
 import java.util.Scanner;
 import java.io.*;
@@ -22,7 +23,6 @@ public class Server extends Thread {
         input.close();
 
         try {
-            // InetAddress addr = InetAddress.getByName("0.0.0.0"); //
             serverSocket = new ServerSocket(port);
             System.out.println("Connection Socket Created");
             try {
@@ -123,7 +123,7 @@ public class Server extends Thread {
                         try {
                             if (json.get("email").equals(JsonNull.INSTANCE)
                                     || json.get("senha").equals(JsonNull.INSTANCE)) {
-                                
+
                                 response = ServerTreatment.jsonError("Dados insuficientes");
                                 System.out.println("Enviando p/ cliente: " + response);
                                 client.println(response);
@@ -146,7 +146,7 @@ public class Server extends Thread {
                         try {
                             if (json.get("id_usuario").equals(JsonNull.INSTANCE)
                                     || json.get("token").equals(JsonNull.INSTANCE)) {
-                                
+
                                 response = ServerTreatment.jsonError("Dados insuficientes");
                                 System.out.println("Enviando p/ cliente: " + response);
                                 client.println(response);
@@ -180,6 +180,7 @@ public class Server extends Thread {
             in.close();
             clientSocket.close();
         } catch (IOException e) {
+            // response = ServerTreatment.userLogout(userLogin, json); // logout ao quitar server
             System.err.println("Problem with Communication Server");
         }
     }
