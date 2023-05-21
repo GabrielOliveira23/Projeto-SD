@@ -24,9 +24,6 @@ public class HomePage extends JFrame {
 		this.userRepository = userRepository;
 		this.homePage = this;
 
-		this.setSize(600, 400);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
 		this.initComponents();
 		this.setVisible(true);
 	}
@@ -41,6 +38,7 @@ public class HomePage extends JFrame {
 			System.out.println("Erro ao realizar logout!");
 			this.lblError.setText(response.get("mensagem").getAsString());
 			this.lblError.setVisible(true);
+			return;
 		}
 
 		this.userRepository = null;
@@ -49,6 +47,9 @@ public class HomePage extends JFrame {
 	}
 
 	private void initComponents() {
+		this.setSize(600, 400);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
 		JLabel lblHome = new JLabel("Home");
