@@ -3,15 +3,15 @@ package client.pages;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import client.ConnectionLogic;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 import javax.swing.SwingConstants;
 
@@ -24,6 +24,7 @@ public class ConnectionPage extends JFrame {
 	private JLabel lblErro;
 
 	public ConnectionPage() {
+		super("Conexao");
 		this.setSize(300, 300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
@@ -31,7 +32,7 @@ public class ConnectionPage extends JFrame {
 		this.setVisible(true);
 	}
 
-	private void confirmForm() {
+	private void confirmForm() throws InterruptedException {
 		String serverIp = txtServerIP.getText();
 
 		try {
@@ -47,9 +48,22 @@ public class ConnectionPage extends JFrame {
 				if (serverIp.isEmpty())
 					serverIp = "127.0.0.1";
 
-				LoginPage loginPage = new LoginPage(serverIp, port);
-				loginPage.setVisible(true);
-				dispose();
+				int countTry = 0;
+				while(!ConnectionLogic.connect(serverIp, port) || countTry == 5) {
+					System.out.println("Dialog Box - Servidor nao encontrado!");
+					this.lblErro.setText("Servidor nao encontrado!");
+					this.lblErro.setVisible(true);
+					Thread.sleep(1000);
+					countTry++;
+
+					if (countTry == 5) {
+						this.lblErro.setText("Tente novamente mais tarde!");
+						return;
+					}
+				}
+
+				new LoginPage(serverIp, port);
+				this.dispose();
 			}
 		} catch (NumberFormatException e) {
 			System.out.println("Dialog Box - Preencha todos os campos!");
@@ -89,7 +103,11 @@ public class ConnectionPage extends JFrame {
 		btnConfirm.setBounds(62, 170, 160, 40);
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				confirmForm();
+				try {
+					confirmForm();
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		contentPane.add(btnConfirm);

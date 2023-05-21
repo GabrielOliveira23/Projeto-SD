@@ -9,11 +9,12 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
-import client.ConnectionLogic;
-
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import client.ConnectionLogic;
+import entities.User;
 
 import utils.CaesarCrypt;
 
@@ -24,10 +25,21 @@ public class LoginPage extends JFrame {
     private JButton registerButton;
     private JLabel passwordLabel;
     private JPasswordField passwordField;
+    private JLabel lblError;
+
+    private User user;
+
+    public LoginPage() {
+        super("Login");
+        this.user = new User();
+        this.initComponents();
+        this.setVisible(true);
+    }
 
     public LoginPage(String serverIp, int port) {
-        super("IncidentSOS");
-        initComponents();
+        super("Login");
+        this.user = new User();
+        this.initComponents();
         this.setVisible(true);
         ConnectionLogic.connect(serverIp, port);
     }
@@ -44,15 +56,18 @@ public class LoginPage extends JFrame {
         System.out.println("Senha: " + password);
 
         JsonObject response = ConnectionLogic.login(email, password);
+        System.out.println("Resposta do servidor: " + response);
         
         if (response.get("codigo").getAsInt() == 200) {
             System.out.println("Login realizado com sucesso!");
-            System.out.println("Token: " + response.get("token").getAsString());
-            System.out.println("Id: " + response.get("id_usuario").getAsInt());
+            user.setId(response.get("id_usuario").getAsInt());
+            user.setToken(response.get("token").getAsString());
+
+            new HomePage(user);
+            this.dispose();
         } else {
             System.out.println("Erro ao realizar login!");
-            System.out.println("Status: " + response.get("status").getAsInt());
-            System.out.println("Mensagem: " + response.get("mensagem").getAsString());
+            this.lblError.setText(response.get("mensagem").getAsString());
         }
     }
 
@@ -68,6 +83,29 @@ public class LoginPage extends JFrame {
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         textField.setBounds(139, 90, 230, 27);
         getContentPane().add(textField);
+
+        passwordLabel = new JLabel("Senha");
+        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        passwordLabel.setBounds(70, 153, 48, 25);
+        getContentPane().add(passwordLabel);
+
+        passwordField = new JPasswordField();
+        passwordField.setBounds(139, 153, 230, 27);
+        getContentPane().add(passwordField);
+
+        JLabel titleLabel = new JLabel("LOGIN");
+        titleLabel.setBounds(0, 15, 484, 43);
+        getContentPane().add(titleLabel);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        titleLabel.setFont(new Font("OCR A Extended", Font.BOLD, 40));
+        
+        lblError = new JLabel("Erro");
+        lblError.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblError.setVerticalAlignment(SwingConstants.TOP);
+        lblError.setHorizontalAlignment(SwingConstants.CENTER);
+        lblError.setBounds(139, 191, 230, 29);
+        lblError.setVisible(false);
+        getContentPane().add(lblError);
 
         submitButton = new JButton("Entrar");
         submitButton.setBounds(267, 231, 102, 37);
@@ -86,21 +124,6 @@ public class LoginPage extends JFrame {
         });
         registerButton.setBounds(139, 231, 102, 37);
         getContentPane().add(registerButton);
-
-        passwordLabel = new JLabel("Senha");
-        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        passwordLabel.setBounds(70, 153, 48, 25);
-        getContentPane().add(passwordLabel);
-
-        passwordField = new JPasswordField();
-        passwordField.setBounds(139, 153, 230, 27);
-        getContentPane().add(passwordField);
-
-        JLabel titleLabel = new JLabel("LOGIN");
-        titleLabel.setBounds(0, 15, 484, 43);
-        getContentPane().add(titleLabel);
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setFont(new Font("OCR A Extended", Font.BOLD, 40));
 
         this.setSize(500, 360);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
