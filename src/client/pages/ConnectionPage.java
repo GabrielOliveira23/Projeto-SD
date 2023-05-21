@@ -25,7 +25,7 @@ public class ConnectionPage extends JFrame {
 
 	public ConnectionPage() {
 		super("Conexao");
-		this.setSize(300, 300);
+		this.setSize(310, 310);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.initComponents();
@@ -81,11 +81,11 @@ public class ConnectionPage extends JFrame {
 
 		JLabel lblServerIP = new JLabel("IP Servidor");
 		lblServerIP.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-		lblServerIP.setBounds(10, 54, 86, 25);
+		lblServerIP.setBounds(10, 54, 126, 25);
 		contentPane.add(lblServerIP);
 
 		txtServerIP = new JTextField();
-		txtServerIP.setBounds(106, 54, 151, 25);
+		txtServerIP.setBounds(134, 55, 151, 25);
 		contentPane.add(txtServerIP);
 		txtServerIP.setColumns(10);
 
@@ -96,7 +96,7 @@ public class ConnectionPage extends JFrame {
 
 		txtPort = new JTextField();
 		txtPort.setColumns(10);
-		txtPort.setBounds(106, 110, 151, 25);
+		txtPort.setBounds(134, 111, 151, 25);
 		contentPane.add(txtPort);
 
 		btnConfirm = new JButton("Confirmar");

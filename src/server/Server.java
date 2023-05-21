@@ -115,6 +115,7 @@ public class Server extends Thread {
                     case 2: {
                         response.addProperty("codigo", 500);
                         response.addProperty("mensagem", "Operação nao implementada");
+                        System.out.println("Enviando p/ cliente: " + response);
                         client.println(response);
                         break;
                     }

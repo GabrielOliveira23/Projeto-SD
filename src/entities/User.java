@@ -8,12 +8,14 @@ import database.UserDB;
 
 public class User {
     private int id;
+    private String name;
     private String email;
     private String token;
     private String password;
     private boolean fakeLogin = false;
 
     public User() {
+        this.name = "";
         this.email = "";
         this.token = "";
         this.password = null;
@@ -236,4 +238,11 @@ public class User {
         this.fakeLogin = fakeLogin;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

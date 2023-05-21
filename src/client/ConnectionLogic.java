@@ -36,40 +36,53 @@ public class ConnectionLogic {
 
     public static JsonObject login(String email, String password) {
         json = new JsonObject();
+        response = new JsonObject();
+
         json.addProperty("id_operacao", 3);
         json.addProperty("email", email);
         json.addProperty("senha", password);
 
-        System.out.println("\nsending to server...");
-        System.out.println(json + "\n");
+        sendToServer();
 
-        response = null;
-        out.println(json);
-
-        try {
-            response = gson.fromJson(in.readLine(), JsonObject.class);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        json = null;
-        return response;
+        return getResponse();
     }
 
     public static JsonObject logout(String token, int idUsuario) {
         json = new JsonObject();
+        response = new JsonObject();
+
         json.addProperty("id_operacao", 9);
         json.addProperty("token", token);
         json.addProperty("id_usuario", idUsuario);
 
+        sendToServer();
+
+        return getResponse();
+    }
+
+    public static JsonObject updateUser(User user) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 2);
+        json.addProperty("nome", user.getName());
+        json.addProperty("email", user.getEmail());
+        json.addProperty("senha", user.getPassword());
+        json.addProperty("token", user.getToken());
+        json.addProperty("id_usuario", user.getId());
+
+        sendToServer();
+
+        return getResponse();
+    }
+
+    private static void sendToServer() {
         System.out.println("\nsending to server...");
         System.out.println(json + "\n");
-
-        response = null;
         out.println(json);
+    }
 
+    private static JsonObject getResponse() {
         try {
             response = gson.fromJson(in.readLine(), JsonObject.class);
         } catch (JsonSyntaxException e) {
@@ -77,8 +90,6 @@ public class ConnectionLogic {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        json = null;
         return response;
     }
 }

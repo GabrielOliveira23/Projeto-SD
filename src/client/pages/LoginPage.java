@@ -76,7 +76,7 @@ public class LoginPage extends JFrame {
 
         emailLabel = new JLabel("Email");
         emailLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-        emailLabel.setBounds(70, 90, 47, 27);
+        emailLabel.setBounds(38, 90, 79, 27);
         getContentPane().add(emailLabel);
 
         textField = new JTextField();
@@ -85,8 +85,8 @@ public class LoginPage extends JFrame {
         getContentPane().add(textField);
 
         passwordLabel = new JLabel("Senha");
-        passwordLabel.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        passwordLabel.setBounds(70, 153, 48, 25);
+        passwordLabel.setFont(new Font("Dialog", Font.PLAIN, 20));
+        passwordLabel.setBounds(38, 153, 80, 25);
         getContentPane().add(passwordLabel);
 
         passwordField = new JPasswordField();
