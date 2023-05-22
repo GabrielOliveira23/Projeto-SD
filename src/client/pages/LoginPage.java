@@ -45,7 +45,8 @@ public class LoginPage extends JFrame {
     }
 
     private void openRegisterPage() {
-
+        new RegisterPage(this);
+        this.setVisible(false);
     }
 
     private void submitLogin() {
@@ -57,7 +58,7 @@ public class LoginPage extends JFrame {
 
         JsonObject response = ConnectionLogic.login(email, password);
         System.out.println("Resposta do servidor: " + response);
-        
+
         if (response.get("codigo").getAsInt() == 200) {
             System.out.println("Login realizado com sucesso!");
             user.setId(response.get("id_usuario").getAsInt());
@@ -68,6 +69,7 @@ public class LoginPage extends JFrame {
         } else {
             System.out.println("Erro ao realizar login!");
             this.lblError.setText(response.get("mensagem").getAsString());
+            this.lblError.setVisible(true);
         }
     }
 
@@ -101,12 +103,12 @@ public class LoginPage extends JFrame {
         getContentPane().add(titleLabel);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setFont(new Font("OCR A Extended", Font.BOLD, 40));
-        
+
         lblError = new JLabel("Erro");
-        lblError.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblError.setFont(new Font("Dialog", Font.BOLD, 12));
         lblError.setVerticalAlignment(SwingConstants.TOP);
         lblError.setHorizontalAlignment(SwingConstants.CENTER);
-        lblError.setBounds(139, 191, 230, 29);
+        lblError.setBounds(139, 200, 230, 15);
         lblError.setVisible(false);
         getContentPane().add(lblError);
 

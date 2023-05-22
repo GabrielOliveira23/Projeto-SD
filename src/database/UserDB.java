@@ -97,32 +97,48 @@ public class UserDB {
 
         try {
             if (!json.get("nome").getAsString().equals("")) {
-                updates = Updates.set("nome", json.get("nome").getAsString());
-                collection.updateOne(user, updates, new UpdateOptions().upsert(true));
-            }
-            if (!json.get("email").getAsString().equals("")) {
-                updates = Updates.set("email", json.get("email").getAsString());
-                collection.updateOne(user, updates, new UpdateOptions().upsert(true));
-            }
-            if (!json.get("senha").getAsString().equals("")) {
+                if (!json.get("email").getAsString().equals("")) {
+                    if (json.has("senha"))
+                        updates = Updates.combine(
+                                Updates.set("nome", json.get("nome").getAsString()),
+                                Updates.set("email", json.get("email").getAsString()),
+                                Updates.set("senha", json.get("senha").getAsString()));
+                    else
+                        updates = Updates.combine(
+                                Updates.set("nome", json.get("nome").getAsString()),
+                                Updates.set("email", json.get("email").getAsString()));
+                } else
+                    updates = Updates.set("nome", json.get("nome").getAsString());
+            } else if (!json.get("email").getAsString().equals("")) {
+                if (json.has("senha"))
+                    updates = Updates.combine(
+                            Updates.set("email", json.get("email").getAsString()),
+                            Updates.set("senha", json.get("senha").getAsString()));
+                else
+                    updates = Updates.set("email", json.get("email").getAsString());
+            } else if (json.has("senha"))
                 updates = Updates.set("senha", json.get("senha").getAsString());
-                collection.updateOne(user, updates, new UpdateOptions().upsert(true));
-            }
 
+            if (updates == null) {
+                response.addProperty("codigo", 500);
+                response.addProperty("mensagem", "Nenhum dado foi alterado");
+                return response;
+            }
 
             collection.updateMany(user, updates, new UpdateOptions().upsert(true));
-            String newToken = updateToken(idUser, DataVerify.generateToken(json.get("email").getAsString()));
-            
+            String newToken = updateToken(idUser, DataVerify.generateToken());
+
             response.addProperty("codigo", 200);
             response.addProperty("token", newToken);
-            
+
             return response;
         } catch (Exception e) {
             System.out.println("Erro ao atualizar usuário (MongoDB): " + e.getMessage());
+            response = new JsonObject();
             response.addProperty("codigo", 500);
             response.addProperty("mensagem", "Erro ao atualizar usuário");
+            return response;
         }
-        return response;
     }
 
     public static String updateToken(int idUser, String token) {

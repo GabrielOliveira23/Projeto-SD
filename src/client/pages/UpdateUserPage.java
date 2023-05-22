@@ -15,12 +15,14 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 public class UpdateUserPage extends JFrame {
 	private User userRepository;
 	private JTextField emailField;
 	private JPasswordField passwordField;
 	private JTextField nameField;
+	private JLabel lblError;
 
 	public UpdateUserPage(User user, HomePage homePage) {
 		super("Atualizar Cadastro");
@@ -34,6 +36,8 @@ public class UpdateUserPage extends JFrame {
 		if (emailField.getText().isEmpty() && passwordField.getPassword().length == 0
 				&& nameField.getText().isEmpty()) {
 			System.out.println("Preencha pelo menos um dos campos!");
+			this.lblError.setText("Preencha pelo menos um dos campos!");
+			this.lblError.setVisible(true);
 			return;
 		}
 
@@ -49,6 +53,8 @@ public class UpdateUserPage extends JFrame {
 			userRepository.setToken(response.get("token").getAsString());
 		} else {
 			System.out.println("Erro ao atualizar!");
+			this.lblError.setText(response.get("message").getAsString());
+			this.lblError.setVisible(true);
 			return;
 		}
 
@@ -83,7 +89,7 @@ public class UpdateUserPage extends JFrame {
 		getContentPane().add(passwordField);
 
 		JButton btnConfirmar = new JButton("Confirmar");
-		btnConfirmar.setBounds(235, 210, 140, 40);
+		btnConfirmar.setBounds(235, 220, 140, 40);
 		btnConfirmar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				confirmForm(homePage);
@@ -98,7 +104,7 @@ public class UpdateUserPage extends JFrame {
 				dispose();
 			}
 		});
-		btnCancelar.setBounds(60, 210, 140, 40);
+		btnCancelar.setBounds(60, 220, 140, 40);
 		getContentPane().add(btnCancelar);
 
 		JLabel lblNovoNome = new JLabel("Novo Nome");
@@ -110,5 +116,11 @@ public class UpdateUserPage extends JFrame {
 		nameField.setColumns(10);
 		nameField.setBounds(190, 40, 215, 25);
 		getContentPane().add(nameField);
+		
+		lblError = new JLabel("Erro");
+		lblError.setHorizontalAlignment(SwingConstants.CENTER);
+		lblError.setBounds(0, 185, 430, 15);
+		lblError.setVisible(false);
+		getContentPane().add(lblError);
 	}
 }

@@ -2,7 +2,6 @@ package utils;
 
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 public class JsonVerify {
     public static boolean register(JsonObject json) {
@@ -24,11 +23,11 @@ public class JsonVerify {
             if (json.has("token") && json.has("id_usuario")) {
                 if (!json.get("token").equals(JsonNull.INSTANCE)
                         && !json.get("id_usuario").equals(JsonNull.INSTANCE))
-                if (json.has("nome") || json.has("email") || json.has("senha"))
-                    if (!json.get("nome").equals(JsonNull.INSTANCE)
-                            || !json.get("email").equals(JsonNull.INSTANCE)
-                            || !json.get("senha").equals(JsonNull.INSTANCE))
-                        return true;
+                    if (json.has("nome") || json.has("email") || json.has("senha"))
+                        if (!json.get("nome").equals(JsonNull.INSTANCE)
+                                || !json.get("email").equals(JsonNull.INSTANCE)
+                                || !json.get("senha").equals(JsonNull.INSTANCE))
+                            return true;
             }
         } catch (Exception e) {
             System.out.println("Erro ao verificar dados de atualização de usuário");
@@ -62,5 +61,4 @@ public class JsonVerify {
         return false;
     }
 
-    
 }

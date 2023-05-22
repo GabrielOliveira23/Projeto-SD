@@ -99,7 +99,7 @@ public class Server extends Thread {
                     }
 
                     case 2: {
-                        if (JsonVerify.register(json)) {
+                        if (JsonVerify.updateUser(json)) {
                             response = ServerTreatment.userUpdate(json);
                             System.out.println("Enviando p/ cliente: " + response);
                             client.println(response);

@@ -17,6 +17,7 @@ public class ServerTreatment {
 
     public static JsonObject userUpdate(JsonObject json) {
         User user = new User();
+        
         user.setName(json.get("nome").getAsString());
         user.setEmail(json.get("email").getAsString());
         user.setPassword(json.get("senha").getAsString());

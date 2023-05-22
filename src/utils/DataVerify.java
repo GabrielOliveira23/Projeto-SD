@@ -61,6 +61,29 @@ public class DataVerify {
         return json;
     }
 
+    public static JsonObject update(User user) {
+        JsonObject json = new JsonObject();
+        
+        if (user.getToken() != null) {
+            if (user.getName() != "" && name(user.getName()))
+                json.addProperty("codigo", 200);
+            if (user.getEmail() != "" && email(user.getEmail(), false))
+                json.addProperty("codigo", 200);
+            if (user.getPassword() != "" && password(user.getPassword()))
+                json.addProperty("codigo", 200);
+            
+            if (!json.has("codigo")) {
+                json.addProperty("codigo", 500);
+                json.addProperty("mensagem", "Token invalido");
+            }
+        } else {
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Token invalido");
+        }
+
+        return json;
+    }
+
     public static JsonObject login(User user, String email, String senha) {
         JsonObject json = new JsonObject();
 
@@ -68,7 +91,7 @@ public class DataVerify {
             if (DataVerify.password(senha)) {
                 if (UserDB.auth(email, senha)) {
                     json.addProperty("codigo", 200);
-                    json.addProperty("token", generateToken(user.getEmail()));
+                    json.addProperty("token", generateToken());
                     json.addProperty("id_usuario", user.getId(email));
 
                     user.setToken(json.get("token").getAsString());
@@ -95,8 +118,8 @@ public class DataVerify {
         return json;
     }
 
-    public static String generateToken(String email) {
-        String token = BCrypt.hashpw(email, BCrypt.gensalt());
+    public static String generateToken() {
+        String token = BCrypt.hashpw("alguma criptografia", BCrypt.gensalt());
         return token;
     }
 }

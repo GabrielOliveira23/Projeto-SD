@@ -34,6 +34,20 @@ public class ConnectionLogic {
         return false;
     }
 
+    public static JsonObject register(String name, String email, String password) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 1);
+        json.addProperty("nome", name);
+        json.addProperty("email", email);
+        json.addProperty("senha", password);
+
+        sendToServer();
+
+        return getResponse();
+    }
+
     public static JsonObject login(String email, String password) {
         json = new JsonObject();
         response = new JsonObject();

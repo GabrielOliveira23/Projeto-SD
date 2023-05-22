@@ -54,20 +54,17 @@ public class User {
     public JsonObject update(String token, int idUsuario) {
         JsonObject json = new JsonObject();
         JsonObject user = new JsonObject();
+        printUpdate();
+
+        user.addProperty("nome", this.getName());
+        user.addProperty("email", this.getEmail());
+        managePassword(this.getPassword(), user);
+        user.addProperty("token", token);
+
         // fazer verificacao no banco depois
-        if ((json = UserDB.isLogged(token, idUsuario)).get("codigo").getAsInt() == 200) {
-            user.addProperty("id_usuario", idUsuario);
-            user.addProperty("nome", this.getName());
-            user.addProperty("email", this.getEmail());
-            managePassword(this.getPassword(), user);
-
-            return UserDB.update(idUsuario, user);
-        } else {
-            json = new JsonObject();
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Usuario nao autorizado");
-        }
-
+        if ((json = DataVerify.update(this)).get("codigo").getAsInt() == 200)
+            json = UserDB.update(idUsuario, user);
+        
         return json;
     }
 
@@ -87,6 +84,9 @@ public class User {
     }
 
     private void managePassword(String password, JsonObject user) {
+        if (password == null || password.isEmpty())
+            return;
+
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
         user.addProperty("senha", hashed);
     }
@@ -96,6 +96,14 @@ public class User {
         System.out.println("Nome: " + nome);
         System.out.println("Email: " + email);
         System.out.println("Senha: " + senha);
+        System.out.println();
+    }
+
+    private void printUpdate() {
+        System.out.println("Executando Atualizacao...");
+        System.out.println("Nome: " + this.getName());
+        System.out.println("Email: " + this.getEmail());
+        System.out.println("Senha: " + this.getPassword());
         System.out.println();
     }
 
