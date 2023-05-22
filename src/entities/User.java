@@ -22,27 +22,27 @@ public class User {
         this.id = -1;
     }
 
-    public JsonObject login(String email, String password) {
+    public JsonObject login() {
         JsonObject json = new JsonObject();
-        printLogin(email, password);
+        printLogin(this.getEmail(), this.getPassword());
 
-        json = DataVerify.login(this, email, password);
+        json = DataVerify.login(this, this.getEmail(), this.getPassword());
 
         return json;
     }
 
-    public JsonObject create(String nome, String email, String senha) {
+    public JsonObject create() {
         JsonObject json = new JsonObject();
-        printRegister(nome, email, senha);
+        printRegister(this.getName(), this.getEmail(), this.getPassword());
 
-        json = DataVerify.register(nome, email, senha);
+        json = DataVerify.register(this.getName(), this.getEmail(), this.getPassword());
 
         if (json.get("codigo").getAsInt() == 200) {
             JsonObject user = new JsonObject();
             user.addProperty("id_usuario", this.createId());
-            user.addProperty("nome", nome);
-            user.addProperty("email", email);
-            managePassword(senha, user);
+            user.addProperty("nome", this.getName());
+            user.addProperty("email", this.getEmail());
+            managePassword(this.getPassword(), user);
             user.add("token", null);
 
             UserDB.insertOne(user);

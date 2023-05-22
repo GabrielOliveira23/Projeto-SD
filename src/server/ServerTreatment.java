@@ -9,15 +9,17 @@ public class ServerTreatment {
     private static User user;
 
     public static JsonObject userCreate(JsonObject json) {
-        User user = new User();
-        String name = json.get("nome").getAsString();
-        String email = json.get("email").getAsString();
-        String password = json.get("senha").getAsString();
-        return user.create(name, email, password);
+        user = new User();
+
+        user.setName(json.get("nome").getAsString());
+        user.setEmail(json.get("email").getAsString());
+        user.setPassword(json.get("senha").getAsString());
+        
+        return user.create();
     }
 
     public static JsonObject userUpdate(JsonObject json) {
-        User user = new User();
+        user = new User();
 
         user.setName(json.get("nome").getAsString());
         user.setEmail(json.get("email").getAsString());
@@ -27,10 +29,12 @@ public class ServerTreatment {
     }
 
     public static JsonObject userLogin(JsonObject json) {
-        User user = new User();
-        String email = json.get("email").getAsString();
-        String password = json.get("senha").getAsString();
-        return user.login(email, password);
+        user = new User();
+
+        user.setEmail(json.get("email").getAsString());
+        user.setPassword(json.get("senha").getAsString());
+
+        return user.login();
     }
 
     public static JsonObject reportIncident(JsonObject json) {
@@ -44,17 +48,27 @@ public class ServerTreatment {
         return incident.create(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
+    public static JsonObject getIncidents(JsonObject json) {
+        Incident incident = new Incident();
+
+        return incident.getIncidents(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
+    }
+
     public static JsonObject userLogout(JsonObject json) {
-        User user = new User();
+        user = new User();
+
         user.setId(json.get("id_usuario").getAsInt());
         user.setToken(json.get("token").getAsString());
+
         return user.logout();
     }
 
     public static JsonObject jsonError(String message) {
         JsonObject json = new JsonObject();
+
         json.addProperty("codigo", 500);
         json.addProperty("mensagem", message);
+
         return json;
     }
 }
