@@ -102,7 +102,7 @@ public class LoginPage extends JFrame {
         titleLabel.setBounds(0, 15, 484, 43);
         getContentPane().add(titleLabel);
         titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        titleLabel.setFont(new Font("OCR A Extended", Font.BOLD, 40));
+        titleLabel.setFont(new Font("URW Bookman L", Font.BOLD, 40));
 
         lblError = new JLabel("Erro");
         lblError.setFont(new Font("Dialog", Font.BOLD, 12));

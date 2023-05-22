@@ -61,6 +61,24 @@ public class ConnectionLogic {
         return getResponse();
     }
 
+    public static JsonObject reportIncident(String token, int idUsuario, String data, String rodovia, int km,
+            int tipoIncidente) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 4);
+        json.addProperty("token", token);
+        json.addProperty("id_usuario", idUsuario);
+        json.addProperty("data", data);
+        json.addProperty("rodovia", rodovia);
+        json.addProperty("km", km);
+        json.addProperty("tipo_incidente", tipoIncidente);
+
+        sendToServer();
+
+        return getResponse();
+    }
+
     public static JsonObject logout(String token, int idUsuario) {
         json = new JsonObject();
         response = new JsonObject();

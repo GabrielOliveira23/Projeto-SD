@@ -59,11 +59,11 @@ public class RegisterPage extends JFrame {
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
-		JLabel lblCadastro = new JLabel("Cadastro");
-		lblCadastro.setFont(new Font("Dialog", Font.BOLD, 30));
-		lblCadastro.setHorizontalAlignment(SwingConstants.CENTER);
-		lblCadastro.setBounds(0, 10, 440, 45);
-		getContentPane().add(lblCadastro);
+		JLabel registerLabel = new JLabel("Cadastro");
+		registerLabel.setFont(new Font("URW Bookman L", Font.BOLD, 30));
+		registerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		registerLabel.setBounds(0, 10, 440, 45);
+		getContentPane().add(registerLabel);
 
 		JLabel lblNome = new JLabel("Nome");
 		lblNome.setFont(new Font("Dialog", Font.BOLD, 18));

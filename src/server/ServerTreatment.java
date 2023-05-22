@@ -17,7 +17,7 @@ public class ServerTreatment {
 
     public static JsonObject userUpdate(JsonObject json) {
         User user = new User();
-        
+
         user.setName(json.get("nome").getAsString());
         user.setEmail(json.get("email").getAsString());
         user.setPassword(json.get("senha").getAsString());
@@ -30,6 +30,15 @@ public class ServerTreatment {
         String email = json.get("email").getAsString();
         String password = json.get("senha").getAsString();
         return user.login(email, password);
+    }
+
+    public static JsonObject reportIncident(JsonObject json) {
+        User user = new User();
+        user.setId(json.get("id_usuario").getAsInt());
+        user.setToken(json.get("token").getAsString());
+        return null;
+        // return user.reportIncident(json.get("data").getAsString(), json.get("rodovia").getAsString(),
+        //         json.get("km").getAsInt(), json.get("tipo_incidente").getAsInt());
     }
 
     public static JsonObject userLogout(JsonObject json) {

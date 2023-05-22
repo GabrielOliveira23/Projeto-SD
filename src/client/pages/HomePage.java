@@ -52,11 +52,11 @@ public class HomePage extends JFrame {
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
-		JLabel lblHome = new JLabel("Home");
-		lblHome.setFont(new Font("OCR A Extended", Font.BOLD, 26));
-		lblHome.setHorizontalAlignment(SwingConstants.CENTER);
-		lblHome.setBounds(0, 11, 584, 38);
-		getContentPane().add(lblHome);
+		JLabel titleLabel = new JLabel("Home");
+		titleLabel.setFont(new Font("URW Bookman L", Font.BOLD, 26));
+		titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		titleLabel.setBounds(0, 11, 584, 38);
+		getContentPane().add(titleLabel);
 
 		JPanel panel = new JPanel();
 		panel.setBounds(0, 60, 584, 56);
@@ -66,25 +66,25 @@ public class HomePage extends JFrame {
 		JButton btnReport = new JButton("Reportar Incidentes");
 		btnReport.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		btnReport.setBounds(350, 11, 150, 34);
+		btnReport.addActionListener(e -> {
+			new IncidentReportPage(userRepository, homePage);
+			setVisible(false);
+		});
 		panel.add(btnReport);
 
 		JButton btnUpdateRegister = new JButton("Atualizar Cadastro");
 		btnUpdateRegister.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		btnUpdateRegister.setBounds(93, 11, 150, 34);
-		btnUpdateRegister.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				new UpdateUserPage(userRepository, homePage);
-				setVisible(false);
-			}
+		btnUpdateRegister.addActionListener(e -> {
+			new UpdateUserPage(userRepository, homePage);
+			setVisible(false);
 		});
 		panel.add(btnUpdateRegister);
 
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.setBounds(10, 327, 89, 23);
-		btnLogout.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				logout();
-			}
+		btnLogout.addActionListener(e -> {
+			logout();
 		});
 		getContentPane().add(btnLogout);
 

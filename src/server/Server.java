@@ -122,8 +122,20 @@ public class Server extends Thread {
                         break;
                     }
 
+                    case 4: {
+                        if (JsonVerify.reportIncident(json)) {
+                            response = ServerTreatment.reportIncident(json);
+                            System.out.println("Enviando p/ cliente: " + response);
+                            client.println(response);
+                            break;
+                        }
+
+                        response = sendInvalidDataError(client);
+                        break;
+                    }
+
                     case 9: {
-                        if (JsonVerify.logout(json)) {
+                        if (JsonVerify.tokenAndId(json)) {
                             response = ServerTreatment.userLogout(json);
                             System.out.println("Enviando p/ cliente: " + response);
                             client.println(response);
