@@ -35,7 +35,7 @@ public class User {
         JsonObject json = new JsonObject();
         printRegister(nome, email, senha);
 
-        json = DataVerify.create(nome, email, senha);
+        json = DataVerify.register(nome, email, senha);
 
         if (json.get("codigo").getAsInt() == 200) {
             JsonObject user = new JsonObject();
@@ -64,7 +64,7 @@ public class User {
         // fazer verificacao no banco depois
         if ((json = DataVerify.update(this)).get("codigo").getAsInt() == 200)
             json = UserDB.update(idUsuario, user);
-        
+
         return json;
     }
 

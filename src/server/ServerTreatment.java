@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.JsonObject;
 
+import entities.Incident;
 import entities.User;
 
 public class ServerTreatment {
@@ -33,12 +34,14 @@ public class ServerTreatment {
     }
 
     public static JsonObject reportIncident(JsonObject json) {
-        User user = new User();
-        user.setId(json.get("id_usuario").getAsInt());
-        user.setToken(json.get("token").getAsString());
-        return null;
-        // return user.reportIncident(json.get("data").getAsString(), json.get("rodovia").getAsString(),
-        //         json.get("km").getAsInt(), json.get("tipo_incidente").getAsInt());
+        Incident incident = new Incident();
+        
+        incident.setKm(json.get("km").getAsInt());
+        incident.setIncidentType(json.get("tipo_incidente").getAsInt());
+        incident.setDate(json.get("data").getAsString());
+        incident.setHighway(json.get("rodovia").getAsString());
+
+        return incident.create(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
     public static JsonObject userLogout(JsonObject json) {
