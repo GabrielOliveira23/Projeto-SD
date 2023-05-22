@@ -71,7 +71,7 @@ public class IncidentReportPage extends JFrame {
 	}
 
 	private void initComponents() {
-		this.setSize(380, 340);
+		this.setSize(390, 340);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);

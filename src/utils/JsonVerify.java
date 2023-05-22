@@ -47,10 +47,15 @@ public class JsonVerify {
 
     public static boolean reportIncident(JsonObject json) {
         try {
-            // validar dados de report de incidente
             if (tokenAndId(json))
-                return true;
-        } catch(Exception e) {
+                if (json.has("data") && json.has("rodovia")
+                        && json.has("km") && json.has("tipo_incidente"))
+                    if (!json.get("data").equals(JsonNull.INSTANCE)
+                            && !json.get("rodovia").equals(JsonNull.INSTANCE)
+                            && !json.get("km").equals(JsonNull.INSTANCE)
+                            && !json.get("tipo_incidente").equals(JsonNull.INSTANCE))
+                        return true;
+        } catch (Exception e) {
             System.out.println("Erro ao verificar dados de reportar incidente");
         }
         return false;
