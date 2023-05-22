@@ -4,11 +4,10 @@ import java.net.*;
 import java.util.Scanner;
 import java.io.*;
 import com.google.gson.Gson;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import entities.User;
+import utils.JsonVerify;
 
 public class Server extends Thread {
     protected Socket clientSocket;
@@ -56,7 +55,6 @@ public class Server extends Thread {
         System.out.println("New Communication Thread Started");
         JsonObject json, response = new JsonObject();
         Gson gson = new Gson();
-        User userLogin = new User();
 
         try {
             PrintWriter client = new PrintWriter(clientSocket.getOutputStream(),
@@ -89,81 +87,51 @@ public class Server extends Thread {
 
                 switch (operation) {
                     case 1: {
-                        try {
-                            if (json.get("nome").equals(JsonNull.INSTANCE)
-                                    || json.get("email").equals(JsonNull.INSTANCE)
-                                    || json.get("senha").equals(JsonNull.INSTANCE)) {
-
-                                response = ServerTreatment.jsonError("Dados insuficientes");
-                                System.out.println("Enviando p/ cliente: " + response);
-                                client.println(response);
-                                break;
-                            }
-
+                        if (JsonVerify.register(json)) {
                             response = ServerTreatment.userCreate(json);
                             System.out.println("Enviando p/ cliente: " + response);
                             client.println(response);
                             break;
-                        } catch (Exception e) {
-                            response = ServerTreatment.jsonError("Erro ao criar usuario");
+                        }
+
+                        response = sendInvalidDataError(client);
+                        break;
+                    }
+
+                    case 2: {
+                        if (JsonVerify.register(json)) {
+                            response = ServerTreatment.userUpdate(json);
                             System.out.println("Enviando p/ cliente: " + response);
                             client.println(response);
                             break;
                         }
-                    }
 
-                    case 2: {
-                        response.addProperty("codigo", 500);
-                        response.addProperty("mensagem", "Operação nao implementada");
-                        System.out.println("Enviando p/ cliente: " + response);
-                        client.println(response);
+                        response = sendInvalidDataError(client);
                         break;
                     }
 
                     case 3: {
-                        try {
-                            if (json.get("email").equals(JsonNull.INSTANCE)
-                                    || json.get("senha").equals(JsonNull.INSTANCE)) {
-
-                                response = ServerTreatment.jsonError("Dados insuficientes");
-                                System.out.println("Enviando p/ cliente: " + response);
-                                client.println(response);
-                                break;
-                            }
-
-                            response = ServerTreatment.userLogin(userLogin, json);
-                            System.out.println("Enviando p/ cliente: " + response);
-                            client.println(response);
-                            break;
-                        } catch (Exception e) {
-                            response = ServerTreatment.jsonError("Erro ao realizar login");
+                        if (JsonVerify.login(json)) {
+                            response = ServerTreatment.userLogin(json);
                             System.out.println("Enviando p/ cliente: " + response);
                             client.println(response);
                             break;
                         }
+
+                        response = sendInvalidDataError(client);
+                        break;
                     }
 
                     case 9: {
-                        try {
-                            if (json.get("id_usuario").equals(JsonNull.INSTANCE)
-                                    || json.get("token").equals(JsonNull.INSTANCE)) {
-
-                                response = ServerTreatment.jsonError("Dados insuficientes");
-                                System.out.println("Enviando p/ cliente: " + response);
-                                client.println(response);
-                                break;
-                            }
-
-                            response = ServerTreatment.userLogout(userLogin, json);
-                            System.out.println("Enviando p/ cliente: " + response);
-                            client.println(response);
-                            break;
-                        } catch (Exception e) {
-                            response = ServerTreatment.jsonError("Erro ao realizar logout");
+                        if (JsonVerify.logout(json)) {
+                            response = ServerTreatment.userLogout(json);
                             System.out.println("Enviando p/ cliente: " + response);
                             client.println(response);
                             break;
                         }
+
+                        response = sendInvalidDataError(client);
+                        break;
                     }
 
                     default:
@@ -185,5 +153,13 @@ public class Server extends Thread {
             // server
             System.err.println("Problem with Communication Server");
         }
+    }
+
+    private JsonObject sendInvalidDataError(PrintWriter client) {
+        JsonObject response;
+        response = ServerTreatment.jsonError("Dados insuficientes");
+        System.out.println("Enviando p/ cliente: " + response);
+        client.println(response);
+        return response;
     }
 }

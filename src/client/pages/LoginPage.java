@@ -72,25 +72,28 @@ public class LoginPage extends JFrame {
     }
 
     private void initComponents() {
+        this.setSize(500, 360);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
         getContentPane().setLayout(null);
 
         emailLabel = new JLabel("Email");
-        emailLabel.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-        emailLabel.setBounds(38, 90, 79, 27);
+        emailLabel.setFont(new Font("Dialog", Font.PLAIN, 20));
+        emailLabel.setBounds(60, 90, 79, 27);
         getContentPane().add(emailLabel);
 
         textField = new JTextField();
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        textField.setBounds(139, 90, 230, 27);
+        textField.setBounds(160, 94, 250, 27);
         getContentPane().add(textField);
 
         passwordLabel = new JLabel("Senha");
         passwordLabel.setFont(new Font("Dialog", Font.PLAIN, 20));
-        passwordLabel.setBounds(38, 153, 80, 25);
+        passwordLabel.setBounds(60, 153, 80, 25);
         getContentPane().add(passwordLabel);
 
         passwordField = new JPasswordField();
-        passwordField.setBounds(139, 153, 230, 27);
+        passwordField.setBounds(160, 156, 250, 27);
         getContentPane().add(passwordField);
 
         JLabel titleLabel = new JLabel("LOGIN");
@@ -124,10 +127,5 @@ public class LoginPage extends JFrame {
         });
         registerButton.setBounds(139, 231, 102, 37);
         getContentPane().add(registerButton);
-
-        this.setSize(500, 360);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
     }
 }

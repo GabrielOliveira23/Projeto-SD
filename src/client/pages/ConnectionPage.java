@@ -25,9 +25,6 @@ public class ConnectionPage extends JFrame {
 
 	public ConnectionPage() {
 		super("Conexao");
-		this.setSize(310, 310);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
 		this.initComponents();
 		this.setVisible(true);
 	}
@@ -44,12 +41,12 @@ public class ConnectionPage extends JFrame {
 				this.lblErro.setVisible(true);
 			} else {
 				this.lblErro.setVisible(false);
-				
-				if (serverIp.isEmpty())
-					serverIp = "127.0.0.1";
+
+				// if (serverIp.isEmpty())
+				// 	serverIp = "127.0.0.1";
 
 				int countTry = 0;
-				while(!ConnectionLogic.connect(serverIp, port) || countTry == 5) {
+				while (!ConnectionLogic.connect(serverIp, port) || countTry == 5) {
 					System.out.println("Dialog Box - Servidor nao encontrado!");
 					this.lblErro.setText("Servidor nao encontrado!");
 					this.lblErro.setVisible(true);
@@ -73,6 +70,10 @@ public class ConnectionPage extends JFrame {
 	}
 
 	private void initComponents() {
+		this.setSize(310, 310);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -100,7 +101,7 @@ public class ConnectionPage extends JFrame {
 		contentPane.add(txtPort);
 
 		btnConfirm = new JButton("Confirmar");
-		btnConfirm.setBounds(62, 170, 160, 40);
+		btnConfirm.setBounds(70, 170, 160, 40);
 		btnConfirm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
