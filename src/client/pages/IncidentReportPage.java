@@ -33,7 +33,7 @@ public class IncidentReportPage extends JFrame {
 	}
 
 	private void initComponents() {
-		this.setSize(380, 340);
+		this.setSize(390, 340);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
@@ -70,7 +70,7 @@ public class IncidentReportPage extends JFrame {
 		
 		dateField = new JTextField();
 		dateField.setColumns(10);
-		dateField.setBounds(200, 197, 100, 25);
+		dateField.setBounds(200, 197, 160, 25);
 		getContentPane().add(dateField);
 		
 		JLabel reportIncidentLabel = new JLabel("Reportar Incidente");
