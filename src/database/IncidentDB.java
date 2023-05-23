@@ -47,15 +47,20 @@ public class IncidentDB {
 
             while (cursor.hasNext()) {
                 bson = BsonDocument.parse(cursor.next().toJson());
-                if (bson.get("id_usuario").asInt32().getValue() == 7) {
+                if (bson.get("data").asString().getValue().split(" ")[0].equals(json.get("data").getAsString().split(" ")[0])
+                        && bson.get("rodovia").asString().getValue().equals(json.get("rodovia").getAsString())
+                        // && bson.get("periodo").asInt32().getValue() == json.get("periodo").getAsInt()
+                        && (bson.get("km").asInt32().getValue() >= json.get("min_km").getAsInt()
+                                && bson.get("km").asInt32().getValue() <= json.get("max_km").getAsInt())) {
+                    // if (bson.get("id_usuario").asInt32().getValue() == 7) {
                     incidents.add(gson.fromJson(bson.toJson(), JsonObject.class));
-                    System.out.println();
                 }
             }
-            
-            response.add("incidentes", incidents);
 
-            if (response.get("incidentes").getAsJsonArray().size() == 0) {
+            System.out.println();
+            response.add("lista", incidents);
+
+            if (response.get("lista").getAsJsonArray().size() == 0) {
                 response = new JsonObject();
                 response.addProperty("codigo", 500);
                 response.addProperty("mensagem", "Nenhum incidente encontrado");

@@ -7,8 +7,6 @@ import com.google.gson.JsonObject;
 import client.ConnectionLogic;
 import entities.User;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class FilterIncidentList extends JFrame {
 	private User userRepository;
@@ -24,8 +22,8 @@ public class FilterIncidentList extends JFrame {
 	}
 
 	private void getIncidents() {
-		String rodovia = "BR-199";
-		String data = "2021-06-01 00:00:00";
+		String rodovia = "BR-222";
+		String data = "2023-05-23 00:00:00";
 		String faixa_km = "0-100";
 		int periodo = 1;
 
@@ -36,7 +34,9 @@ public class FilterIncidentList extends JFrame {
 
 		if (response.get("codigo").getAsInt() == 200) {
 			System.out.println("Incidentes obtidos com sucesso!");
-			System.out.println(response.get("incidentes").getAsJsonArray());
+			response.get("lista").getAsJsonArray().forEach(incident -> {
+				System.out.println("Rodovia: " + ((JsonObject) incident).get("rodovia").getAsString());
+			});
 		} else {
 			System.out.println("Erro ao obter incidentes!");
 			// this.lblError.setText(response.get("mensagem").getAsString());

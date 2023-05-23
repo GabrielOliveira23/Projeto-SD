@@ -12,7 +12,7 @@ import entities.User;
 
 public class DataVerify {
     private static String regex;
-    private static String listError = "";
+    private static String listError = "Erro nos campos:";
 
     public static boolean name(String name) {
         if (name.length() >= 3 && name.length() <= 32 && !name.matches("[0-9]+"))
@@ -128,7 +128,7 @@ public class DataVerify {
         regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
         if (Pattern.matches(regex, date))
             return true;
-        listError.concat(" data");
+        listError = listError.concat(" data");
         return false;
     }
 
@@ -136,7 +136,7 @@ public class DataVerify {
         regex = "^[A-Za-z]{2}-\\d{3}$";
         if (Pattern.matches(regex, highway))
             return true;
-        listError.concat(" rodovia");
+        listError = listError.concat(" rodovia");
         return false;
     }
 
@@ -144,15 +144,15 @@ public class DataVerify {
         regex = "^[0-9]{1,3}$";
         if (Pattern.matches(regex, String.valueOf(km)))
             return true;
-        listError.concat(" km");
+        listError = listError.concat(" km");
         return false;
     }
 
     private static boolean incidentType(int type) {
-        regex = "^[1-5]$";
+        regex = "^[0-1][0-9]$";
         if (Pattern.matches(regex, String.valueOf(type)))
             return true;
-        listError.concat(" tipoIncidente");
+        listError = listError.concat(" tipoIncidente");
         return false;
     }
 
@@ -160,15 +160,15 @@ public class DataVerify {
         regex = "^[0-9]{1,3}-[0-9]{1,3}$";
         if (Pattern.matches(regex, highwayLane))
             return true;
-        listError.concat(" faixaKm");
+        listError = listError.concat(" faixaKm");
         return false;
     }
 
     public static boolean period(int period) {
-        regex = "^[1-3]$";
+        regex = "^[1-4]$";
         if (Pattern.matches(regex, String.valueOf(period)))
             return true;
-        listError.concat(" periodo");
+        listError = listError.concat(" periodo");
         return false;
     }
 
@@ -181,7 +181,7 @@ public class DataVerify {
             json.addProperty("codigo", 200);
         else {
             json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Erro nos campos: " + listError);
+            json.addProperty("mensagem", listError);
         }
         return json;
     }
@@ -195,9 +195,21 @@ public class DataVerify {
             json.addProperty("codigo", 200);
         else {
             json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Erro nos campos: " + listError);
+            json.addProperty("mensagem", listError);
         }
         return json;
+    }
+
+    public static boolean hour(String hour) {
+        if (Integer.parseInt(hour) >= 0 && Integer.parseInt(hour) <= 23)
+            return true;
+        return false;
+    }
+
+    public static boolean minute(String minute) {
+        if (Integer.parseInt(minute) >= 0 && Integer.parseInt(minute) <= 59)
+            return true;
+        return false;
     }
 
     public static String generateToken() {

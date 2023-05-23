@@ -7,6 +7,9 @@ import com.google.gson.JsonObject;
 
 import client.ConnectionLogic;
 import entities.User;
+import utils.DataVerify;
+import utils.IncidentTypeEnum;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.text.ParseException;
@@ -23,9 +26,13 @@ public class IncidentReportPage extends JFrame {
 
 	private JTextField highwayField;
 	private JTextField kmField;
-	private JTextField dateField;
+	private JFormattedTextField dateField;
+	private JFormattedTextField hourField;
 	private JComboBox<String> incidentCombo;
 	private MaskFormatter dateMask;
+	private MaskFormatter hourMask;
+
+	// IncidentTypeEnum.NEBLINA.getNumero();
 
 	public IncidentReportPage(User user, HomePage home) {
 		super("Reportar Incidente");
@@ -33,7 +40,8 @@ public class IncidentReportPage extends JFrame {
 		this.home = home;
 
 		try {
-			this.dateMask = new MaskFormatter("####-##-## ##:##:##");
+			this.dateMask = new MaskFormatter("##/##/####");
+			this.hourMask = new MaskFormatter("##:##");
 		} catch (ParseException e) {
 			System.out.println("Erro de formatacao da data");
 		}
@@ -42,17 +50,35 @@ public class IncidentReportPage extends JFrame {
 		this.setVisible(true);
 	}
 
+	private String getParsedDate(String date) {
+		String[] dateSplit = date.split("/");
+		return dateSplit[2] + "-" + dateSplit[1] + "-" + dateSplit[0] + " " + hourField.getText() + ":00";
+	}
+
 	private void confirmForm() {
 		if (highwayField.getText().isEmpty()
 				|| kmField.getText().isEmpty()
 				|| dateField.getText().isEmpty()) {
 			System.out.println("Preencha todos os campos!");
 			return;
+		} else if (Integer.parseInt(kmField.getText()) < 0) {
+			System.out.println("Km invalido!");
+			return;
+		} else if (!DataVerify.hour(hourField.getText().split(":")[0])) {
+			System.out.println("Hora invalida!");
+			return;
+		} else if (!DataVerify.minute(hourField.getText().split(":")[1])) {
+			System.out.println("minuto invalida!");
+			return;
 		}
-
-		JsonObject response = ConnectionLogic.reportIncident(user.getToken(), user.getId(), dateField.getText(),
+		
+		JsonObject response = ConnectionLogic.reportIncident(
+				user.getToken(), user.getId(),
+				getParsedDate(dateField.getText()),
 				highwayField.getText(),
-				Integer.parseInt(kmField.getText()), 1);
+				Integer.parseInt(kmField.getText()),
+				IncidentTypeEnum.getEnum(incidentCombo.getSelectedItem().toString()));
+
 		System.out.println("Resposta servidor: " + response);
 
 		if (response.get("codigo").getAsInt() == 200) {
@@ -64,6 +90,23 @@ public class IncidentReportPage extends JFrame {
 
 		this.home.setVisible(true);
 		dispose();
+	}
+
+	private void addIncidents() {
+		this.incidentCombo.addItem("Vento");
+		this.incidentCombo.addItem("Chuva");
+		this.incidentCombo.addItem("Neblina");
+		this.incidentCombo.addItem("Neve");
+		this.incidentCombo.addItem("Gelo na pista");
+		this.incidentCombo.addItem("Granizo");
+		this.incidentCombo.addItem("Transito parado");
+		this.incidentCombo.addItem("Filas de transito");
+		this.incidentCombo.addItem("Transito lento");
+		this.incidentCombo.addItem("Acidente desconhecido");
+		this.incidentCombo.addItem("Incidente desconhecido");
+		this.incidentCombo.addItem("Trabalhos na estrada");
+		this.incidentCombo.addItem("Via interditada");
+		this.incidentCombo.addItem("Pista interditada");
 	}
 
 	private void initComponents() {
@@ -89,7 +132,7 @@ public class IncidentReportPage extends JFrame {
 
 		JLabel lblData = new JLabel("Data");
 		lblData.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblData.setBounds(20, 200, 41, 19);
+		lblData.setBounds(40, 200, 40, 19);
 		getContentPane().add(lblData);
 
 		highwayField = new JTextField();
@@ -103,8 +146,9 @@ public class IncidentReportPage extends JFrame {
 		getContentPane().add(kmField);
 
 		dateField = new JFormattedTextField(dateMask);
+		dateField.setHorizontalAlignment(SwingConstants.CENTER);
 		dateField.setColumns(10);
-		dateField.setBounds(200, 197, 160, 25);
+		dateField.setBounds(90, 197, 80, 25);
 		getContentPane().add(dateField);
 
 		JLabel reportIncidentLabel = new JLabel("Reportar Incidente");
@@ -130,6 +174,18 @@ public class IncidentReportPage extends JFrame {
 
 		incidentCombo = new JComboBox<String>();
 		incidentCombo.setBounds(200, 157, 160, 25);
+		this.addIncidents();
 		getContentPane().add(incidentCombo);
+
+		JLabel lblHora = new JLabel("Hora");
+		lblHora.setFont(new Font("Dialog", Font.BOLD, 16));
+		lblHora.setBounds(220, 200, 40, 19);
+		getContentPane().add(lblHora);
+
+		hourField = new JFormattedTextField(hourMask);
+		hourField.setHorizontalAlignment(SwingConstants.CENTER);
+		hourField.setColumns(10);
+		hourField.setBounds(270, 197, 80, 25);
+		getContentPane().add(hourField);
 	}
 }
