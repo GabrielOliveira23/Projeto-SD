@@ -63,7 +63,7 @@ public class UserDB {
         return false;
     }
 
-    public static JsonObject isLogged(String token, int userId) {
+    public static JsonObject isLogged(int userId, String token) {
         BsonDocument user = getUserById(userId);
         response = new JsonObject();
 
@@ -90,8 +90,8 @@ public class UserDB {
         return null;
     }
 
-    public static JsonObject update(int idUser, JsonObject json) {
-        BsonDocument user = getUserById(idUser);
+    public static JsonObject update(int userId, JsonObject json) {
+        BsonDocument user = getUserById(userId);
         Bson updates = null;
         response = new JsonObject();
 
@@ -126,7 +126,7 @@ public class UserDB {
             }
 
             collection.updateMany(user, updates, new UpdateOptions().upsert(true));
-            String newToken = updateToken(idUser, DataVerify.generateToken());
+            String newToken = updateToken(userId, DataVerify.generateToken());
 
             response.addProperty("codigo", 200);
             response.addProperty("token", newToken);

@@ -11,7 +11,7 @@ import entities.Incident;
 import entities.User;
 
 public class DataVerify {
-    private String regex;
+    private static String regex;
     private static String listError = "";
 
     public static boolean name(String name) {
@@ -124,9 +124,66 @@ public class DataVerify {
         return json;
     }
 
-    public static String generateToken() {
-        String token = BCrypt.hashpw("alguma criptografia", BCrypt.gensalt());
-        return token;
+    public static boolean date(String date) {
+        regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
+        if (Pattern.matches(regex, date))
+            return true;
+        listError.concat(" data");
+        return false;
+    }
+
+    private static boolean highway(String highway) {
+        regex = "^[A-Za-z]{2}-\\d{3}$";
+        if (Pattern.matches(regex, highway))
+            return true;
+        listError.concat(" rodovia");
+        return false;
+    }
+
+    private static boolean km(int km) {
+        regex = "^[0-9]{1,3}$";
+        if (Pattern.matches(regex, String.valueOf(km)))
+            return true;
+        listError.concat(" km");
+        return false;
+    }
+
+    private static boolean incidentType(int type) {
+        regex = "^[1-5]$";
+        if (Pattern.matches(regex, String.valueOf(type)))
+            return true;
+        listError.concat(" tipoIncidente");
+        return false;
+    }
+
+    public static boolean highwayLane(String highwayLane) {
+        regex = "^[0-9]{1,3}-[0-9]{1,3}$";
+        if (Pattern.matches(regex, highwayLane))
+            return true;
+        listError.concat(" faixaKm");
+        return false;
+    }
+
+    public static boolean period(int period) {
+        regex = "^[1-3]$";
+        if (Pattern.matches(regex, String.valueOf(period)))
+            return true;
+        listError.concat(" periodo");
+        return false;
+    }
+
+    public static JsonObject getIncidents(Incident incident) {
+        JsonObject json = new JsonObject();
+        if (date(incident.getDate())
+                && highway(incident.getHighway())
+                && highwayLane(incident.getHighwayLane())
+                && period(incident.getPeriod()))
+            json.addProperty("codigo", 200);
+        else {
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Erro nos campos: " + listError);
+        }
+        return json;
     }
 
     public static JsonObject reportIncident(Incident incident) {
@@ -143,32 +200,8 @@ public class DataVerify {
         return json;
     }
 
-    public static boolean date(String date) {
-        String regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
-        if (Pattern.matches(regex, date))
-            return true;
-        listError.concat(" data");
-        return false;
-    }
-
-    private static boolean highway(String highway) {
-        String regex = "^[A-Za-z]{2}-\\d{3}$";
-        if (Pattern.matches(regex, highway))
-            return true;
-        listError.concat(" rodovia");
-        return false;
-    }
-
-    private static boolean km(int km) {
-        String regex = "^[0-9]{1,3}$";
-        if (Pattern.matches(regex, String.valueOf(km)))
-            return true;
-        listError.concat(" km");
-        return false;
-    }
-
-    private static boolean incidentType(int type) {
-        String regex = "^[1-5]$";
-        return Pattern.matches(regex, String.valueOf(type));
+    public static String generateToken() {
+        String token = BCrypt.hashpw("alguma criptografia", BCrypt.gensalt());
+        return token;
     }
 }

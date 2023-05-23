@@ -1,8 +1,6 @@
 package client.pages;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import client.ConnectionLogic;
 
@@ -17,7 +15,6 @@ import javax.swing.SwingConstants;
 
 public class ConnectionPage extends JFrame {
 
-	private JPanel contentPane;
 	private JTextField txtServerIP;
 	private JTextField txtPort;
 	private JButton btnConfirm;
@@ -31,74 +28,65 @@ public class ConnectionPage extends JFrame {
 
 	private void confirmForm() throws InterruptedException {
 		String serverIp = txtServerIP.getText();
+		int port, countTry = 0;
 
 		try {
-			int port = Integer.parseInt(txtPort.getText());
-
-			if (port < 15000 || port > 65000) {
-				System.out.println("Dialog Box - Preencha todos os campos!");
-				this.lblErro.setText("Porta invalida!");
-				this.lblErro.setVisible(true);
-			} else {
-				this.lblErro.setVisible(false);
-
-				// if (serverIp.isEmpty())
-				// 	serverIp = "127.0.0.1";
-
-				int countTry = 0;
-				while (!ConnectionLogic.connect(serverIp, port) || countTry == 5) {
-					System.out.println("Dialog Box - Servidor nao encontrado!");
-					this.lblErro.setText("Servidor nao encontrado!");
-					this.lblErro.setVisible(true);
-					Thread.sleep(1000);
-					countTry++;
-
-					if (countTry == 5) {
-						this.lblErro.setText("Tente novamente mais tarde!");
-						return;
-					}
-				}
-
-				new LoginPage(serverIp, port);
-				this.dispose();
-			}
+			port = Integer.parseInt(txtPort.getText());
 		} catch (NumberFormatException e) {
-			System.out.println("Dialog Box - Preencha todos os campos!");
-			this.lblErro.setText("Preencha a Porta!");
-			this.lblErro.setVisible(true);
+			port = 24001;
 		}
+
+		if (port < 15000 || port > 65000) {
+			System.out.println("Dialog Box - Preencha todos os campos!");
+			this.lblErro.setText("Porta invalida!");
+			this.lblErro.setVisible(true);
+		} else {
+			this.lblErro.setVisible(false);
+
+			while (!ConnectionLogic.connect(serverIp, port) || countTry == 5) {
+				System.out.println("Dialog Box - Servidor nao encontrado!");
+				this.lblErro.setText("Servidor nao encontrado!");
+				this.lblErro.setVisible(true);
+				Thread.sleep(1000);
+				countTry++;
+
+				if (countTry == 5) {
+					this.lblErro.setText("Tente novamente mais tarde!");
+					return;
+				}
+			}
+
+			new LoginPage();
+			this.dispose();
+		}
+
 	}
 
 	private void initComponents() {
 		this.setSize(310, 310);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		getContentPane().setLayout(null);
 
 		JLabel lblServerIP = new JLabel("IP Servidor");
 		lblServerIP.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		lblServerIP.setBounds(10, 54, 126, 25);
-		contentPane.add(lblServerIP);
+		getContentPane().add(lblServerIP);
 
 		txtServerIP = new JTextField();
 		txtServerIP.setBounds(134, 55, 151, 25);
-		contentPane.add(txtServerIP);
+		getContentPane().add(txtServerIP);
 		txtServerIP.setColumns(10);
 
 		JLabel lblPort = new JLabel("Porta");
 		lblPort.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		lblPort.setBounds(10, 110, 86, 25);
-		contentPane.add(lblPort);
+		getContentPane().add(lblPort);
 
 		txtPort = new JTextField();
 		txtPort.setColumns(10);
 		txtPort.setBounds(134, 111, 151, 25);
-		contentPane.add(txtPort);
+		getContentPane().add(txtPort);
 
 		btnConfirm = new JButton("Confirmar");
 		btnConfirm.setBounds(70, 170, 160, 40);
@@ -111,7 +99,7 @@ public class ConnectionPage extends JFrame {
 				}
 			}
 		});
-		contentPane.add(btnConfirm);
+		getContentPane().add(btnConfirm);
 
 		lblErro = new JLabel("Erro");
 		lblErro.setVerticalAlignment(SwingConstants.TOP);
@@ -119,6 +107,6 @@ public class ConnectionPage extends JFrame {
 		lblErro.setHorizontalAlignment(SwingConstants.CENTER);
 		lblErro.setBounds(0, 221, 284, 40);
 		lblErro.setVisible(false);
-		contentPane.add(lblErro);
+		getContentPane().add(lblErro);
 	}
 }

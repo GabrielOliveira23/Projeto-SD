@@ -62,16 +62,17 @@ public class User {
         user.addProperty("token", token);
 
         // fazer verificacao no banco depois
-        if ((json = DataVerify.update(this)).get("codigo").getAsInt() == 200)
-            json = UserDB.update(idUsuario, user);
+        if ((json = UserDB.isLogged(idUsuario, token)).get("codigo").getAsInt() == 200)
+            if ((json = DataVerify.update(this)).get("codigo").getAsInt() == 200)
+                json = UserDB.update(idUsuario, user);
 
         return json;
     }
 
-    public JsonObject logout() {
+    public JsonObject logout(int userId, String token) {
         JsonObject json = new JsonObject();
 
-        if ((json = UserDB.isLogged(this.getToken(), this.getId())).get("codigo").getAsInt() == 200)
+        if ((json = UserDB.isLogged(this.getId(), this.getToken())).get("codigo").getAsInt() == 200)
             this.setToken(UserDB.updateToken(this.getId(), null));
 
         if (this.getToken() != null) {

@@ -10,7 +10,6 @@ import com.google.gson.JsonSyntaxException;
 import entities.User;
 
 public class ConnectionLogic {
-    private static User user;
     private static Socket socket = null;
     private static PrintWriter out = null;
     private static BufferedReader in = null;
@@ -73,6 +72,24 @@ public class ConnectionLogic {
         json.addProperty("rodovia", rodovia);
         json.addProperty("km", km);
         json.addProperty("tipo_incidente", tipoIncidente);
+
+        sendToServer();
+
+        return getResponse();
+    }
+
+    public static JsonObject getIncidents(String token, int idUsuario, String rodovia,
+            String data, String faixaKm, int periodo) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 5);
+        json.addProperty("token", token);
+        json.addProperty("id_usuario", idUsuario);
+        json.addProperty("rodovia", rodovia);
+        json.addProperty("data", data);
+        json.addProperty("faixa_km", faixaKm);
+        json.addProperty("periodo", periodo);
 
         sendToServer();
 

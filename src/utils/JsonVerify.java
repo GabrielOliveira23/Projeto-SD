@@ -61,6 +61,22 @@ public class JsonVerify {
         return false;
     }
 
+    public static boolean getIncidents(JsonObject json) {
+        try {
+            if (tokenAndId(json))
+                if (json.has("data") && json.has("rodovia")
+                        && json.has("periodo"))
+                    if (!json.get("data").equals(JsonNull.INSTANCE)
+                            && !json.get("rodovia").equals(JsonNull.INSTANCE)
+                            && !json.get("periodo").equals(JsonNull.INSTANCE)
+                            && !json.get("faixa_km").equals(JsonNull.INSTANCE))
+                        return true;
+        } catch (Exception e) {
+            System.out.println("Erro ao verificar dados de obter incidentes");
+        }
+        return false;
+    }
+
     public static boolean tokenAndId(JsonObject json) {
         try {
             if (json.has("token") && json.has("id_usuario")) {

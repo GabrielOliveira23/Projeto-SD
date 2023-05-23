@@ -51,16 +51,16 @@ public class ServerTreatment {
     public static JsonObject getIncidents(JsonObject json) {
         Incident incident = new Incident();
 
+        incident.setDate(json.get("data").getAsString());
+        incident.setHighway(json.get("rodovia").getAsString());
+        incident.setPeriod(json.get("periodo").getAsInt());
+        incident.setHighwayLane(json.get("faixa_km").getAsString());
+
         return incident.getIncidents(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
     public static JsonObject userLogout(JsonObject json) {
-        user = new User();
-
-        user.setId(json.get("id_usuario").getAsInt());
-        user.setToken(json.get("token").getAsString());
-
-        return user.logout();
+        return user.logout(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
     public static JsonObject jsonError(String message) {

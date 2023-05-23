@@ -1,8 +1,6 @@
 package client.pages;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.text.MaskFormatter;
 
 import com.google.gson.JsonObject;
@@ -20,11 +18,9 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
 public class IncidentReportPage extends JFrame {
-
-	private JPanel contentPane;
-
 	private User user;
 	private HomePage home;
+
 	private JTextField highwayField;
 	private JTextField kmField;
 	private JTextField dateField;
@@ -37,7 +33,7 @@ public class IncidentReportPage extends JFrame {
 		this.home = home;
 
 		try {
-			this.dateMask = new MaskFormatter("####/##/## ##:##:##");
+			this.dateMask = new MaskFormatter("####-##-## ##:##:##");
 		} catch (ParseException e) {
 			System.out.println("Erro de formatacao da data");
 		}
@@ -119,6 +115,10 @@ public class IncidentReportPage extends JFrame {
 
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(70, 245, 110, 35);
+		btnCancelar.addActionListener(e -> {
+			this.home.setVisible(true);
+			dispose();
+		});
 		getContentPane().add(btnCancelar);
 
 		JButton btnConfirmar = new JButton("Confirmar");

@@ -36,14 +36,6 @@ public class LoginPage extends JFrame {
         this.setVisible(true);
     }
 
-    public LoginPage(String serverIp, int port) {
-        super("Login");
-        this.user = new User();
-        this.initComponents();
-        this.setVisible(true);
-        ConnectionLogic.connect(serverIp, port);
-    }
-
     private void openRegisterPage() {
         new RegisterPage(this);
         this.setVisible(false);

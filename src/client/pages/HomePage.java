@@ -29,6 +29,7 @@ public class HomePage extends JFrame {
 	}
 
 	private void logout() {
+		this.lblError.setVisible(false);
 		JsonObject response = ConnectionLogic.logout(userRepository.getToken(), userRepository.getId());
 		System.out.println("Resposta do servidor: " + response);
 
@@ -59,14 +60,15 @@ public class HomePage extends JFrame {
 		getContentPane().add(titleLabel);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(0, 60, 584, 56);
+		panel.setBounds(0, 60, 584, 237);
 		getContentPane().add(panel);
 		panel.setLayout(null);
 
 		JButton btnReport = new JButton("Reportar Incidentes");
 		btnReport.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnReport.setBounds(350, 11, 150, 34);
+		btnReport.setBounds(350, 10, 150, 34);
 		btnReport.addActionListener(e -> {
+			this.lblError.setVisible(false);
 			new IncidentReportPage(userRepository, homePage);
 			setVisible(false);
 		});
@@ -74,12 +76,22 @@ public class HomePage extends JFrame {
 
 		JButton btnUpdateRegister = new JButton("Atualizar Cadastro");
 		btnUpdateRegister.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-		btnUpdateRegister.setBounds(93, 11, 150, 34);
+		btnUpdateRegister.setBounds(93, 10, 150, 34);
 		btnUpdateRegister.addActionListener(e -> {
+			this.lblError.setVisible(false);
 			new UpdateUserPage(userRepository, homePage);
 			setVisible(false);
 		});
 		panel.add(btnUpdateRegister);
+
+		JButton btnIncidentsList = new JButton("Lista de Incidentes");
+		btnIncidentsList.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		btnIncidentsList.setBounds(350, 70, 150, 34);
+		btnIncidentsList.addActionListener(e -> {
+			this.lblError.setVisible(false);
+			new FilterIncidentList(userRepository, homePage);
+		});
+		panel.add(btnIncidentsList);
 
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.setBounds(10, 327, 89, 23);
