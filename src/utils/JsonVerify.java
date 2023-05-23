@@ -63,13 +63,12 @@ public class JsonVerify {
 
     public static boolean getIncidents(JsonObject json) {
         try {
-            if (tokenAndId(json))
-                if (json.has("data") && json.has("rodovia")
-                        && json.has("periodo"))
-                    if (!json.get("data").equals(JsonNull.INSTANCE)
-                            && !json.get("rodovia").equals(JsonNull.INSTANCE)
-                            && !json.get("periodo").equals(JsonNull.INSTANCE))
-                        return true;
+            if (json.has("data") && json.has("rodovia")
+                    && json.has("periodo"))
+                if (!json.get("data").equals(JsonNull.INSTANCE)
+                        && !json.get("rodovia").equals(JsonNull.INSTANCE)
+                        && !json.get("periodo").equals(JsonNull.INSTANCE))
+                    return true;
         } catch (Exception e) {
             System.out.println("Erro ao verificar dados de obter incidentes");
         }

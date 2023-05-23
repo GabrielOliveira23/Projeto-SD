@@ -3,7 +3,6 @@ package entities;
 import com.google.gson.JsonObject;
 
 import database.IncidentDB;
-import database.UserDB;
 import utils.DataVerify;
 
 public class Incident {
@@ -51,28 +50,24 @@ public class Incident {
         return json;
     }
 
-    public JsonObject getIncidents(int userId, String token) {
+    public JsonObject getIncidents() {
         JsonObject json = new JsonObject();
         printGetIncidents();
 
-        this.userId = userId;
+        if ((json = DataVerify.getIncidents(this)).get("codigo").getAsInt() == 200) {
+            JsonObject incident = new JsonObject();
 
-        if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
-            if ((json = DataVerify.getIncidents(this)).get("codigo").getAsInt() == 200) {
-                JsonObject incident = new JsonObject();
+            incident.addProperty("data", this.getParsedDate());
+            incident.addProperty("rodovia", this.getHighway());
+            incident.addProperty("periodo", this.getPeriod());
 
-                incident.addProperty("id_usuario", userId);
-                incident.addProperty("data", this.getParsedDate());
-                incident.addProperty("rodovia", this.getHighway());
-                incident.addProperty("periodo", this.getPeriod());
-
-                if (this.getHighwayLane() != "") {
-                    incident.addProperty("min_km", this.getMinKm());
-                    incident.addProperty("max_km", this.getMaxKm());
-                }
-
-                json = IncidentDB.getMany(incident);
+            if (this.getHighwayLane() != "") {
+                incident.addProperty("min_km", this.getMinKm());
+                incident.addProperty("max_km", this.getMaxKm());
             }
+
+            json = IncidentDB.getMany(incident);
+        }
 
         return json;
     }

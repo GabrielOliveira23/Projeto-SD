@@ -63,11 +63,11 @@ public class IncidentDB {
             }
 
             System.out.println();
-            response.add("lista", incidents);
+            response.add("lista_incidentes", incidents);
 
-            if (response.get("lista").getAsJsonArray().size() == 0) {
+            if (response.get("lista_incidentes").getAsJsonArray().size() == 0) {
                 response = new JsonObject();
-                response.addProperty("codigo", 500);
+                response.addProperty("codigo", 200);
                 response.addProperty("mensagem", "Nenhum incidente encontrado");
             }
         } catch (Exception e) {

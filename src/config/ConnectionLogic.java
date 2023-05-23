@@ -84,8 +84,8 @@ public class ConnectionLogic {
         response = new JsonObject();
 
         json.addProperty("id_operacao", 5);
-        json.addProperty("token", token);
-        json.addProperty("id_usuario", idUsuario);
+        // json.addProperty("token", token);
+        // json.addProperty("id_usuario", idUsuario);
         json.addProperty("rodovia", rodovia);
         json.addProperty("data", data);
         json.addProperty("faixa_km", faixaKm);

@@ -68,14 +68,16 @@ public class FilterIncidentList extends JFrame {
 		System.out.println("Resposta do servidor: " + response);
 
 		if (response.get("codigo").getAsInt() == 200) {
-			System.out.println("Incidentes obtidos com sucesso!");
-			response.get("lista").getAsJsonArray().forEach(incident -> {
-				System.out.println("Rodovia: " + ((JsonObject) incident).get("rodovia").getAsString());
-			});
+			if (response.has("mensagem"))
+				System.out.println(response.get("mensagem").getAsString());
+			else {
+				System.out.println("Incidentes obtidos com sucesso!");
+				response.get("lista_incidentes").getAsJsonArray().forEach(incident -> {
+					System.out.println("Rodovia: " + ((JsonObject) incident).get("rodovia").getAsString());
+				});
+			}
 		} else {
 			System.out.println("Erro ao obter incidentes!");
-			// this.lblError.setText(response.get("mensagem").getAsString());
-			// this.lblError.setVisible(true);
 			return;
 		}
 	}

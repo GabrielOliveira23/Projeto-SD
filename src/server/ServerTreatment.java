@@ -59,7 +59,7 @@ public class ServerTreatment {
             if (!json.get("faixa_km").equals(JsonNull.INSTANCE))
                 incident.setHighwayLane(json.get("faixa_km").getAsString());
 
-        return incident.getIncidents(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
+        return incident.getIncidents();
     }
 
     public static JsonObject userLogout(JsonObject json) {
