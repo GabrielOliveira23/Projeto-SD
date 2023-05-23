@@ -6,6 +6,10 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
+import client.pages.incident.FilterIncidentList;
+import client.pages.incident.IncidentReportPage;
+import client.pages.user.LoginPage;
+import client.pages.user.UpdateUserPage;
 import config.ConnectionLogic;
 
 import java.awt.Font;

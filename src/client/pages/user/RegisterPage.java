@@ -1,4 +1,4 @@
-package client.pages;
+package client.pages.user;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;

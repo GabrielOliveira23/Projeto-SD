@@ -1,9 +1,10 @@
-package client.pages;
+package client.pages.incident;
 
 import javax.swing.JFrame;
 
 import com.google.gson.JsonObject;
 
+import client.pages.HomePage;
 import config.ConnectionLogic;
 import entities.User;
 import utils.GeneralFunctions;

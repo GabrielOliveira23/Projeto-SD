@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.SwingConstants;
 
+import client.pages.user.LoginPage;
 import config.ConnectionLogic;
 
 public class ConnectionPage extends JFrame {

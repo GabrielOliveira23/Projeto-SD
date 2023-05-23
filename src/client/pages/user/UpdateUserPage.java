@@ -1,10 +1,11 @@
-package client.pages;
+package client.pages.user;
 
 import javax.swing.JFrame;
 import javax.swing.JPasswordField;
 
 import com.google.gson.JsonObject;
 
+import client.pages.HomePage;
 import config.ConnectionLogic;
 import entities.User;
 import utils.CaesarCrypt;

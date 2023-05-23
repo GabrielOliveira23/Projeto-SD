@@ -1,4 +1,4 @@
-package client.pages;
+package client.pages.user;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -9,6 +9,7 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
+import client.pages.HomePage;
 import config.ConnectionLogic;
 
 import java.awt.Font;
