@@ -116,7 +116,7 @@ public class FilterIncidentList extends JFrame {
 
 		JLabel lblEntre = new JLabel("Entre km");
 		lblEntre.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblEntre.setBounds(20, 120, 68, 21);
+		lblEntre.setBounds(20, 120, 81, 19);
 		getContentPane().add(lblEntre);
 
 		minKmField = new JTextField();
@@ -126,7 +126,7 @@ public class FilterIncidentList extends JFrame {
 
 		JLabel lblE = new JLabel("e");
 		lblE.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblE.setBounds(210, 120, 10, 20);
+		lblE.setBounds(210, 120, 11, 19);
 		getContentPane().add(lblE);
 
 		maxKmField = new JTextField();

@@ -133,7 +133,7 @@ public class IncidentReportPage extends JFrame {
 
 		JLabel lblData = new JLabel("Data");
 		lblData.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblData.setBounds(40, 200, 40, 19);
+		lblData.setBounds(40, 200, 41, 19);
 		getContentPane().add(lblData);
 
 		highwayField = new JTextField();
@@ -178,7 +178,7 @@ public class IncidentReportPage extends JFrame {
 
 		JLabel lblHora = new JLabel("Hora");
 		lblHora.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblHora.setBounds(220, 200, 40, 19);
+		lblHora.setBounds(220, 200, 41, 19);
 		getContentPane().add(lblHora);
 
 		hourField = new JFormattedTextField(hourMask);
