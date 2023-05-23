@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import entities.Incident;
@@ -14,7 +15,7 @@ public class ServerTreatment {
         user.setName(json.get("nome").getAsString());
         user.setEmail(json.get("email").getAsString());
         user.setPassword(json.get("senha").getAsString());
-        
+
         return user.create();
     }
 
@@ -39,7 +40,7 @@ public class ServerTreatment {
 
     public static JsonObject reportIncident(JsonObject json) {
         Incident incident = new Incident();
-        
+
         incident.setKm(json.get("km").getAsInt());
         incident.setIncidentType(json.get("tipo_incidente").getAsInt());
         incident.setDate(json.get("data").getAsString());
@@ -54,7 +55,9 @@ public class ServerTreatment {
         incident.setDate(json.get("data").getAsString());
         incident.setHighway(json.get("rodovia").getAsString());
         incident.setPeriod(json.get("periodo").getAsInt());
-        incident.setHighwayLane(json.get("faixa_km").getAsString());
+        if (json.has("faixa_km"))
+            if (!json.get("faixa_km").equals(JsonNull.INSTANCE))
+                incident.setHighwayLane(json.get("faixa_km").getAsString());
 
         return incident.getIncidents(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }

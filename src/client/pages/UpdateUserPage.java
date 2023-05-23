@@ -5,7 +5,7 @@ import javax.swing.JPasswordField;
 
 import com.google.gson.JsonObject;
 
-import client.ConnectionLogic;
+import config.ConnectionLogic;
 import entities.User;
 import utils.CaesarCrypt;
 
@@ -90,11 +90,7 @@ public class UpdateUserPage extends JFrame {
 
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(235, 220, 140, 40);
-		btnConfirmar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				confirmForm(homePage);
-			}
-		});
+		btnConfirmar.addActionListener(e -> confirmForm(homePage));
 		getContentPane().add(btnConfirmar);
 
 		JButton btnCancelar = new JButton("Cancelar");

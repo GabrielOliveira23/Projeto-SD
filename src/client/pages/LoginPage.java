@@ -9,11 +9,10 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import config.ConnectionLogic;
 
-import client.ConnectionLogic;
+import java.awt.Font;
+
 import entities.User;
 
 import utils.CaesarCrypt;
@@ -106,19 +105,11 @@ public class LoginPage extends JFrame {
 
         submitButton = new JButton("Entrar");
         submitButton.setBounds(267, 231, 102, 37);
-        submitButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                submitLogin();
-            }
-        });
+        submitButton.addActionListener(e -> submitLogin());
         getContentPane().add(submitButton);
 
         registerButton = new JButton("Cadastro");
-        registerButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                openRegisterPage();
-            }
-        });
+        registerButton.addActionListener(e -> openRegisterPage());
         registerButton.setBounds(139, 231, 102, 37);
         getContentPane().add(registerButton);
     }

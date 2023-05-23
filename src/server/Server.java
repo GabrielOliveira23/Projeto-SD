@@ -173,9 +173,7 @@ public class Server extends Thread {
             in.close();
             clientSocket.close();
         } catch (IOException e) {
-            // response = ServerTreatment.userLogout(userLogin, json); // logout ao quitar
-            // server
-            System.err.println("Problem with Communication Server");
+            System.err.println("Cliente desconectado");
         }
     }
 

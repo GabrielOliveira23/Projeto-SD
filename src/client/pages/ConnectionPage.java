@@ -1,9 +1,6 @@
 package client.pages;
 
 import javax.swing.JFrame;
-
-import client.ConnectionLogic;
-
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -12,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.SwingConstants;
+
+import config.ConnectionLogic;
 
 public class ConnectionPage extends JFrame {
 

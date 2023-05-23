@@ -6,7 +6,7 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
-import client.ConnectionLogic;
+import config.ConnectionLogic;
 
 import java.awt.Font;
 import javax.swing.JPanel;
@@ -95,9 +95,7 @@ public class HomePage extends JFrame {
 
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.setBounds(10, 327, 89, 23);
-		btnLogout.addActionListener(e -> {
-			logout();
-		});
+		btnLogout.addActionListener(e -> logout());
 		getContentPane().add(btnLogout);
 
 		lblError = new JLabel("New label");

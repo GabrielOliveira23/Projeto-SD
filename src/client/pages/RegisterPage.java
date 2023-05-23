@@ -7,7 +7,7 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
-import client.ConnectionLogic;
+import config.ConnectionLogic;
 import utils.CaesarCrypt;
 
 import java.awt.Font;
@@ -105,9 +105,7 @@ public class RegisterPage extends JFrame {
 
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(240, 240, 140, 40);
-		btnConfirmar.addActionListener(e -> {
-			confirmForm();
-		});
+		btnConfirmar.addActionListener(e -> confirmForm());
 		getContentPane().add(btnConfirmar);
 		
 		lblError = new JLabel("Erro");

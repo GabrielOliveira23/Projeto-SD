@@ -149,7 +149,7 @@ public class DataVerify {
     }
 
     private static boolean incidentType(int type) {
-        regex = "^[0-1][0-9]$";
+        regex = "^[0-9]{1,2}$";
         if (Pattern.matches(regex, String.valueOf(type)))
             return true;
         listError = listError.concat(" tipoIncidente");
@@ -157,9 +157,13 @@ public class DataVerify {
     }
 
     public static boolean highwayLane(String highwayLane) {
+        if (highwayLane.equals(""))
+            return true;
+
         regex = "^[0-9]{1,3}-[0-9]{1,3}$";
         if (Pattern.matches(regex, highwayLane))
             return true;
+
         listError = listError.concat(" faixaKm");
         return false;
     }

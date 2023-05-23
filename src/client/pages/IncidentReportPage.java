@@ -5,7 +5,7 @@ import javax.swing.text.MaskFormatter;
 
 import com.google.gson.JsonObject;
 
-import client.ConnectionLogic;
+import config.ConnectionLogic;
 import entities.User;
 import utils.DataVerify;
 import utils.IncidentTypeEnum;
@@ -117,7 +117,7 @@ public class IncidentReportPage extends JFrame {
 
 		JLabel lblRodovia = new JLabel("Rodovia");
 		lblRodovia.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblRodovia.setBounds(20, 80, 69, 19);
+		lblRodovia.setBounds(20, 80, 70, 20);
 		getContentPane().add(lblRodovia);
 
 		JLabel lblKm = new JLabel("Km");
@@ -154,7 +154,7 @@ public class IncidentReportPage extends JFrame {
 		JLabel reportIncidentLabel = new JLabel("Reportar Incidente");
 		reportIncidentLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		reportIncidentLabel.setFont(new Font("URW Bookman L", Font.BOLD, 20));
-		reportIncidentLabel.setBounds(0, 20, 390, 20);
+		reportIncidentLabel.setBounds(0, 20, 374, 20);
 		getContentPane().add(reportIncidentLabel);
 
 		JButton btnCancelar = new JButton("Cancelar");
@@ -167,9 +167,7 @@ public class IncidentReportPage extends JFrame {
 
 		JButton btnConfirmar = new JButton("Confirmar");
 		btnConfirmar.setBounds(200, 245, 110, 35);
-		btnConfirmar.addActionListener(e -> {
-			confirmForm();
-		});
+		btnConfirmar.addActionListener(e -> confirmForm());
 		getContentPane().add(btnConfirmar);
 
 		incidentCombo = new JComboBox<String>();

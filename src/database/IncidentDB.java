@@ -11,6 +11,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
 import config.Database;
+import utils.GeneralFunctions;
 
 public class IncidentDB {
     private static MongoDatabase db = Database.connect();
@@ -47,13 +48,17 @@ public class IncidentDB {
 
             while (cursor.hasNext()) {
                 bson = BsonDocument.parse(cursor.next().toJson());
-                if (bson.get("data").asString().getValue().split(" ")[0].equals(json.get("data").getAsString().split(" ")[0])
+                if (bson.get("data").asString().getValue().split(" ")[0]
+                        .equals(json.get("data").getAsString().split(" ")[0])
                         && bson.get("rodovia").asString().getValue().equals(json.get("rodovia").getAsString())
-                        // && bson.get("periodo").asInt32().getValue() == json.get("periodo").getAsInt()
-                        && (bson.get("km").asInt32().getValue() >= json.get("min_km").getAsInt()
-                                && bson.get("km").asInt32().getValue() <= json.get("max_km").getAsInt())) {
-                    // if (bson.get("id_usuario").asInt32().getValue() == 7) {
-                    incidents.add(gson.fromJson(bson.toJson(), JsonObject.class));
+                        && GeneralFunctions.getPeriod(bson.get("data").asString().getValue()) == json.get("periodo")
+                                .getAsInt()) {
+                    if (json.has("min_km") && json.has("max_km")) {
+                        if ((bson.get("km").asInt32().getValue() >= json.get("min_km").getAsInt()
+                                && bson.get("km").asInt32().getValue() <= json.get("max_km").getAsInt()))
+                            incidents.add(gson.fromJson(bson.toJson(), JsonObject.class));
+                    } else
+                        incidents.add(gson.fromJson(bson.toJson(), JsonObject.class));
                 }
             }
 
