@@ -31,7 +31,7 @@ public class User {
         return json;
     }
 
-    public JsonObject create() {
+    public JsonObject register() {
         JsonObject json = new JsonObject();
         printRegister(this.getName(), this.getEmail(), this.getPassword());
 

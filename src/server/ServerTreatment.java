@@ -16,7 +16,7 @@ public class ServerTreatment {
         user.setEmail(json.get("email").getAsString());
         user.setPassword(json.get("senha").getAsString());
 
-        return user.create();
+        return user.register();
     }
 
     public static JsonObject userUpdate(JsonObject json) {
@@ -46,7 +46,7 @@ public class ServerTreatment {
         incident.setDate(json.get("data").getAsString());
         incident.setHighway(json.get("rodovia").getAsString());
 
-        return incident.create(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
+        return incident.report(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
     public static JsonObject getIncidents(JsonObject json) {

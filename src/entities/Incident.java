@@ -28,7 +28,7 @@ public class Incident {
         this.highwayLane = "";
     }
 
-    public JsonObject create(int userId, String token) {
+    public JsonObject report(int userId, String token) {
         JsonObject json = new JsonObject();
         printCreate();
 
@@ -37,6 +37,7 @@ public class Incident {
         if ((json = DataVerify.reportIncident(this)).get("codigo").getAsInt() == 200) {
             JsonObject incident = new JsonObject();
 
+            incident.addProperty("id_incidente", this.createId());
             incident.addProperty("id_usuario", userId);
             incident.addProperty("token", token);
             incident.addProperty("data", this.getDate());
@@ -88,6 +89,10 @@ public class Incident {
         System.out.println("faixa de km: " + this.getHighwayLane());
         System.out.println("periodo: " + this.getPeriod());
         System.out.println();
+    }
+
+    public int createId() {
+        return IncidentDB.getCount() + 1;
     }
 
     private String getMinKm() {

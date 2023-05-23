@@ -33,6 +33,10 @@ public class IncidentDB {
         return null;
     }
 
+    public static int getCount() {
+        return (int) collection.countDocuments();
+    }
+
     public static void insertOne(JsonObject json) {
         Document document = Document.parse(json.toString());
         collection.insertOne(document);

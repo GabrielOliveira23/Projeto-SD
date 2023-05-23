@@ -15,7 +15,7 @@ public class Database {
             connection = new MongoClient("localhost", 27017);
             db = connection.getDatabase("projeto-sd");
             Logger mongoLogger = Logger.getLogger( "org.mongodb.driver" );
-            mongoLogger.setLevel(Level.SEVERE); // e.g. or Log.WARNING, etc.
+            mongoLogger.setLevel(Level.OFF); // e.g. or Log.WARNING, etc.
             // System.out.println("--- Connected to MongoDB ---");
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());

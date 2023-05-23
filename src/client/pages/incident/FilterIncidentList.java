@@ -73,7 +73,7 @@ public class FilterIncidentList extends JFrame {
 			else {
 				System.out.println("Incidentes obtidos com sucesso!");
 				response.get("lista_incidentes").getAsJsonArray().forEach(incident -> {
-					System.out.println("Rodovia: " + ((JsonObject) incident).get("rodovia").getAsString());
+					System.out.println("id incidente: " + ((JsonObject) incident).get("id_incidente").getAsString());
 				});
 			}
 		} else {
