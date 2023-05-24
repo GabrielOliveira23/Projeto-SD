@@ -61,7 +61,6 @@ public class User {
         managePassword(this.getPassword(), user);
         user.addProperty("token", token);
 
-        // fazer verificacao no banco depois
         if ((json = UserDB.isLogged(idUsuario, token)).get("codigo").getAsInt() == 200)
             if ((json = DataVerify.update(this)).get("codigo").getAsInt() == 200)
                 json = UserDB.update(idUsuario, user);
@@ -72,14 +71,12 @@ public class User {
     public JsonObject logout(int userId, String token) {
         JsonObject json = new JsonObject();
 
-        if ((json = UserDB.isLogged(this.getId(), this.getToken())).get("codigo").getAsInt() == 200)
-            this.setToken(UserDB.updateToken(this.getId(), null));
-
-        if (this.getToken() != null) {
-            json = new JsonObject();
-            json.addProperty("codigo", 500);
-            json.addProperty("mensagem", "Id nao encontrado");
-        }
+        if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
+            if ((UserDB.updateToken(userId, null)) != null) {
+                json = new JsonObject();
+                json.addProperty("codigo", 500);
+                json.addProperty("mensagem", "logout nao realizado");
+            }
 
         return json;
     }

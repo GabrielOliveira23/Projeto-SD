@@ -72,7 +72,7 @@ public class IncidentDB {
 
             if (response.get("lista_incidentes").getAsJsonArray().size() == 0) {
                 response = new JsonObject();
-                response.addProperty("codigo", 200);
+                response.addProperty("codigo", 500);
                 response.addProperty("mensagem", "Nenhum incidente encontrado");
             }
         } catch (Exception e) {

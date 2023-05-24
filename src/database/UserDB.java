@@ -69,12 +69,12 @@ public class UserDB {
 
         if (user == null) {
             response.addProperty("codigo", 500);
-            response.addProperty("mensagem", "Usuário não encontrado");
+            response.addProperty("mensagem", "Usuario nao encontrado");
         } else if (user.get("token").asString().getValue().equals(token)) {
             response.addProperty("codigo", 200);
         } else {
             response.addProperty("codigo", 500);
-            response.addProperty("mensagem", "Usuário não logado");
+            response.addProperty("mensagem", "Token invalido");
         }
         return response;
     }
