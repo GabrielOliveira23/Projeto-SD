@@ -56,7 +56,7 @@ public class ServerTreatment {
         incident.setHighway(json.get("rodovia").getAsString());
         incident.setPeriod(json.get("periodo").getAsInt());
         if (json.has("faixa_km"))
-            if (!json.get("faixa_km").equals(JsonNull.INSTANCE))
+            if (!json.get("faixa_km").equals(JsonNull.INSTANCE) && !json.get("faixa_km").getAsString().equals(""))
                 incident.setHighwayLane(json.get("faixa_km").getAsString());
 
         return incident.getIncidents();
