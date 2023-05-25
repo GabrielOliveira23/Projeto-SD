@@ -46,7 +46,7 @@ public class FilterIncidentListPage extends JFrame {
 	}
 
 	private void getIncidents() {
-		String faixaKm = null;
+		String faixaKm = "";
 
 		if (!minKmField.getText().isEmpty() && !maxKmField.getText().isEmpty())
 			faixaKm = minKmField.getText() + "-" + maxKmField.getText();
@@ -86,7 +86,7 @@ public class FilterIncidentListPage extends JFrame {
 			}
 		} else if (response.get("codigo").getAsInt() == 500) {
 			System.out.println("Erro ao pegar lista de incidentes");
-			System.out.println(response.get("mesnsagem").getAsString());
+			System.out.println(response.get("mensagem").getAsString());
 			return false;
 		} else {
 			System.out.println("Codigo retornado invalido");

@@ -39,13 +39,13 @@ public class RegisterPage extends JFrame {
 				nameField.getText(),
 				emailField.getText(),
 				CaesarCrypt.hashed(new String(passwordField.getPassword())));
-
+		System.out.println("Resposta do servidor: " + response);
 		try {
 			if (response.get("codigo").getAsInt() == 200) {
 				System.out.println("Cadastrado com sucesso!");
 			} else {
 				System.out.println("Erro ao cadastrar!");
-				this.lblError.setText(response.get("message").getAsString());
+				this.lblError.setText(response.get("mensagem").getAsString());
 				this.lblError.setVisible(true);
 				return;
 			}

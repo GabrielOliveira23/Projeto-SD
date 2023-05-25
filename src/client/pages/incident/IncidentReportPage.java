@@ -25,13 +25,14 @@ public class IncidentReportPage extends JFrame {
 	private User user;
 	private HomePage home;
 
-	private JTextField highwayField;
 	private JTextField kmField;
+	private JFormattedTextField highwayField;
 	private JFormattedTextField dateField;
 	private JFormattedTextField hourField;
 	private JComboBox<String> incidentCombo;
 	private MaskFormatter dateMask;
 	private MaskFormatter hourMask;
+	private MaskFormatter highwayMask;
 
 	// IncidentTypeEnum.NEBLINA.getNumero();
 
@@ -43,6 +44,7 @@ public class IncidentReportPage extends JFrame {
 		try {
 			this.dateMask = new MaskFormatter("##/##/####");
 			this.hourMask = new MaskFormatter("##:##");
+			this.highwayMask = new MaskFormatter("UU-###");
 		} catch (ParseException e) {
 			System.out.println("Erro de formatacao da data");
 		}
@@ -136,7 +138,7 @@ public class IncidentReportPage extends JFrame {
 		lblData.setBounds(40, 200, 41, 19);
 		getContentPane().add(lblData);
 
-		highwayField = new JTextField();
+		highwayField = new JFormattedTextField(this.highwayMask);
 		highwayField.setBounds(200, 77, 160, 25);
 		getContentPane().add(highwayField);
 		highwayField.setColumns(10);
