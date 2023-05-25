@@ -23,7 +23,6 @@ public class DataVerify {
 
     public static boolean email(String email, boolean isRegister) {
         if (isRegister) {
-            // verificar se o email já existe no banco de dados
             if (UserDB.getByEmail(email) != null) {
                 System.out.println("Email ja cadastrado!");
                 return false;
@@ -70,23 +69,22 @@ public class DataVerify {
     public static JsonObject update(User user) {
         JsonObject json = new JsonObject();
 
-        if (user.getToken() != null) {
+        if (user.getToken() != null)
             if (user.getName() != "" && name(user.getName()))
-                json.addProperty("codigo", 200);
-            if (user.getEmail() != "" && email(user.getEmail(), false))
-                json.addProperty("codigo", 200);
-            if (user.getPassword() != "" && password(user.getPassword()))
-                json.addProperty("codigo", 200);
-
-            if (!json.has("codigo")) {
-                json.addProperty("codigo", 500);
-                json.addProperty("mensagem", "Token invalido");
-            }
-        } else {
-            json.addProperty("codigo", 500);
+                if (user.getEmail() != "" && email(user.getEmail(), false))
+                    if (user.getPassword() != "" && password(user.getPassword())) {
+                        json.addProperty("codigo", 200);
+                        return json;
+                    } else
+                        json.addProperty("mensagem", "Senha invalida");
+                else
+                    json.addProperty("mensagem", "Email invalido");
+            else
+                json.addProperty("mensagem", "Nome invalido");
+        else
             json.addProperty("mensagem", "Token invalido");
-        }
 
+        json.addProperty("codigo", 500);
         return json;
     }
 

@@ -6,7 +6,7 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
-import client.pages.incident.FilterIncidentList;
+import client.pages.incident.FilterIncidentListPage;
 import client.pages.incident.IncidentReportPage;
 import client.pages.user.LoginPage;
 import client.pages.user.UpdateUserPage;
@@ -93,7 +93,7 @@ public class HomePage extends JFrame {
 		btnIncidentsList.setBounds(350, 70, 150, 34);
 		btnIncidentsList.addActionListener(e -> {
 			this.lblError.setVisible(false);
-			new FilterIncidentList(userRepository, homePage);
+			new FilterIncidentListPage(userRepository, homePage);
 		});
 		panel.add(btnIncidentsList);
 

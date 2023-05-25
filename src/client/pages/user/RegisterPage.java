@@ -39,13 +39,20 @@ public class RegisterPage extends JFrame {
 				nameField.getText(),
 				emailField.getText(),
 				CaesarCrypt.hashed(new String(passwordField.getPassword())));
-		
-		if (response.get("codigo").getAsInt() == 200) {
-			System.out.println("Cadastrado com sucesso!");
-		} else {
-			System.out.println("Erro ao cadastrar!");
-			lblError.setText(response.get("message").getAsString());
-			lblError.setVisible(true);
+
+		try {
+			if (response.get("codigo").getAsInt() == 200) {
+				System.out.println("Cadastrado com sucesso!");
+			} else {
+				System.out.println("Erro ao cadastrar!");
+				this.lblError.setText(response.get("message").getAsString());
+				this.lblError.setVisible(true);
+				return;
+			}
+		} catch (Exception e) {
+			System.out.println("Json enviado pelo servidor esta quebrado");
+			this.lblError.setText("Json recebido invalido");
+			this.lblError.setVisible(true);
 			return;
 		}
 
@@ -107,7 +114,7 @@ public class RegisterPage extends JFrame {
 		btnConfirmar.setBounds(240, 240, 140, 40);
 		btnConfirmar.addActionListener(e -> confirmForm());
 		getContentPane().add(btnConfirmar);
-		
+
 		lblError = new JLabel("Erro");
 		lblError.setHorizontalAlignment(SwingConstants.CENTER);
 		lblError.setBounds(30, 210, 375, 15);
