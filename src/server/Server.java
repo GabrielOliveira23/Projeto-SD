@@ -90,6 +90,7 @@ public class Server extends Thread {
                         if (JsonVerify.register(json)) {
                             response = ServerTreatment.userCreate(json);
                             System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println("\n========================================");
                             client.println(response);
                             break;
                         }
@@ -102,6 +103,7 @@ public class Server extends Thread {
                         if (JsonVerify.updateUser(json)) {
                             response = ServerTreatment.userUpdate(json);
                             System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println("\n========================================");
                             client.println(response);
                             break;
                         }
@@ -114,6 +116,7 @@ public class Server extends Thread {
                         if (JsonVerify.login(json)) {
                             response = ServerTreatment.userLogin(json);
                             System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println("\n========================================");
                             client.println(response);
                             break;
                         }
@@ -126,6 +129,7 @@ public class Server extends Thread {
                         if (JsonVerify.reportIncident(json)) {
                             response = ServerTreatment.reportIncident(json);
                             System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println("\n========================================");
                             client.println(response);
                             break;
                         }
@@ -138,6 +142,7 @@ public class Server extends Thread {
                         if (JsonVerify.getIncidents(json)) {
                             response = ServerTreatment.getIncidents(json);
                             System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println("\n========================================");
                             client.println(response);
                             break;
                         }
@@ -150,6 +155,7 @@ public class Server extends Thread {
                         if (JsonVerify.tokenAndId(json)) {
                             response = ServerTreatment.userLogout(json);
                             System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println("\n========================================");
                             client.println(response);
                             break;
                         }
@@ -161,6 +167,7 @@ public class Server extends Thread {
                     default:
                         json.addProperty("codigo", 500);
                         json.addProperty("mensagem", "Operacao nao implementada");
+                        System.out.println("\n========================================");
                         client.println(json);
                         break;
                 }
