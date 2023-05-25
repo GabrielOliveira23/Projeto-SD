@@ -95,35 +95,14 @@ public class UserDB {
         Bson updates = null;
         response = new JsonObject();
 
-        try {
-            if (!json.get("nome").getAsString().equals("")) {
-                if (!json.get("email").getAsString().equals("")) {
-                    if (json.has("senha"))
-                        updates = Updates.combine(
-                                Updates.set("nome", json.get("nome").getAsString()),
-                                Updates.set("email", json.get("email").getAsString()),
-                                Updates.set("senha", json.get("senha").getAsString()));
-                    else
-                        updates = Updates.combine(
-                                Updates.set("nome", json.get("nome").getAsString()),
-                                Updates.set("email", json.get("email").getAsString()));
-                } else
-                    updates = Updates.set("nome", json.get("nome").getAsString());
-            } else if (!json.get("email").getAsString().equals("")) {
-                if (json.has("senha"))
-                    updates = Updates.combine(
-                            Updates.set("email", json.get("email").getAsString()),
-                            Updates.set("senha", json.get("senha").getAsString()));
-                else
-                    updates = Updates.set("email", json.get("email").getAsString());
-            } else if (json.has("senha"))
-                updates = Updates.set("senha", json.get("senha").getAsString());
+        String name = json.get("nome").getAsString();
+        String email = json.get("email").getAsString();
 
-            if (updates == null) {
-                response.addProperty("codigo", 500);
-                response.addProperty("mensagem", "Nenhum dado foi alterado");
-                return response;
-            }
+        try {
+            updates = Updates.combine(
+                    Updates.set("nome", name),
+                    Updates.set("email", email),
+                    Updates.set("senha", json.get("senha").getAsString()));
 
             collection.updateMany(user, updates, new UpdateOptions().upsert(true));
             String newToken = updateToken(userId, DataVerify.generateToken());
@@ -132,7 +111,9 @@ public class UserDB {
             response.addProperty("token", newToken);
 
             return response;
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             System.out.println("Erro ao atualizar usuário (MongoDB): " + e.getMessage());
             response = new JsonObject();
             response.addProperty("codigo", 500);

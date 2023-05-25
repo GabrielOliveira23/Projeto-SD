@@ -49,12 +49,19 @@ public class UpdateUserPage extends JFrame {
 		JsonObject response = ConnectionLogic.updateUser(userRepository);
 		System.out.println("Resposta do servidor: " + response);
 
-		if (response.get("codigo").getAsInt() == 200) {
-			System.out.println("Atualizado com sucesso!");
-			userRepository.setToken(response.get("token").getAsString());
-		} else {
-			System.out.println("Erro ao atualizar!");
-			this.lblError.setText(response.get("message").getAsString());
+		try {
+			if (response.get("codigo").getAsInt() == 200) {
+				System.out.println("Atualizado com sucesso!");
+				userRepository.setToken(response.get("token").getAsString());
+			} else if (response.get("codigo").getAsInt() == 500) {
+				System.out.println("Erro ao atualizar!");
+				this.lblError.setText(response.get("message").getAsString());
+				this.lblError.setVisible(true);
+				return;
+			}
+		} catch (Exception e) {
+			System.out.println("Json enviado pelo servidor esta quebrado");
+			this.lblError.setText("Json recebido invalido");
 			this.lblError.setVisible(true);
 			return;
 		}

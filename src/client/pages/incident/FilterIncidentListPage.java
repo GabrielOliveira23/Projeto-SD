@@ -20,7 +20,7 @@ import javax.swing.SwingConstants;
 import javax.swing.text.MaskFormatter;
 import javax.swing.JTextField;
 
-public class FilterIncidentList extends JFrame {
+public class FilterIncidentListPage extends JFrame {
 	private User userRepository;
 	private HomePage homePage;
 	private JFormattedTextField highwayField;
@@ -29,7 +29,7 @@ public class FilterIncidentList extends JFrame {
 
 	private MaskFormatter highwayMask;
 
-	public FilterIncidentList(User userRepository, HomePage homePage) {
+	public FilterIncidentListPage(User userRepository, HomePage homePage) {
 		super("Filtrar Incidentes");
 		this.userRepository = userRepository;
 		this.homePage = homePage;
@@ -67,18 +67,30 @@ public class FilterIncidentList extends JFrame {
 				highwayField.getText(), data, faixaKm, periodo);
 		System.out.println("Resposta do servidor: " + response);
 
+		if (!ResponseTreatment(response))
+			return;
+	}
+
+	private boolean ResponseTreatment(JsonObject response) {
 		if (response.get("codigo").getAsInt() == 200) {
-			if (response.has("mensagem"))
-				System.out.println(response.get("mensagem").getAsString());
+			if (response.get("lista_incidentes").getAsJsonArray().size() == 0) {
+				System.out.println("Nenhum incidente encontrado!");
+				return true;
+			}
 			else {
 				System.out.println("Incidentes obtidos com sucesso!");
 				response.get("lista_incidentes").getAsJsonArray().forEach(incident -> {
 					System.out.println("id incidente: " + ((JsonObject) incident).get("id_incidente").getAsString());
 				});
+				return true;
 			}
+		} else if (response.get("codigo").getAsInt() == 500) {
+			System.out.println("Erro ao pegar lista de incidentes");
+			System.out.println(response.get("mesnsagem").getAsString());
+			return false;
 		} else {
-			System.out.println("Erro ao obter incidentes!");
-			return;
+			System.out.println("Codigo retornado invalido");
+			return false;
 		}
 	}
 
