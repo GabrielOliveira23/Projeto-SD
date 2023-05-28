@@ -26,6 +26,14 @@ public enum IncidentTypeEnum {
         return numero;
     }
 
+    public static String getDescription(int incident) {
+        for(IncidentTypeEnum incidentType : IncidentTypeEnum.values()) {
+            if(incidentType.getNumero() == incident)
+                return incidentType.name().replace("_", " ");
+        }
+        return "";
+    }
+
     public static int getEnum(String incident) {
         for(IncidentTypeEnum incidentType : IncidentTypeEnum.values()) {
             if(incidentType.name().equals(incident.replace(" ", "_").toUpperCase()))
