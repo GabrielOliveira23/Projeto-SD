@@ -89,7 +89,6 @@ public class ListIncidentPage extends JFrame {
 		for (JsonElement item : list) {
 			model.addRow(new Object[] {
 					item.getAsJsonObject().get("id_incidente").getAsInt(),
-					item.getAsJsonObject().get("id_usuario").getAsInt(),
 					item.getAsJsonObject().get("rodovia").getAsString(),
 					item.getAsJsonObject().get("km").getAsInt(),
 					IncidentTypeEnum.getDescription(item.getAsJsonObject().get("tipo_incidente").getAsInt()),
@@ -190,14 +189,13 @@ public class ListIncidentPage extends JFrame {
 				new Object[][] {
 				},
 				new String[] {
-						"ID", "Usu\u00E1rio", "Rodovia", "Km", "Tipo de Incidente", "Data"
+						"ID", "Rodovia", "Km", "Tipo de Incidente", "Data"
 				}));
 		incidentTable.getColumnModel().getColumn(0).setPreferredWidth(35);
-		incidentTable.getColumnModel().getColumn(1).setPreferredWidth(92);
-		incidentTable.getColumnModel().getColumn(2).setPreferredWidth(87);
-		incidentTable.getColumnModel().getColumn(3).setPreferredWidth(65);
-		incidentTable.getColumnModel().getColumn(4).setPreferredWidth(234);
-		incidentTable.getColumnModel().getColumn(5).setPreferredWidth(109);
+		incidentTable.getColumnModel().getColumn(1).setPreferredWidth(87);
+		incidentTable.getColumnModel().getColumn(2).setPreferredWidth(65);
+		incidentTable.getColumnModel().getColumn(3).setPreferredWidth(234);
+		incidentTable.getColumnModel().getColumn(4).setPreferredWidth(109);
 		scrollPane.setViewportView(incidentTable);
 	}
 }
