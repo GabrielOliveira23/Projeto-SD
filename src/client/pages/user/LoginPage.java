@@ -51,16 +51,22 @@ public class LoginPage extends JFrame {
         JsonObject response = ConnectionLogic.login(email, password);
         System.out.println("Resposta do servidor: " + response);
 
-        if (response.get("codigo").getAsInt() == 200) {
-            System.out.println("Login realizado com sucesso!");
-            user.setId(response.get("id_usuario").getAsInt());
-            user.setToken(response.get("token").getAsString());
+        try {
+            if (response.get("codigo").getAsInt() == 200) {
+                System.out.println("Login realizado com sucesso!");
+                user.setId(response.get("id_usuario").getAsInt());
+                user.setToken(response.get("token").getAsString());
 
-            new HomePage(user);
-            this.dispose();
-        } else {
+                new HomePage(user);
+                this.dispose();
+            } else {
+                System.out.println("Erro ao realizar login!");
+                this.lblError.setText(response.get("mensagem").getAsString());
+                this.lblError.setVisible(true);
+            }
+        } catch (Exception e) {
             System.out.println("Erro ao realizar login!");
-            this.lblError.setText(response.get("mensagem").getAsString());
+            this.lblError.setText("Erro inesperado!");
             this.lblError.setVisible(true);
         }
     }

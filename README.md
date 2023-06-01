@@ -19,3 +19,6 @@ RA: a2317940
     UserDB: classe que faz a comunicacao com o banco de dados
     Database: conexao com o banco de dados
     CaesarCrypt: classe para encriptografia da senha para que transite de forma segura do cliente ao servidor
+    
+## Banco de dados
+    O banco de dados utilizado foi o MongoDB, o conector dele esta definido na pasta libs
