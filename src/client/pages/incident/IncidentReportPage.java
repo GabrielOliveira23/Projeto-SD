@@ -29,12 +29,10 @@ public class IncidentReportPage extends JFrame {
 	private JFormattedTextField highwayField;
 	private JFormattedTextField dateField;
 	private JFormattedTextField hourField;
-	private JComboBox<String> incidentCombo;
+	private JComboBox<String> incidentTypeBox;
 	private MaskFormatter dateMask;
 	private MaskFormatter hourMask;
 	private MaskFormatter highwayMask;
-
-	// IncidentTypeEnum.NEBLINA.getNumero();
 
 	public IncidentReportPage(User user, HomePage home) {
 		super("Reportar Incidente");
@@ -80,7 +78,7 @@ public class IncidentReportPage extends JFrame {
 				getParsedDate(dateField.getText()),
 				highwayField.getText(),
 				Integer.parseInt(kmField.getText()),
-				IncidentTypeEnum.getEnum(incidentCombo.getSelectedItem().toString()));
+				IncidentTypeEnum.getEnum(incidentTypeBox.getSelectedItem().toString()));
 
 		System.out.println("Resposta servidor: " + response);
 
@@ -96,20 +94,20 @@ public class IncidentReportPage extends JFrame {
 	}
 
 	private void addIncidents() {
-		this.incidentCombo.addItem("Vento");
-		this.incidentCombo.addItem("Chuva");
-		this.incidentCombo.addItem("Neblina");
-		this.incidentCombo.addItem("Neve");
-		this.incidentCombo.addItem("Gelo na pista");
-		this.incidentCombo.addItem("Granizo");
-		this.incidentCombo.addItem("Transito parado");
-		this.incidentCombo.addItem("Filas de transito");
-		this.incidentCombo.addItem("Transito lento");
-		this.incidentCombo.addItem("Acidente desconhecido");
-		this.incidentCombo.addItem("Incidente desconhecido");
-		this.incidentCombo.addItem("Trabalhos na estrada");
-		this.incidentCombo.addItem("Via interditada");
-		this.incidentCombo.addItem("Pista interditada");
+		this.incidentTypeBox.addItem("Vento");
+		this.incidentTypeBox.addItem("Chuva");
+		this.incidentTypeBox.addItem("Neblina");
+		this.incidentTypeBox.addItem("Neve");
+		this.incidentTypeBox.addItem("Gelo na pista");
+		this.incidentTypeBox.addItem("Granizo");
+		this.incidentTypeBox.addItem("Transito parado");
+		this.incidentTypeBox.addItem("Filas de transito");
+		this.incidentTypeBox.addItem("Transito lento");
+		this.incidentTypeBox.addItem("Acidente desconhecido");
+		this.incidentTypeBox.addItem("Incidente desconhecido");
+		this.incidentTypeBox.addItem("Trabalhos na estrada");
+		this.incidentTypeBox.addItem("Via interditada");
+		this.incidentTypeBox.addItem("Pista interditada");
 	}
 
 	private void initComponents() {
@@ -173,10 +171,10 @@ public class IncidentReportPage extends JFrame {
 		btnConfirmar.addActionListener(e -> confirmForm());
 		getContentPane().add(btnConfirmar);
 
-		incidentCombo = new JComboBox<String>();
-		incidentCombo.setBounds(200, 157, 160, 25);
+		incidentTypeBox = new JComboBox<String>();
+		incidentTypeBox.setBounds(200, 157, 160, 25);
 		this.addIncidents();
-		getContentPane().add(incidentCombo);
+		getContentPane().add(incidentTypeBox);
 
 		JLabel lblHora = new JLabel("Hora");
 		lblHora.setFont(new Font("Dialog", Font.BOLD, 16));

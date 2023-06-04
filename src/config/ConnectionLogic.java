@@ -107,6 +107,20 @@ public class ConnectionLogic {
         return getResponse();
     }
 
+    public static JsonObject deleteIncident(String token, int idUsuario, int idIncidente) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 7);
+        json.addProperty("token", token);
+        json.addProperty("id_usuario", idUsuario);
+        json.addProperty("id_incidente", idIncidente);
+
+        sendToServer();
+
+        return getResponse();
+    }
+
     public static JsonObject logout(String token, int idUsuario) {
         json = new JsonObject();
         response = new JsonObject();
@@ -114,6 +128,25 @@ public class ConnectionLogic {
         json.addProperty("id_operacao", 9);
         json.addProperty("token", token);
         json.addProperty("id_usuario", idUsuario);
+
+        sendToServer();
+
+        return getResponse();
+    }
+
+    public static JsonObject updateIncident(String token, int idUsuario, int idIncidente, String data, String rodovia,
+            int km, int tipoIncidente) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 8);
+        json.addProperty("token", token);
+        json.addProperty("id_usuario", idUsuario);
+        json.addProperty("id_incidente", idIncidente);
+        json.addProperty("data", data);
+        json.addProperty("rodovia", rodovia);
+        json.addProperty("km", km);
+        json.addProperty("tipo_incidente", tipoIncidente);
 
         sendToServer();
 

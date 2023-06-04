@@ -112,12 +112,12 @@ public class ListIncidentPage extends JFrame {
 		JLabel lblTitle = new JLabel("Lista de Incidentes");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblTitle.setBounds(0, 20, 634, 20);
+		lblTitle.setBounds(0, 20, 784, 20);
 		getContentPane().add(lblTitle);
 
 		JLabel lblRodovia = new JLabel("Rodovia");
 		lblRodovia.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblRodovia.setBounds(20, 90, 70, 20);
+		lblRodovia.setBounds(20, 90, 80, 20);
 		getContentPane().add(lblRodovia);
 
 		highwayField = new JFormattedTextField(highwayMask);
@@ -128,7 +128,7 @@ public class ListIncidentPage extends JFrame {
 
 		JLabel lblEntre = new JLabel("Km Mín");
 		lblEntre.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblEntre.setBounds(20, 139, 57, 21);
+		lblEntre.setBounds(20, 139, 70, 21);
 		getContentPane().add(lblEntre);
 
 		minKmField = new JTextField();
@@ -145,7 +145,7 @@ public class ListIncidentPage extends JFrame {
 
 		JLabel lblKmMax = new JLabel("Km Max");
 		lblKmMax.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblKmMax.setBounds(20, 195, 61, 21);
+		lblKmMax.setBounds(20, 195, 70, 21);
 		getContentPane().add(lblKmMax);
 
 		JButton btnCancelar = new JButton("Cancelar");
