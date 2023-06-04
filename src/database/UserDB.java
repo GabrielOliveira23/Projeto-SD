@@ -111,9 +111,7 @@ public class UserDB {
             response.addProperty("token", newToken);
 
             return response;
-        } catch (
-
-        Exception e) {
+        } catch (Exception e) {
             System.out.println("Erro ao atualizar usuário (MongoDB): " + e.getMessage());
             response = new JsonObject();
             response.addProperty("codigo", 500);

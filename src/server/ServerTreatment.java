@@ -8,6 +8,7 @@ import entities.User;
 
 public class ServerTreatment {
     private static User user;
+    private static Incident incident;
 
     public static JsonObject userCreate(JsonObject json) {
         user = new User();
@@ -39,7 +40,7 @@ public class ServerTreatment {
     }
 
     public static JsonObject reportIncident(JsonObject json) {
-        Incident incident = new Incident();
+        incident = new Incident();
 
         incident.setKm(json.get("km").getAsInt());
         incident.setIncidentType(json.get("tipo_incidente").getAsInt());
@@ -50,7 +51,7 @@ public class ServerTreatment {
     }
 
     public static JsonObject getIncidents(JsonObject json) {
-        Incident incident = new Incident();
+        incident = new Incident();
 
         incident.setDate(json.get("data").getAsString());
         incident.setHighway(json.get("rodovia").getAsString());
@@ -62,8 +63,12 @@ public class ServerTreatment {
         return incident.getIncidents();
     }
 
+    public static JsonObject getUserIncidents(JsonObject json) {
+        return new Incident().getUserIncidents(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
+    }
+
     public static JsonObject userLogout(JsonObject json) {
-        return user.logout(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
+        return new User().logout(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
     public static JsonObject jsonError(String message) {

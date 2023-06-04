@@ -84,12 +84,23 @@ public class ConnectionLogic {
         response = new JsonObject();
 
         json.addProperty("id_operacao", 5);
-        // json.addProperty("token", token);
-        // json.addProperty("id_usuario", idUsuario);
         json.addProperty("rodovia", rodovia);
         json.addProperty("data", data);
         json.addProperty("faixa_km", faixaKm);
         json.addProperty("periodo", periodo);
+
+        sendToServer();
+
+        return getResponse();
+    }
+
+    public static JsonObject getUserIncidents(String token, int idUsuario) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 6);
+        json.addProperty("token", token);
+        json.addProperty("id_usuario", idUsuario);
 
         sendToServer();
 

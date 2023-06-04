@@ -17,4 +17,10 @@ public class GeneralFunctions {
 
         return -1;
     }
+
+	public static String getParsedDate(String date) {
+		String[] dateSplit = date.split(" ");
+		String[] dateSplit2 = dateSplit[0].split("-");
+		return dateSplit2[2] + "/" + dateSplit2[1] + "/" + dateSplit2[0];
+	}
 }

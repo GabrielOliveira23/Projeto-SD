@@ -3,6 +3,7 @@ package entities;
 import com.google.gson.JsonObject;
 
 import database.IncidentDB;
+import database.UserDB;
 import utils.DataVerify;
 
 public class Incident {
@@ -69,6 +70,15 @@ public class Incident {
 
             json = IncidentDB.getMany(incident);
         }
+
+        return json;
+    }
+
+    public JsonObject getUserIncidents(int userId, String token) {
+        JsonObject json = new JsonObject();
+
+        if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
+            json = IncidentDB.getManyByUser(userId);
 
         return json;
     }

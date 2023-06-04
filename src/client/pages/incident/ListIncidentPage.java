@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import client.JsonClientTreatment;
 import client.pages.HomePage;
 import config.ConnectionLogic;
 import entities.User;
@@ -75,7 +76,7 @@ public class ListIncidentPage extends JFrame {
 				highwayField.getText(), data, faixaKm, periodo);
 		System.out.println("Resposta do servidor: " + response);
 
-		if (!ResponseTreatment(response))
+		if (!JsonClientTreatment.responseTreatment(response))
 			return;
 
 		fillTable(response.get("lista_incidentes").getAsJsonArray());
@@ -92,27 +93,8 @@ public class ListIncidentPage extends JFrame {
 					item.getAsJsonObject().get("rodovia").getAsString(),
 					item.getAsJsonObject().get("km").getAsInt(),
 					IncidentTypeEnum.getDescription(item.getAsJsonObject().get("tipo_incidente").getAsInt()),
-					getParsedDate(item.getAsJsonObject().get("data").getAsString())
+					GeneralFunctions.getParsedDate(item.getAsJsonObject().get("data").getAsString())
 			});
-		}
-	}
-
-	private String getParsedDate(String date) {
-		String[] dateSplit = date.split(" ");
-		String[] dateSplit2 = dateSplit[0].split("-");
-		return dateSplit2[2] + "/" + dateSplit2[1] + "/" + dateSplit2[0];
-	}
-
-	private boolean ResponseTreatment(JsonObject response) {
-		if (response.get("codigo").getAsInt() == 200) {
-			return true;
-		} else if (response.get("codigo").getAsInt() == 500) {
-			System.out.println("Erro ao pegar lista de incidentes");
-			System.out.println(response.get("mensagem").getAsString());
-			return false;
-		} else {
-			System.out.println("Codigo retornado invalido");
-			return false;
 		}
 	}
 
@@ -127,11 +109,11 @@ public class ListIncidentPage extends JFrame {
 		btnConfirmar.addActionListener(e -> getIncidents());
 		getContentPane().add(btnConfirmar);
 
-		JLabel lblEspecificarIncidente = new JLabel("Lista de Incidentes");
-		lblEspecificarIncidente.setHorizontalAlignment(SwingConstants.CENTER);
-		lblEspecificarIncidente.setFont(new Font("Dialog", Font.BOLD, 20));
-		lblEspecificarIncidente.setBounds(0, 20, 634, 20);
-		getContentPane().add(lblEspecificarIncidente);
+		JLabel lblTitle = new JLabel("Lista de Incidentes");
+		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitle.setFont(new Font("Dialog", Font.BOLD, 20));
+		lblTitle.setBounds(0, 20, 634, 20);
+		getContentPane().add(lblTitle);
 
 		JLabel lblRodovia = new JLabel("Rodovia");
 		lblRodovia.setFont(new Font("Dialog", Font.BOLD, 16));

@@ -7,6 +7,7 @@ import javax.swing.SwingConstants;
 import com.google.gson.JsonObject;
 
 import client.pages.incident.ListIncidentPage;
+import client.pages.incident.MyIncidentsPage;
 import client.pages.incident.IncidentReportPage;
 import client.pages.user.LoginPage;
 import client.pages.user.UpdateUserPage;
@@ -97,6 +98,16 @@ public class HomePage extends JFrame {
 			setVisible(false);
 		});
 		panel.add(btnIncidentsList);
+		
+		JButton btnMeusIncidentes = new JButton("Meus Incidentes");
+		btnMeusIncidentes.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		btnMeusIncidentes.setBounds(93, 70, 150, 34);
+		btnMeusIncidentes.addActionListener(e -> {
+			this.lblError.setVisible(false);
+			new MyIncidentsPage(userRepository, homePage);
+			setVisible(false);
+		});
+		panel.add(btnMeusIncidentes);
 
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.setBounds(10, 327, 89, 23);

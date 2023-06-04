@@ -80,4 +80,34 @@ public class IncidentDB {
 
         return response;
     }
+
+    public static JsonObject getManyByUser(int userId) {
+        response = new JsonObject();
+        JsonArray incidents = new JsonArray();
+
+        MongoCursor<Document> cursor = collection.find().iterator();
+
+        try {
+            response.addProperty("codigo", 200);
+
+            while (cursor.hasNext()) {
+                bson = BsonDocument.parse(cursor.next().toJson());
+                if (bson.get("id_usuario").asInt32().getValue() == userId) {
+                    incidents.add(gson.fromJson(bson.toJson(), JsonObject.class));
+                }
+            }
+
+            System.out.println();
+            response.add("lista_incidentes", incidents);
+        } catch (Exception e) {
+            response = new JsonObject();
+            System.out.println("MongoDB error: " + e.getMessage());
+            response.addProperty("codigo", 500);
+            response.addProperty("mensagem", "Erro ao buscar incidentes");
+        } finally {
+            cursor.close();
+        }
+
+        return response;
+    }
 }
