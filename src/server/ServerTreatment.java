@@ -71,6 +71,11 @@ public class ServerTreatment {
         return new User().logout(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
+    public static JsonObject removeIncident(JsonObject json) {
+        return new Incident().removeIncident(json.get("id_usuario").getAsInt(), json.get("token").getAsString(),
+                json.get("id_incidente").getAsInt());
+    }
+
     public static JsonObject jsonError(String message) {
         JsonObject json = new JsonObject();
 

@@ -42,6 +42,10 @@ public class IncidentDB {
         collection.insertOne(document);
     }
 
+    public static void deleteOne(int incidentId) {
+        collection.deleteOne(getIncidentById(incidentId));
+    }
+
     public static JsonObject getMany(JsonObject json) {
         response = new JsonObject();
         JsonArray incidents = new JsonArray();

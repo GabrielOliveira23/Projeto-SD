@@ -85,6 +85,18 @@ public class JsonVerify {
         return false;
     }
 
+    public static boolean removeIncident(JsonObject json) {
+        try {
+            if (hasTokenAndId(json))
+                if (json.has("id_incidente"))
+                    if (!json.get("id_incidente").equals(JsonNull.INSTANCE))
+                        return true;
+        } catch (Exception e) {
+            System.out.println("Erro ao verificar dados de remover incidente");
+        }
+        return false;
+    }
+
     public static boolean hasTokenAndId(JsonObject json) {
         try {
             if (json.has("token") && json.has("id_usuario")) {
@@ -93,7 +105,7 @@ public class JsonVerify {
                     return true;
             }
         } catch (Exception e) {
-            System.out.println("Erro ao verificar dados de logout");
+            System.out.println("Erro ao verificar dados de usuário, id ou token invalido");
         }
         return false;
     }

@@ -83,6 +83,15 @@ public class Incident {
         return json;
     }
 
+    public JsonObject removeIncident(int userId, String token, int idIncident) {
+        JsonObject json = new JsonObject();
+
+        if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
+            IncidentDB.deleteOne(idIncident);
+
+        return json;
+    }
+
     private void printCreate() {
         System.out.println("Executando operacao de criacao de incidente...");
         System.out.println("data: " + this.getDate());
