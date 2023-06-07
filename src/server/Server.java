@@ -199,20 +199,21 @@ public class Server extends Thread {
                     }
 
                     case 10: {
-                        // if (JsonVerify.hasTokenAndId(json)) {
-                        //     response = ServerTreatment.userDelete(json);
-                        //     System.out.println("Enviando p/ cliente: " + response);
-                        //     System.out.println(
-                        //             "\n================================================================================");
-                        //     client.println(response);
-                        //     break;
-                        // }
+                        if (JsonVerify.hasTokenAndId(json)) {
+                            response = ServerTreatment.updateIncident(json);
+                            System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println(
+                                    "\n================================================================================");
+                            client.println(response);
+                            break;
+                        }
 
                         response = sendInvalidDataError(client);
                         break;
                     }
 
                     default:
+                        json = new JsonObject();
                         json.addProperty("codigo", 500);
                         json.addProperty("mensagem", "Operacao nao implementada");
                         System.out.println(

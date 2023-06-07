@@ -67,6 +67,18 @@ public class ServerTreatment {
         return new Incident().getUserIncidents(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }
 
+    public static JsonObject updateIncident(JsonObject json) {
+        incident = new Incident();
+
+        incident.setKm(json.get("km").getAsInt());
+        incident.setIncidentType(json.get("tipo_incidente").getAsInt());
+        incident.setDate(json.get("data").getAsString());
+        incident.setHighway(json.get("rodovia").getAsString());
+
+        return incident.updateIncident(json.get("id_usuario").getAsInt(), json.get("id_incidente").getAsInt(),
+                json.get("token").getAsString());
+    }
+
     public static JsonObject userLogout(JsonObject json) {
         return new User().logout(json.get("id_usuario").getAsInt(), json.get("token").getAsString());
     }

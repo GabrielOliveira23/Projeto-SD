@@ -57,14 +57,16 @@ public class MyIncidentsPage extends JFrame {
 		model.fireTableDataChanged();
 
 		for (JsonElement item : list) {
-			fillBox(item.getAsJsonObject().get("id_incidente").getAsInt());
-			model.addRow(new Object[] {
-					item.getAsJsonObject().get("id_incidente").getAsInt(),
-					item.getAsJsonObject().get("rodovia").getAsString(),
-					item.getAsJsonObject().get("km").getAsInt(),
-					IncidentTypeEnum.getDescription(item.getAsJsonObject().get("tipo_incidente").getAsInt()),
-					GeneralFunctions.getParsedDate(item.getAsJsonObject().get("data").getAsString())
-			});
+			if (item.getAsJsonObject().has("id_incidente")) {
+				fillBox(item.getAsJsonObject().get("id_incidente").getAsInt());
+				model.addRow(new Object[] {
+						item.getAsJsonObject().get("id_incidente").getAsInt(),
+						item.getAsJsonObject().get("rodovia").getAsString(),
+						item.getAsJsonObject().get("km").getAsInt(),
+						IncidentTypeEnum.getDescription(item.getAsJsonObject().get("tipo_incidente").getAsInt()),
+						GeneralFunctions.getParsedDate(item.getAsJsonObject().get("data").getAsString())
+				});
+			}
 		}
 	}
 
@@ -133,7 +135,7 @@ public class MyIncidentsPage extends JFrame {
 		JButton btnAtualizar = new JButton("Atualizar");
 		btnAtualizar.addActionListener(e -> {
 			int id = Integer.parseInt(this.idIncidentBox.getSelectedItem().toString());
-			new UpdateIncidentPage(userRepository, this, id);
+			new IncidentUpdatePage(userRepository, this, id);
 			this.dispose();
 		});
 		btnAtualizar.setBounds(55, 190, 110, 35);

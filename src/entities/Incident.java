@@ -83,11 +83,40 @@ public class Incident {
         return json;
     }
 
+    public JsonObject updateIncident(int userId, int idIncident, String token) {
+        JsonObject response = new JsonObject();
+
+        try {
+            if ((response = DataVerify.updateIncident(this)).get("codigo").getAsInt() == 200)
+                if ((response = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200) {
+                    JsonObject incident = new JsonObject();
+
+                    incident.addProperty("data", this.getDate());
+                    incident.addProperty("rodovia", this.getHighway());
+                    incident.addProperty("km", this.getKm());
+                    incident.addProperty("tipo_incidente", this.getIncidentType());
+
+                    IncidentDB.update(idIncident, incident);
+                    response.addProperty("codigo", 200);
+                }
+        } catch (Exception e) {
+            response.addProperty("codigo", 500);
+            response.addProperty("mensagem", "Erro interno ao atualizar incidente");
+        }
+
+        return response;
+    }
+
     public JsonObject removeIncident(int userId, String token, int idIncident) {
         JsonObject json = new JsonObject();
 
-        if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
-            IncidentDB.deleteOne(idIncident);
+        try {
+            if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
+                IncidentDB.deleteOne(idIncident);
+        } catch (Exception e) {
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Erro interno ao remover incidente");
+        }
 
         return json;
     }

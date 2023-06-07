@@ -3,6 +3,8 @@ package client.pages.incident;
 import java.awt.Font;
 import java.text.ParseException;
 
+import com.google.gson.JsonObject;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
@@ -12,14 +14,12 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.text.MaskFormatter;
 
-import com.google.gson.JsonObject;
-
 import config.ConnectionLogic;
 import entities.User;
 import utils.DataVerify;
 import utils.IncidentTypeEnum;
 
-public class UpdateIncidentPage extends JFrame {
+public class IncidentUpdatePage extends JFrame {
     private int idIncident;
     private User userRepository;
     private JFrame previousPage;
@@ -34,7 +34,7 @@ public class UpdateIncidentPage extends JFrame {
     private MaskFormatter highwayMask;
     // private JLabel lblError;
 
-    public UpdateIncidentPage(User user, JFrame myIncidentPage, int idIncident) {
+    public IncidentUpdatePage(User user, JFrame myIncidentPage, int idIncident) {
         super("Atualizar Incidente");
         this.userRepository = user;
         this.previousPage = myIncidentPage;

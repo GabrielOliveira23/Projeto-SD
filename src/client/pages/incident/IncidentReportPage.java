@@ -5,12 +5,6 @@ import javax.swing.text.MaskFormatter;
 
 import com.google.gson.JsonObject;
 
-import client.pages.HomePage;
-import config.ConnectionLogic;
-import entities.User;
-import utils.DataVerify;
-import utils.IncidentTypeEnum;
-
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.text.ParseException;
@@ -20,6 +14,12 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
+
+import client.pages.HomePage;
+import config.ConnectionLogic;
+import entities.User;
+import utils.DataVerify;
+import utils.IncidentTypeEnum;
 
 public class IncidentReportPage extends JFrame {
 	private User user;

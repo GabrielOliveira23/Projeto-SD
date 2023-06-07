@@ -188,6 +188,20 @@ public class DataVerify {
         return json;
     }
 
+    public static JsonObject updateIncident(Incident incident) {
+        JsonObject json = new JsonObject();
+        if (date(incident.getDate())
+                && highway(incident.getHighway())
+                && km(incident.getKm())
+                && incidentType(incident.getIncidentType()))
+            json.addProperty("codigo", 200);
+        else {
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", listError);
+        }
+        return json;
+    }
+
     public static JsonObject reportIncident(Incident incident) {
         JsonObject json = new JsonObject();
         if (date(incident.getDate())

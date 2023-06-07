@@ -2,6 +2,7 @@ package database;
 
 import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -9,7 +10,8 @@ import com.google.gson.JsonObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
-
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 
 import config.Database;
 import utils.GeneralFunctions;
@@ -26,9 +28,8 @@ public class IncidentDB {
 
         while (cursor.hasNext()) {
             bson = BsonDocument.parse(cursor.next().toJson());
-            if (bson.get("id_incidente").asInt32().getValue() == incidentId) {
+            if (bson.get("id_incidente").asInt32().getValue() == incidentId)
                 return bson;
-            }
         }
         return null;
     }
@@ -42,8 +43,33 @@ public class IncidentDB {
         collection.insertOne(document);
     }
 
+    public static JsonObject update(int incidentId, JsonObject json) {
+        BsonDocument incident = getIncidentById(incidentId);
+        Bson updates = null;
+        response = new JsonObject();
+
+        String rodovia = json.get("rodovia").getAsString();
+        int tipoIncidente = json.get("tipo_incidente").getAsInt();
+        String data = json.get("data").getAsString();
+        int km = json.get("km").getAsInt();
+
+        updates = Updates.combine(
+                Updates.set("rodovia", rodovia),
+                Updates.set("km", km),
+                Updates.set("tipo_incidente", tipoIncidente),
+                Updates.set("data", data));
+
+        collection.updateMany(incident, updates, new UpdateOptions().upsert(true));
+
+        response.addProperty("codigo", 200);
+
+        return response;
+    }
+
     public static void deleteOne(int incidentId) {
-        collection.deleteOne(getIncidentById(incidentId));
+        BsonDocument bson = getIncidentById(incidentId);
+        if (bson != null)
+            collection.deleteOne(bson);
     }
 
     public static JsonObject getMany(JsonObject json) {

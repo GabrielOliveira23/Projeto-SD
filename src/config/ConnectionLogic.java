@@ -139,7 +139,7 @@ public class ConnectionLogic {
         json = new JsonObject();
         response = new JsonObject();
 
-        json.addProperty("id_operacao", 8);
+        json.addProperty("id_operacao", 10);
         json.addProperty("token", token);
         json.addProperty("id_usuario", idUsuario);
         json.addProperty("id_incidente", idIncidente);
