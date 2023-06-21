@@ -122,7 +122,7 @@ public class DataVerify {
         return json;
     }
 
-    public static boolean date(String date) {
+    private static boolean date(String date) {
         regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
         if (Pattern.matches(regex, date))
             return true;
@@ -130,7 +130,7 @@ public class DataVerify {
         return false;
     }
 
-    private static boolean highway(String highway) {
+    public static boolean highway(String highway) {
         regex = "^[A-Za-z]{2}-\\d{3}$";
         if (Pattern.matches(regex, highway))
             return true;
@@ -138,7 +138,7 @@ public class DataVerify {
         return false;
     }
 
-    private static boolean km(int km) {
+    public static boolean km(int km) {
         regex = "^[0-9]{1,3}$";
         if (Pattern.matches(regex, String.valueOf(km)))
             return true;

@@ -18,14 +18,13 @@ import utils.IncidentTypeEnum;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
-import javax.swing.JComboBox;
 import javax.swing.JButton;
 
 public class MyIncidentsPage extends JFrame {
 	private JTable incidentTable;
-	private JComboBox<Integer> idIncidentBox;
 
 	private User userRepository;
 	private JFrame previousPage;
@@ -39,7 +38,7 @@ public class MyIncidentsPage extends JFrame {
 		this.setVisible(true);
 	}
 
-	private void getIncidents() {
+	public void getIncidents() {
 		JsonObject response = ConnectionLogic.getUserIncidents(
 				userRepository.getToken(), userRepository.getId());
 
@@ -58,7 +57,6 @@ public class MyIncidentsPage extends JFrame {
 
 		for (JsonElement item : list) {
 			if (item.getAsJsonObject().has("id_incidente")) {
-				fillBox(item.getAsJsonObject().get("id_incidente").getAsInt());
 				model.addRow(new Object[] {
 						item.getAsJsonObject().get("id_incidente").getAsInt(),
 						item.getAsJsonObject().get("rodovia").getAsString(),
@@ -70,21 +68,42 @@ public class MyIncidentsPage extends JFrame {
 		}
 	}
 
-	private void fillBox(int id) {
-		this.idIncidentBox.addItem(id);
+	private void removeIncident() {
+		try {
+			if (incidentTable.getSelectedRow() == -1)
+				throw new Exception("Selecione um incidente para remover!");
+
+			int id = (int) incidentTable.getValueAt(incidentTable.getSelectedRow(), 0);
+			JsonObject response = ConnectionLogic.deleteIncident(
+					userRepository.getToken(), userRepository.getId(), id);
+
+			System.out.println("Resposta do servidor: " + response);
+
+			if (!JsonClientTreatment.responseTreatment(response))
+				return;
+
+			this.getIncidents();
+		} catch (Exception e) {
+			if (e.getMessage() == null || e.getMessage().isEmpty())
+				e = new Exception("Erro ao remover incidente!");
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
-	private void removeIncident() {
-		int id = (int) this.idIncidentBox.getSelectedItem();
-		JsonObject response = ConnectionLogic.deleteIncident(
-				userRepository.getToken(), userRepository.getId(), id);
-
-		System.out.println("Resposta do servidor: " + response);
-
-		if (!JsonClientTreatment.responseTreatment(response))
-			return;
-
-		this.getIncidents();
+	private void updateIncident() {
+		try {
+			if (incidentTable.getSelectedRow() == -1)
+				throw new Exception("Selecione um incidente para atualizar!");
+			int id = (int) incidentTable.getValueAt(incidentTable.getSelectedRow(), 0);
+			new IncidentUpdatePage(userRepository, this, id);
+			this.dispose();
+		} catch (Exception e) {
+			if (e.getMessage() == null || e.getMessage().isEmpty())
+				e = new Exception("Erro ao atualizar incidente!");
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void initComponents() {
@@ -123,33 +142,22 @@ public class MyIncidentsPage extends JFrame {
 		lblTitle.setBounds(0, 20, 784, 20);
 		getContentPane().add(lblTitle);
 
-		idIncidentBox = new JComboBox<Integer>();
-		idIncidentBox.setBounds(154, 113, 60, 20);
-		getContentPane().add(idIncidentBox);
-
-		JLabel lblIdIncidente = new JLabel("ID Incidente");
-		lblIdIncidente.setFont(new Font("Dialog", Font.BOLD, 16));
-		lblIdIncidente.setBounds(20, 110, 110, 21);
-		getContentPane().add(lblIdIncidente);
-
 		JButton btnAtualizar = new JButton("Atualizar");
 		btnAtualizar.addActionListener(e -> {
-			int id = Integer.parseInt(this.idIncidentBox.getSelectedItem().toString());
-			new IncidentUpdatePage(userRepository, this, id);
-			this.dispose();
+			updateIncident();
 		});
-		btnAtualizar.setBounds(55, 190, 110, 35);
+		btnAtualizar.setBounds(55, 149, 110, 35);
 		getContentPane().add(btnAtualizar);
 
 		JButton btnRemover = new JButton("Remover");
-		btnRemover.setBounds(55, 240, 110, 35);
+		btnRemover.setBounds(55, 199, 110, 35);
 		btnRemover.addActionListener(e -> {
 			removeIncident();
 		});
 		getContentPane().add(btnRemover);
 
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(55, 290, 110, 35);
+		btnCancelar.setBounds(55, 249, 110, 35);
 		btnCancelar.addActionListener(e -> {
 			this.dispose();
 			this.previousPage.setVisible(true);

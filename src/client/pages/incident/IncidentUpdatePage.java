@@ -10,6 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.text.MaskFormatter;
@@ -18,11 +19,12 @@ import config.ConnectionLogic;
 import entities.User;
 import utils.DataVerify;
 import utils.IncidentTypeEnum;
+import utils.RegexVerify;
 
 public class IncidentUpdatePage extends JFrame {
     private int idIncident;
     private User userRepository;
-    private JFrame previousPage;
+    private MyIncidentsPage previousPage;
 
     private JTextField kmField;
     private JFormattedTextField highwayField;
@@ -34,7 +36,7 @@ public class IncidentUpdatePage extends JFrame {
     private MaskFormatter highwayMask;
     // private JLabel lblError;
 
-    public IncidentUpdatePage(User user, JFrame myIncidentPage, int idIncident) {
+    public IncidentUpdatePage(User user, MyIncidentsPage myIncidentPage, int idIncident) {
         super("Atualizar Incidente");
         this.userRepository = user;
         this.previousPage = myIncidentPage;
@@ -58,40 +60,44 @@ public class IncidentUpdatePage extends JFrame {
     }
 
     private void confirmForm() {
-        if (highwayField.getText().isEmpty()
-                || kmField.getText().isEmpty()
-                || dateField.getText().isEmpty()) {
-            System.out.println("Preencha todos os campos!");
-            return;
-        } else if (Integer.parseInt(kmField.getText()) < 0) {
-            System.out.println("Km invalido!");
-            return;
-        } else if (!DataVerify.hour(hourField.getText().split(":")[0])) {
-            System.out.println("Hora invalida!");
-            return;
-        } else if (!DataVerify.minute(hourField.getText().split(":")[1])) {
-            System.out.println("minuto invalida!");
-            return;
+        try {
+            if (highwayField.getText().equals("  -   ")
+                    || kmField.getText().isEmpty()
+                    || dateField.getText().equals("  /  /    ")) {
+                throw new Exception("Preencha todos os campos!");
+            } else if (!RegexVerify.matchesRegex("^[0-9]{1,3}$", kmField.getText())) {
+                throw new Exception("Km invalido!");
+            } else if (!DataVerify.hour(hourField.getText().split(":")[0])
+                    || !DataVerify.minute(hourField.getText().split(":")[1])) {
+                throw new Exception("Hora invalida!");
+            } else if (!RegexVerify.matchesRegex("^\\d{2}/\\d{2}/\\d{4}$", dateField.getText())) {
+                throw new Exception("Data invalida!");
+            }
+
+            JsonObject response = ConnectionLogic.updateIncident(
+                    userRepository.getToken(), userRepository.getId(), this.idIncident,
+                    getParsedDate(dateField.getText()),
+                    highwayField.getText(),
+                    Integer.parseInt(kmField.getText()),
+                    IncidentTypeEnum.getEnum(incidentTypeBox.getSelectedItem().toString()));
+
+            System.out.println("Resposta servidor: " + response);
+
+            if (response.get("codigo").getAsInt() == 200) {
+                JOptionPane.showMessageDialog(null, "Incidente atualizado com sucesso!", "Sucesso",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                throw new Exception(response.get("message").getAsString());
+            }
+
+            this.previousPage.setVisible(true);
+            this.previousPage.getIncidents();
+            dispose();
+        } catch (Exception e) {
+            if (e.getMessage() == null || e.getMessage().isEmpty())
+                e = new Exception("Erro ao atualizar incidente!");
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         }
-
-        JsonObject response = ConnectionLogic.updateIncident(
-                userRepository.getToken(), userRepository.getId(), this.idIncident,
-                getParsedDate(dateField.getText()),
-                highwayField.getText(),
-                Integer.parseInt(kmField.getText()),
-                IncidentTypeEnum.getEnum(incidentTypeBox.getSelectedItem().toString()));
-
-        System.out.println("Resposta servidor: " + response);
-
-        if (response.get("codigo").getAsInt() == 200) {
-            System.out.println("Atualizado com sucesso!");
-        } else {
-            System.out.println("Erro ao atualizar");
-            return;
-        }
-
-        this.previousPage.setVisible(true);
-        dispose();
     }
 
     private void addIncidents() {
