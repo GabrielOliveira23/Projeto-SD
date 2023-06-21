@@ -1,67 +1,68 @@
 package server.pages;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 
 public class ConnectionPage extends JFrame {
+	private JTextField txtPort;
 
-	private JPanel contentPane;
-	private JTextField textField_1;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ConnectionPage frame = new ConnectionPage();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	public ConnectionPage() {
+		super("Conexao");
+		this.initComponents();
+		this.setVisible(true);
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public ConnectionPage() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(310, 310);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+	private void confirmForm() {
+		int port;
+		try {
+			if (txtPort.getText().isEmpty())
+				port = 24001;
+			else
+				port = Integer.parseInt(txtPort.getText());
 
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
-		
+			if (port < 15000 || port > 65000)
+				throw new Exception("Porta invalida!");
+			 else {
+				new LoggedUsersPage(this, port);
+				this.dispose();
+			}
+		} catch (Exception e) {
+			if (e.getMessage() == null || e.getMessage().equals(""))
+				e = new Exception("Erro ao conectar com o servidor!");
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	private void initComponents() {
+		setSize(310, 310);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+		getContentPane().setLayout(null);
+
 		JLabel lblNewLabel = new JLabel("Server Connection");
 		lblNewLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setBounds(0, 31, 294, 27);
-		contentPane.add(lblNewLabel);
-		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-		textField_1.setBounds(115, 100, 151, 25);
-		contentPane.add(textField_1);
-		
+		getContentPane().add(lblNewLabel);
+
+		txtPort = new JTextField();
+		txtPort.setColumns(10);
+		txtPort.setBounds(115, 100, 151, 25);
+		getContentPane().add(txtPort);
+
 		JLabel lblPort = new JLabel("Porta");
 		lblPort.setFont(new Font("Segoe UI", Font.PLAIN, 18));
 		lblPort.setBounds(20, 100, 86, 25);
-		contentPane.add(lblPort);
-		
+		getContentPane().add(lblPort);
+
 		JButton btnConfirm = new JButton("Confirmar");
 		btnConfirm.setBounds(70, 170, 160, 40);
-		contentPane.add(btnConfirm);
+		btnConfirm.addActionListener(e -> confirmForm());
+		getContentPane().add(btnConfirm);
 	}
 }

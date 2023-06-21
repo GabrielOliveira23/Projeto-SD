@@ -43,11 +43,11 @@ public class ConnectionPage extends JFrame {
 		} else {
 			this.lblErro.setVisible(false);
 
-			while (!ConnectionLogic.connect(serverIp, port) || countTry == 5) {
+			while (!ConnectionLogic.connect(serverIp, port) || countTry == 3) {
 				System.out.println("Dialog Box - Servidor nao encontrado!");
 				this.lblErro.setText("Servidor nao encontrado!");
 				this.lblErro.setVisible(true);
-				Thread.sleep(1000);
+				Thread.sleep(500);
 				countTry++;
 
 				if (countTry == 5) {
