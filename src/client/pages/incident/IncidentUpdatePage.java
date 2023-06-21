@@ -34,6 +34,8 @@ public class IncidentUpdatePage extends JFrame {
     private MaskFormatter dateMask;
     private MaskFormatter hourMask;
     private MaskFormatter highwayMask;
+    private String dateRegex;
+    private String kmRegex;
     // private JLabel lblError;
 
     public IncidentUpdatePage(User user, MyIncidentsPage myIncidentPage, int idIncident) {
@@ -41,6 +43,8 @@ public class IncidentUpdatePage extends JFrame {
         this.userRepository = user;
         this.previousPage = myIncidentPage;
         this.idIncident = idIncident;
+        this.dateRegex = "^\\d{2}/\\d{2}/\\d{4}$";
+        this.kmRegex = "^[0-9]{1,3}$";
 
         try {
             this.dateMask = new MaskFormatter("##/##/####");
@@ -65,12 +69,12 @@ public class IncidentUpdatePage extends JFrame {
                     || kmField.getText().isEmpty()
                     || dateField.getText().equals("  /  /    ")) {
                 throw new Exception("Preencha todos os campos!");
-            } else if (!RegexVerify.matchesRegex("^[0-9]{1,3}$", kmField.getText())) {
+            } else if (!RegexVerify.matchesRegex(kmRegex, kmField.getText())) {
                 throw new Exception("Km invalido!");
             } else if (!DataVerify.hour(hourField.getText().split(":")[0])
                     || !DataVerify.minute(hourField.getText().split(":")[1])) {
                 throw new Exception("Hora invalida!");
-            } else if (!RegexVerify.matchesRegex("^\\d{2}/\\d{2}/\\d{4}$", dateField.getText())) {
+            } else if (!RegexVerify.matchesRegex(dateRegex, dateField.getText())) {
                 throw new Exception("Data invalida!");
             }
 
