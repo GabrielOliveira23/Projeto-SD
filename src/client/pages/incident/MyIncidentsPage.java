@@ -108,7 +108,7 @@ public class MyIncidentsPage extends JFrame {
 
 	private void initComponents() {
 		this.setSize(800, 450);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 

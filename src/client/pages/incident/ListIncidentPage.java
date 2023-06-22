@@ -100,7 +100,7 @@ public class ListIncidentPage extends JFrame {
 
 	private void initComponents() {
 		this.setSize(800, 400);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
