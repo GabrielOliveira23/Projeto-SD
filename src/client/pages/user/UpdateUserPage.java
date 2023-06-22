@@ -55,7 +55,7 @@ public class UpdateUserPage extends JFrame {
 				userRepository.setToken(response.get("token").getAsString());
 			} else if (response.get("codigo").getAsInt() == 500) {
 				System.out.println("Erro ao atualizar!");
-				this.lblError.setText(response.get("message").getAsString());
+				this.lblError.setText(response.get("mensagem").getAsString());
 				this.lblError.setVisible(true);
 				return;
 			}

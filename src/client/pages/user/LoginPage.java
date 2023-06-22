@@ -48,7 +48,7 @@ public class LoginPage extends JFrame {
         System.out.println("Email: " + email);
         System.out.println("Senha: " + password);
 
-        JsonObject response = ClientLogic.login(email, password);
+        JsonObject response = ClientLogic.login(null, password);
         System.out.println("Resposta do servidor: " + response);
 
         try {

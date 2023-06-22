@@ -158,8 +158,6 @@ public class UserDB {
             try {
                 collection.deleteOne(user);
                 response.addProperty("codigo", 200);
-                response.addProperty("mensagem", "Usuario deletado com sucesso");
-                return response;
             } catch (Exception e) {
                 response.addProperty("codigo", 500);
                 response.addProperty("mensagem", "Erro ao deletar usuario");

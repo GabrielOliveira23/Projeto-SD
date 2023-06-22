@@ -122,9 +122,9 @@ public class IncidentDB {
 
             while (cursor.hasNext()) {
                 bson = BsonDocument.parse(cursor.next().toJson());
-                if (bson.get("id_usuario").asInt32().getValue() == userId) {
-                    incidents.add(gson.fromJson(bson.toJson(), JsonObject.class));
-                }
+                if (!bson.get("id_usuario").isNull())
+                    if (bson.get("id_usuario").asInt32().getValue() == userId)
+                        incidents.add(gson.fromJson(bson.toJson(), JsonObject.class));
             }
 
             System.out.println();
@@ -139,5 +139,43 @@ public class IncidentDB {
         }
 
         return response;
+    }
+
+    public static JsonObject setNullOnIncidents(int userId) {
+        JsonObject json = getManyByUser(userId);
+
+        try {
+            if (json.get("codigo").getAsInt() == 200) {
+                JsonArray incidents = json.get("lista_incidentes").getAsJsonArray();
+                for (int i = 0; i < incidents.size(); i++) {
+                    JsonObject incident = incidents.get(i).getAsJsonObject();
+                    incident.add("id_usuario", null);
+
+                    BsonDocument bsonIncident = getIncidentById(incident.get("id_incidente").getAsInt());
+
+                    String rodovia = incident.get("rodovia").getAsString();
+                    int tipoIncidente = incident.get("tipo_incidente").getAsInt();
+                    String data = incident.get("data").getAsString();
+                    int km = incident.get("km").getAsInt();
+
+                    Bson updates = Updates.combine(
+                            Updates.set("rodovia", rodovia),
+                            Updates.set("km", km),
+                            Updates.set("tipo_incidente", tipoIncidente),
+                            Updates.set("id_usuario", null),
+                            Updates.set("data", data));
+
+                    collection.updateMany(bsonIncident, updates, new UpdateOptions().upsert(true));
+                }
+            }
+            response = new JsonObject();
+            response.addProperty("codigo", 200);
+        } catch (Exception e) {
+            response.addProperty("codigo", 500);
+            response.addProperty("mensagem", "Erro ao setar null em incidentes");
+        }
+
+        return response;
+
     }
 }

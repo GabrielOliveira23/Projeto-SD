@@ -90,7 +90,16 @@ public class Connection extends Thread {
                     break;
                 }
 
-                int operation = json.get("id_operacao").getAsInt();
+                int operation = 0;
+                try {
+                    operation = json.get("id_operacao").getAsInt();
+                } catch (Exception e) {
+                    System.out.println("\n================================================================================");
+                    response.addProperty("codigo", 500);
+                    response.addProperty("mensagem", "Ta trolando o servidor?");
+                    client.println(response);
+                    break;
+                }
 
                 switch (operation) {
                     case 1: {

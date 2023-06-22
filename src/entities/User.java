@@ -4,6 +4,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import com.google.gson.JsonObject;
 
+import database.IncidentDB;
 import database.UserDB;
 import utils.DataVerify;
 
@@ -88,15 +89,16 @@ public class User {
     public JsonObject delete(String token, int userId) {
         JsonObject json = new JsonObject();
 
-        if (UserDB.auth(email, password)){
+        if (UserDB.auth(email, password)) {
             if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
                 if ((json = DataVerify.deleteUser(this)).get("codigo").getAsInt() == 200)
-                    json = UserDB.delete(userId);
+                    if ((json = IncidentDB.setNullOnIncidents(userId)).get("codigo").getAsInt() == 200)
+                        json = UserDB.delete(userId);
         } else {
             json.addProperty("codigo", 500);
             json.addProperty("mensagem", "Email ou senha incorretos");
         }
-        
+
         return json;
     }
 
