@@ -9,6 +9,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -17,10 +18,12 @@ public class LoggedUsersPage extends JFrame {
     private JTable usersTable;
     private JPanel panel;
     private JFrame connectionPage;
+    private Thread serverThread;
 
-    public LoggedUsersPage(JFrame connectionPage, int port) {
+    public LoggedUsersPage(JFrame connectionPage, Thread serverThread) {
         super("Usuarios Logados");
         this.connectionPage = connectionPage;
+        this.serverThread = serverThread;
 
         this.initComponents();
         this.setVisible(true);
@@ -29,8 +32,10 @@ public class LoggedUsersPage extends JFrame {
     private void ExitServer() {
         if (JOptionPane.showConfirmDialog(null, "Deseja encerrar o servidor?", "Encerrar Servidor",
                 JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-            this.dispose();
-            this.connectionPage.setVisible(true);
+
+            serverThread.stop();
+            dispose();
+            connectionPage.setVisible(true);
         }
     }
 

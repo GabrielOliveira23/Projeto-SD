@@ -2,6 +2,8 @@ package client.pages;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -47,11 +49,11 @@ public class ConnectionPage extends JFrame {
 				System.out.println("Dialog Box - Servidor nao encontrado!");
 				this.lblErro.setText("Servidor nao encontrado!");
 				this.lblErro.setVisible(true);
-				Thread.sleep(500);
 				countTry++;
 
-				if (countTry == 5) {
-					this.lblErro.setText("Tente novamente mais tarde!");
+				if (countTry == 3) {
+					JOptionPane.showMessageDialog(null, "Tente novamente mais tarde!", "Erro",
+							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 			}

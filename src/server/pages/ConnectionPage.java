@@ -6,13 +6,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+
+import server.config.Connection;
+
 import java.awt.Font;
 
 public class ConnectionPage extends JFrame {
 	private JTextField txtPort;
+	private Connection serverThread;
 
 	public ConnectionPage() {
 		super("Conexao");
+		serverThread = new Connection();
 		this.initComponents();
 		this.setVisible(true);
 	}
@@ -27,8 +32,19 @@ public class ConnectionPage extends JFrame {
 
 			if (port < 15000 || port > 65000)
 				throw new Exception("Porta invalida!");
-			 else {
-				new LoggedUsersPage(this, port);
+			else {
+				Thread chamaServer = new Thread(() -> {
+					try {
+						serverThread.connect(port);
+					} catch (Exception ex) {
+						// Lidar com possíveis exceções lançadas durante a inicialização do servidor
+						ex.printStackTrace();
+						JOptionPane.showMessageDialog(null, "Erro ao iniciar o servidor: " + ex.getMessage(), "Erro",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				});
+				chamaServer.start();
+				new LoggedUsersPage(this, chamaServer);
 				this.dispose();
 			}
 		} catch (Exception e) {
