@@ -11,7 +11,7 @@ import client.pages.incident.MyIncidentsPage;
 import client.pages.incident.IncidentReportPage;
 import client.pages.user.LoginPage;
 import client.pages.user.UpdateUserPage;
-import config.ConnectionLogic;
+import config.ClientLogic;
 
 import java.awt.Font;
 import javax.swing.JPanel;
@@ -35,7 +35,7 @@ public class HomePage extends JFrame {
 
 	private void logout() {
 		this.lblError.setVisible(false);
-		JsonObject response = ConnectionLogic.logout(userRepository.getToken(), userRepository.getId());
+		JsonObject response = ClientLogic.logout(userRepository.getToken(), userRepository.getId());
 		System.out.println("Resposta do servidor: " + response);
 
 		if (response.get("codigo").getAsInt() == 200) {

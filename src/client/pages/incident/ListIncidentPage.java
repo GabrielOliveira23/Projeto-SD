@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 
 import client.JsonClientTreatment;
 import client.pages.HomePage;
-import config.ConnectionLogic;
+import config.ClientLogic;
 import entities.User;
 import utils.GeneralFunctions;
 import utils.IncidentTypeEnum;
@@ -71,7 +71,7 @@ public class ListIncidentPage extends JFrame {
 
 		int periodo = GeneralFunctions.getPeriod(data);
 
-		JsonObject response = ConnectionLogic.getIncidents(
+		JsonObject response = ClientLogic.getIncidents(
 				userRepository.getToken(), userRepository.getId(),
 				highwayField.getText(), data, faixaKm, periodo);
 		System.out.println("Resposta do servidor: " + response);

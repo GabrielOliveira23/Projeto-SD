@@ -81,6 +81,10 @@ public class User {
         return json;
     }
 
+    public JsonObject getLoggedUsers() {
+        return UserDB.getAllLogged();
+    }
+
     private void managePassword(String password, JsonObject user) {
         if (password == null || password.isEmpty())
             return;

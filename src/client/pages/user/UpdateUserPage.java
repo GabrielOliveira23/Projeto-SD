@@ -6,7 +6,7 @@ import javax.swing.JPasswordField;
 import com.google.gson.JsonObject;
 
 import client.pages.HomePage;
-import config.ConnectionLogic;
+import config.ClientLogic;
 import entities.User;
 import utils.CaesarCrypt;
 
@@ -46,7 +46,7 @@ public class UpdateUserPage extends JFrame {
 		userRepository.setEmail(emailField.getText());
 		userRepository.setPassword(CaesarCrypt.hashed(new String(passwordField.getPassword())));
 
-		JsonObject response = ConnectionLogic.updateUser(userRepository);
+		JsonObject response = ClientLogic.updateUser(userRepository);
 		System.out.println("Resposta do servidor: " + response);
 
 		try {

@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import client.JsonClientTreatment;
-import config.ConnectionLogic;
+import config.ClientLogic;
 import entities.User;
 import utils.GeneralFunctions;
 import utils.IncidentTypeEnum;
@@ -39,7 +39,7 @@ public class MyIncidentsPage extends JFrame {
 	}
 
 	public void getIncidents() {
-		JsonObject response = ConnectionLogic.getUserIncidents(
+		JsonObject response = ClientLogic.getUserIncidents(
 				userRepository.getToken(), userRepository.getId());
 
 		System.out.println("Resposta do servidor: " + response);
@@ -74,7 +74,7 @@ public class MyIncidentsPage extends JFrame {
 				throw new Exception("Selecione um incidente para remover!");
 
 			int id = (int) incidentTable.getValueAt(incidentTable.getSelectedRow(), 0);
-			JsonObject response = ConnectionLogic.deleteIncident(
+			JsonObject response = ClientLogic.deleteIncident(
 					userRepository.getToken(), userRepository.getId(), id);
 
 			System.out.println("Resposta do servidor: " + response);

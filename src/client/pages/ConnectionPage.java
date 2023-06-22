@@ -13,7 +13,7 @@ import java.awt.event.ActionListener;
 import javax.swing.SwingConstants;
 
 import client.pages.user.LoginPage;
-import config.ConnectionLogic;
+import config.ClientLogic;
 
 public class ConnectionPage extends JFrame {
 
@@ -45,7 +45,7 @@ public class ConnectionPage extends JFrame {
 		} else {
 			this.lblErro.setVisible(false);
 
-			while (!ConnectionLogic.connect(serverIp, port) || countTry == 3) {
+			while (!ClientLogic.connect(serverIp, port) || countTry == 3) {
 				System.out.println("Dialog Box - Servidor nao encontrado!");
 				this.lblErro.setText("Servidor nao encontrado!");
 				this.lblErro.setVisible(true);

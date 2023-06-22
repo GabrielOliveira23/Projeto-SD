@@ -1,5 +1,7 @@
 package database;
 
+import javax.swing.JOptionPane;
+
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -15,6 +17,7 @@ import config.Database;
 import utils.DataVerify;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 public class UserDB {
@@ -76,6 +79,32 @@ public class UserDB {
             response.addProperty("codigo", 500);
             response.addProperty("mensagem", "Token invalido");
         }
+        return response;
+    }
+
+    public static JsonObject getAllLogged() {
+        response = new JsonObject();
+        JsonArray users = new JsonArray();
+
+        MongoCursor<Document> cursor = collection.find().iterator();
+
+        try {
+            response.addProperty("codigo", 200);
+
+            while (cursor.hasNext()) {
+                bson = BsonDocument.parse(cursor.next().toJson());
+
+                if (bson.get("token") != null && !bson.get("token").isNull() && bson.get("token").isString())
+                    users.add(gson.fromJson(bson.toJson(), JsonObject.class));
+                System.out.println("banana");
+            }
+            response.add("usuarios", users);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "MongoDB error: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            cursor.close();
+        }
+
         return response;
     }
 

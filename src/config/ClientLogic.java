@@ -9,7 +9,7 @@ import com.google.gson.JsonSyntaxException;
 
 import entities.User;
 
-public class ConnectionLogic {
+public class ClientLogic {
     private static Socket socket = null;
     private static PrintWriter out = null;
     private static BufferedReader in = null;

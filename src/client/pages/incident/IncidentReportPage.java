@@ -16,7 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 
 import client.pages.HomePage;
-import config.ConnectionLogic;
+import config.ClientLogic;
 import entities.User;
 import utils.DataVerify;
 import utils.IncidentTypeEnum;
@@ -73,7 +73,7 @@ public class IncidentReportPage extends JFrame {
 			return;
 		}
 		
-		JsonObject response = ConnectionLogic.reportIncident(
+		JsonObject response = ClientLogic.reportIncident(
 				user.getToken(), user.getId(),
 				getParsedDate(dateField.getText()),
 				highwayField.getText(),

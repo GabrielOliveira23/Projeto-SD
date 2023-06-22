@@ -15,7 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.text.MaskFormatter;
 
-import config.ConnectionLogic;
+import config.ClientLogic;
 import entities.User;
 import utils.DataVerify;
 import utils.IncidentTypeEnum;
@@ -78,7 +78,7 @@ public class IncidentUpdatePage extends JFrame {
                 throw new Exception("Data invalida!");
             }
 
-            JsonObject response = ConnectionLogic.updateIncident(
+            JsonObject response = ClientLogic.updateIncident(
                     userRepository.getToken(), userRepository.getId(), this.idIncident,
                     getParsedDate(dateField.getText()),
                     highwayField.getText(),

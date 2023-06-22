@@ -7,7 +7,7 @@ import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
 
-import config.ConnectionLogic;
+import config.ClientLogic;
 import utils.CaesarCrypt;
 
 import java.awt.Font;
@@ -35,7 +35,7 @@ public class RegisterPage extends JFrame {
 			return;
 		}
 
-		JsonObject response = ConnectionLogic.register(
+		JsonObject response = ClientLogic.register(
 				nameField.getText(),
 				emailField.getText(),
 				CaesarCrypt.hashed(new String(passwordField.getPassword())));

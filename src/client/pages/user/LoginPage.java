@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 import com.google.gson.JsonObject;
 
 import client.pages.HomePage;
-import config.ConnectionLogic;
+import config.ClientLogic;
 
 import java.awt.Font;
 
@@ -48,7 +48,7 @@ public class LoginPage extends JFrame {
         System.out.println("Email: " + email);
         System.out.println("Senha: " + password);
 
-        JsonObject response = ConnectionLogic.login(email, password);
+        JsonObject response = ClientLogic.login(email, password);
         System.out.println("Resposta do servidor: " + response);
 
         try {
