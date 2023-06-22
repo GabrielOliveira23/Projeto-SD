@@ -2,6 +2,7 @@ package client.pages;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 import com.google.gson.JsonObject;
@@ -9,6 +10,7 @@ import com.google.gson.JsonObject;
 import client.pages.incident.ListIncidentPage;
 import client.pages.incident.MyIncidentsPage;
 import client.pages.incident.IncidentReportPage;
+import client.pages.user.DeleteUserPage;
 import client.pages.user.LoginPage;
 import client.pages.user.UpdateUserPage;
 import config.ClientLogic;
@@ -20,30 +22,28 @@ import javax.swing.JButton;
 import entities.User;
 
 public class HomePage extends JFrame {
-	private JLabel lblError;
 	private User userRepository;
-	private HomePage homePage;
 
 	public HomePage(User userRepository) {
-		super("HomePage");
+		super("Home Page");
 		this.userRepository = userRepository;
-		this.homePage = this;
 
 		this.initComponents();
 		this.setVisible(true);
 	}
 
 	private void logout() {
-		this.lblError.setVisible(false);
 		JsonObject response = ClientLogic.logout(userRepository.getToken(), userRepository.getId());
 		System.out.println("Resposta do servidor: " + response);
 
 		if (response.get("codigo").getAsInt() == 200) {
 			System.out.println("Logout realizado com sucesso!");
+		} else if (response.get("codigo").getAsInt() == 500) {
+			JOptionPane.showMessageDialog(null, response.get("mensagem").getAsString(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+			return;
 		} else {
-			System.out.println("Erro ao realizar logout!");
-			this.lblError.setText(response.get("mensagem").getAsString());
-			this.lblError.setVisible(true);
+			JOptionPane.showMessageDialog(null, "Erro desconhecido", "Erro", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -73,8 +73,7 @@ public class HomePage extends JFrame {
 		btnReport.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		btnReport.setBounds(350, 10, 150, 34);
 		btnReport.addActionListener(e -> {
-			this.lblError.setVisible(false);
-			new IncidentReportPage(userRepository, homePage);
+			new IncidentReportPage(userRepository, this);
 			setVisible(false);
 		});
 		panel.add(btnReport);
@@ -83,8 +82,7 @@ public class HomePage extends JFrame {
 		btnUpdateRegister.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		btnUpdateRegister.setBounds(93, 10, 150, 34);
 		btnUpdateRegister.addActionListener(e -> {
-			this.lblError.setVisible(false);
-			new UpdateUserPage(userRepository, homePage);
+			new UpdateUserPage(userRepository, this);
 			setVisible(false);
 		});
 		panel.add(btnUpdateRegister);
@@ -93,30 +91,32 @@ public class HomePage extends JFrame {
 		btnIncidentsList.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		btnIncidentsList.setBounds(350, 70, 150, 34);
 		btnIncidentsList.addActionListener(e -> {
-			this.lblError.setVisible(false);
-			new ListIncidentPage(userRepository, homePage);
+			new ListIncidentPage(userRepository, this);
 			setVisible(false);
 		});
 		panel.add(btnIncidentsList);
-		
+
 		JButton btnMeusIncidentes = new JButton("Meus Incidentes");
 		btnMeusIncidentes.setFont(new Font("Segoe UI", Font.PLAIN, 11));
 		btnMeusIncidentes.setBounds(93, 70, 150, 34);
 		btnMeusIncidentes.addActionListener(e -> {
-			this.lblError.setVisible(false);
-			new MyIncidentsPage(userRepository, homePage);
+			new MyIncidentsPage(userRepository, this);
 			setVisible(false);
 		});
 		panel.add(btnMeusIncidentes);
+
+		JButton btnExcluirCadastro = new JButton("Excluir Cadastro");
+		btnExcluirCadastro.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+		btnExcluirCadastro.setBounds(219, 163, 150, 34);
+		btnExcluirCadastro.addActionListener(e -> {
+			new DeleteUserPage(userRepository, this);
+			setVisible(false);
+		});
+		panel.add(btnExcluirCadastro);
 
 		JButton btnLogout = new JButton("Logout");
 		btnLogout.setBounds(10, 327, 89, 23);
 		btnLogout.addActionListener(e -> logout());
 		getContentPane().add(btnLogout);
-
-		lblError = new JLabel("New label");
-		lblError.setBounds(109, 329, 285, 19);
-		lblError.setVisible(false);
-		getContentPane().add(lblError);
 	}
 }

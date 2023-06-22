@@ -45,10 +45,10 @@ public class ConnectionPage extends JFrame {
 		} else {
 			this.lblErro.setVisible(false);
 
-			while (!ClientLogic.connect(serverIp, port) || countTry == 3) {
-				System.out.println("Dialog Box - Servidor nao encontrado!");
+			while (!ClientLogic.connect(serverIp, port)) {
 				this.lblErro.setText("Servidor nao encontrado!");
 				this.lblErro.setVisible(true);
+				Thread.sleep(500);
 				countTry++;
 
 				if (countTry == 3) {
@@ -57,7 +57,6 @@ public class ConnectionPage extends JFrame {
 					return;
 				}
 			}
-
 			new LoginPage();
 			this.dispose();
 		}

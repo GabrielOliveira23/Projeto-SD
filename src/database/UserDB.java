@@ -58,7 +58,6 @@ public class UserDB {
                 String pass = response.get("senha").getAsString();
                 if (BCrypt.checkpw(senha, pass))
                     return true;
-
                 break;
             }
         }
@@ -96,7 +95,6 @@ public class UserDB {
 
                 if (bson.get("token") != null && !bson.get("token").isNull() && bson.get("token").isString())
                     users.add(gson.fromJson(bson.toJson(), JsonObject.class));
-                System.out.println("banana");
             }
             response.add("usuarios", users);
         } catch (Exception e) {
@@ -147,6 +145,28 @@ public class UserDB {
             response.addProperty("mensagem", "Erro ao atualizar usuário");
             return response;
         }
+    }
+
+    public static JsonObject delete(int userId) {
+        BsonDocument user = getUserById(userId);
+        response = new JsonObject();
+
+        if (user == null) {
+            response.addProperty("codigo", 500);
+            response.addProperty("mensagem", "Usuario nao encontrado");
+        } else {
+            try {
+                collection.deleteOne(user);
+                response.addProperty("codigo", 200);
+                response.addProperty("mensagem", "Usuario deletado com sucesso");
+                return response;
+            } catch (Exception e) {
+                response.addProperty("codigo", 500);
+                response.addProperty("mensagem", "Erro ao deletar usuario");
+            }
+        }
+
+        return response;
     }
 
     public static String updateToken(int idUser, String token) {

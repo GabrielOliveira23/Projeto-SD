@@ -26,6 +26,7 @@ public class ServerTreatment {
         user.setName(json.get("nome").getAsString());
         user.setEmail(json.get("email").getAsString());
         user.setPassword(json.get("senha").getAsString());
+        user.setToken(json.get("token").getAsString());
 
         return user.update(json.get("token").getAsString(), json.get("id_usuario").getAsInt());
     }
@@ -37,6 +38,16 @@ public class ServerTreatment {
         user.setPassword(json.get("senha").getAsString());
 
         return user.login();
+    }
+
+    public static JsonObject userDelete(JsonObject json) {
+        user = new User();
+
+        user.setEmail(json.get("email").getAsString());
+        user.setPassword(json.get("senha").getAsString());
+        user.setToken(json.get("token").getAsString());
+
+        return user.delete(json.get("token").getAsString(), json.get("id_usuario").getAsInt());
     }
 
     public static JsonObject reportIncident(JsonObject json) {

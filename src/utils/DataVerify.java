@@ -44,7 +44,7 @@ public class DataVerify {
         return false;
     }
 
-    public static JsonObject register(String nome, String email, String senha) {
+    public static JsonObject registerUser(String nome, String email, String senha) {
         JsonObject json = new JsonObject();
         if (email(email, true))
             if (name(nome))
@@ -66,10 +66,10 @@ public class DataVerify {
         return json;
     }
 
-    public static JsonObject update(User user) {
+    public static JsonObject updateUser(User user) {
         JsonObject json = new JsonObject();
 
-        if (user.getToken() != null)
+        if (!user.getToken().isEmpty())
             if (user.getName() != "" && name(user.getName()))
                 if (user.getEmail() != "" && email(user.getEmail(), false))
                     if (user.getPassword() != "" && password(user.getPassword())) {
@@ -81,6 +81,25 @@ public class DataVerify {
                     json.addProperty("mensagem", "Email invalido");
             else
                 json.addProperty("mensagem", "Nome invalido");
+        else
+            json.addProperty("mensagem", "Token invalido");
+
+        json.addProperty("codigo", 500);
+        return json;
+    }
+
+    public static JsonObject deleteUser(User user) {
+        JsonObject json = new JsonObject();
+
+        if (!user.getToken().isEmpty())
+            if (user.getEmail() != "" && email(user.getEmail(), false))
+                if (user.getPassword() != "" && password(user.getPassword())) {
+                    json.addProperty("codigo", 200);
+                    return json;
+                } else
+                    json.addProperty("mensagem", "Senha invalida");
+            else
+                json.addProperty("mensagem", "Email invalido");
         else
             json.addProperty("mensagem", "Token invalido");
 
@@ -122,14 +141,6 @@ public class DataVerify {
         return json;
     }
 
-    private static boolean date(String date) {
-        regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
-        if (Pattern.matches(regex, date))
-            return true;
-        listError = listError.concat(" data");
-        return false;
-    }
-
     public static boolean highway(String highway) {
         regex = "^[A-Za-z]{2}-\\d{3}$";
         if (Pattern.matches(regex, highway))
@@ -143,14 +154,6 @@ public class DataVerify {
         if (Pattern.matches(regex, String.valueOf(km)))
             return true;
         listError = listError.concat(" km");
-        return false;
-    }
-
-    private static boolean incidentType(int type) {
-        regex = "^[0-9]{1,2}$";
-        if (Pattern.matches(regex, String.valueOf(type)))
-            return true;
-        listError = listError.concat(" tipoIncidente");
         return false;
     }
 
@@ -231,5 +234,21 @@ public class DataVerify {
     public static String generateToken() {
         String token = BCrypt.hashpw("alguma criptografia", BCrypt.gensalt());
         return token;
+    }
+
+    private static boolean incidentType(int type) {
+        regex = "^[0-9]{1,2}$";
+        if (Pattern.matches(regex, String.valueOf(type)))
+            return true;
+        listError = listError.concat(" tipoIncidente");
+        return false;
+    }
+
+    private static boolean date(String date) {
+        regex = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
+        if (Pattern.matches(regex, date))
+            return true;
+        listError = listError.concat(" data");
+        return false;
     }
 }

@@ -191,6 +191,20 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    case 8: {
+                        if (JsonVerify.hasTokenAndId(json)) {
+                            response = ServerTreatment.userDelete(json);
+                            System.out.println("Enviando p/ cliente: " + response);
+                            System.out.println(
+                                    "\n================================================================================");
+                            client.println(response);
+                            break;
+                        }
+
+                        response = sendInvalidDataError(client);
+                        break;
+                    }
+
                     case 9: {
                         if (JsonVerify.hasTokenAndId(json)) {
                             response = ServerTreatment.userLogout(json);

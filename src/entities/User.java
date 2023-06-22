@@ -24,7 +24,7 @@ public class User {
 
     public JsonObject login() {
         JsonObject json = new JsonObject();
-        printLogin(this.getEmail(), this.getPassword());
+        printLogin(email, password);
 
         json = DataVerify.login(this, this.getEmail(), this.getPassword());
 
@@ -35,7 +35,7 @@ public class User {
         JsonObject json = new JsonObject();
         printRegister(this.getName(), this.getEmail(), this.getPassword());
 
-        json = DataVerify.register(this.getName(), this.getEmail(), this.getPassword());
+        json = DataVerify.registerUser(this.getName(), this.getEmail(), this.getPassword());
 
         if (json.get("codigo").getAsInt() == 200) {
             JsonObject user = new JsonObject();
@@ -62,7 +62,7 @@ public class User {
         user.addProperty("token", token);
 
         if ((json = UserDB.isLogged(idUsuario, token)).get("codigo").getAsInt() == 200)
-            if ((json = DataVerify.update(this)).get("codigo").getAsInt() == 200)
+            if ((json = DataVerify.updateUser(this)).get("codigo").getAsInt() == 200)
                 json = UserDB.update(idUsuario, user);
 
         return json;
@@ -83,6 +83,21 @@ public class User {
 
     public JsonObject getLoggedUsers() {
         return UserDB.getAllLogged();
+    }
+
+    public JsonObject delete(String token, int userId) {
+        JsonObject json = new JsonObject();
+
+        if (UserDB.auth(email, password)){
+            if ((json = UserDB.isLogged(userId, token)).get("codigo").getAsInt() == 200)
+                if ((json = DataVerify.deleteUser(this)).get("codigo").getAsInt() == 200)
+                    json = UserDB.delete(userId);
+        } else {
+            json.addProperty("codigo", 500);
+            json.addProperty("mensagem", "Email ou senha incorretos");
+        }
+        
+        return json;
     }
 
     private void managePassword(String password, JsonObject user) {

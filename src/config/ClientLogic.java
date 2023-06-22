@@ -24,11 +24,9 @@ public class ClientLogic {
             return true;
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host: " + serverIp);
-            e.printStackTrace();
         } catch (IOException e) {
             System.err.println("Couldn't get I/O for "
                     + "the connection to: " + serverIp);
-            e.printStackTrace();
         }
         return false;
     }
@@ -159,6 +157,21 @@ public class ClientLogic {
 
         json.addProperty("id_operacao", 2);
         json.addProperty("nome", user.getName());
+        json.addProperty("email", user.getEmail());
+        json.addProperty("senha", user.getPassword());
+        json.addProperty("token", user.getToken());
+        json.addProperty("id_usuario", user.getId());
+
+        sendToServer();
+
+        return getResponse();
+    }
+
+    public static JsonObject deleteUser(User user) {
+        json = new JsonObject();
+        response = new JsonObject();
+
+        json.addProperty("id_operacao", 8);
         json.addProperty("email", user.getEmail());
         json.addProperty("senha", user.getPassword());
         json.addProperty("token", user.getToken());
