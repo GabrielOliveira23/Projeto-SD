@@ -91,6 +91,7 @@ public class Connection extends Thread {
                 }
 
                 int operation = 0;
+                
                 try {
                     operation = json.get("id_operacao").getAsInt();
                 } catch (Exception e) {
