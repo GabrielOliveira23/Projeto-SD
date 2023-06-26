@@ -2,6 +2,7 @@ package client.pages.user;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
@@ -19,7 +20,6 @@ public class RegisterPage extends JFrame {
 	private JTextField nameField;
 	private JTextField emailField;
 	private JPasswordField passwordField;
-	private JLabel lblError;
 
 	public RegisterPage(LoginPage loginPage) {
 		super("Cadastro");
@@ -29,30 +29,28 @@ public class RegisterPage extends JFrame {
 	}
 
 	private void confirmForm() {
-		if (nameField.getText().isEmpty() || emailField.getText().isEmpty()
-				|| passwordField.getPassword().length == 0) {
-			System.out.println("Preencha todos os campos!");
-			return;
-		}
-
-		JsonObject response = ClientLogic.register(
-				nameField.getText(),
-				emailField.getText(),
-				CaesarCrypt.hashed(new String(passwordField.getPassword())));
-		System.out.println("Resposta do servidor: " + response);
 		try {
-			if (response.get("codigo").getAsInt() == 200) {
-				System.out.println("Cadastrado com sucesso!");
-			} else {
-				System.out.println("Erro ao cadastrar!");
-				this.lblError.setText(response.get("mensagem").getAsString());
-				this.lblError.setVisible(true);
-				return;
-			}
+			if (nameField.getText().isEmpty() || emailField.getText().isEmpty()
+					|| passwordField.getPassword().length == 0)
+				throw new Exception("Preencha todos os campos!");
+
+			JsonObject response = ClientLogic.register(
+					nameField.getText(),
+					emailField.getText(),
+					CaesarCrypt.hashed(new String(passwordField.getPassword())));
+			System.out.println("Resposta do servidor: " + response);
+
+			if (response.get("codigo").getAsInt() == 500)
+				throw new Exception(response.get("mensagem").getAsString());
+			else if (response.get("codigo").getAsInt() != 200)
+				throw new Exception("Erro de codigo desconhecido");
+
+			System.out.println("Cadastrado com sucesso!");
+			JOptionPane.showMessageDialog(null, "Cadastrado com sucesso!");
 		} catch (Exception e) {
-			System.out.println("Json enviado pelo servidor esta quebrado");
-			this.lblError.setText("Json recebido invalido");
-			this.lblError.setVisible(true);
+			System.out.println("Erro ao realizar cadastro: " + e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao realizar cadastro: " + e.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -114,11 +112,5 @@ public class RegisterPage extends JFrame {
 		btnConfirmar.setBounds(240, 240, 140, 40);
 		btnConfirmar.addActionListener(e -> confirmForm());
 		getContentPane().add(btnConfirmar);
-
-		lblError = new JLabel("Erro");
-		lblError.setHorizontalAlignment(SwingConstants.CENTER);
-		lblError.setBounds(30, 210, 375, 15);
-		lblError.setVisible(false);
-		getContentPane().add(lblError);
 	}
 }

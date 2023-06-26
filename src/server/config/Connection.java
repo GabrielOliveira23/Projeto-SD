@@ -103,6 +103,7 @@ public class Connection extends Thread {
                 }
 
                 switch (operation) {
+                    // cadastro
                     case 1: {
                         if (JsonVerify.register(json)) {
                             response = ServerTreatment.userCreate(json);
@@ -117,6 +118,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // atualizar usuario
                     case 2: {
                         if (JsonVerify.updateUser(json)) {
                             response = ServerTreatment.userUpdate(json);
@@ -131,6 +133,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // login
                     case 3: {
                         if (JsonVerify.login(json)) {
                             response = ServerTreatment.userLogin(json);
@@ -145,6 +148,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // reportar incidente
                     case 4: {
                         if (JsonVerify.reportIncident(json)) {
                             response = ServerTreatment.reportIncident(json);
@@ -159,6 +163,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // lista de incidentes na rodovia
                     case 5: {
                         if (JsonVerify.getIncidents(json)) {
                             response = ServerTreatment.getIncidents(json);
@@ -173,6 +178,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // lista de incidentes reportado pelo usuario
                     case 6: {
                         if (JsonVerify.getUserIncidents(json)) {
                             response = ServerTreatment.getUserIncidents(json);
@@ -187,6 +193,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // remover incidente reportado pelo usuario
                     case 7: {
                         if (JsonVerify.removeIncident(json)) {
                             response = ServerTreatment.removeIncident(json);
@@ -201,6 +208,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // remover cadastro do usuario
                     case 8: {
                         if (JsonVerify.hasTokenAndId(json)) {
                             response = ServerTreatment.userDelete(json);
@@ -215,6 +223,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // logout
                     case 9: {
                         if (JsonVerify.hasTokenAndId(json)) {
                             response = ServerTreatment.userLogout(json);
@@ -229,6 +238,7 @@ public class Connection extends Thread {
                         break;
                     }
 
+                    // editar um incidente
                     case 10: {
                         if (JsonVerify.hasTokenAndId(json)) {
                             response = ServerTreatment.updateIncident(json);

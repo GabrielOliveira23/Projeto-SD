@@ -33,23 +33,26 @@ public class HomePage extends JFrame {
 	}
 
 	private void logout() {
-		JsonObject response = ClientLogic.logout(userRepository.getToken(), userRepository.getId());
-		System.out.println("Resposta do servidor: " + response);
+		try {
+			JsonObject response = ClientLogic.logout(userRepository.getToken(), userRepository.getId());
+			System.out.println("Resposta do servidor: " + response);
 
-		if (response.get("codigo").getAsInt() == 200) {
+			if (response.get("codigo").getAsInt() == 500)
+				throw new Exception(response.get("mensagem").getAsString());
+			else if (response.get("codigo").getAsInt() != 200)
+				throw new Exception("Erro de codigo desconhecido");
+
 			System.out.println("Logout realizado com sucesso!");
-		} else if (response.get("codigo").getAsInt() == 500) {
-			JOptionPane.showMessageDialog(null, response.get("mensagem").getAsString(), "Erro",
-					JOptionPane.ERROR_MESSAGE);
-			return;
-		} else {
-			JOptionPane.showMessageDialog(null, "Erro desconhecido", "Erro", JOptionPane.ERROR_MESSAGE);
-			return;
-		}
+			JOptionPane.showMessageDialog(null, "Logout realizado com sucesso!");
 
-		this.userRepository = null;
-		new LoginPage();
-		this.dispose();
+			this.userRepository = null;
+			new LoginPage();
+			this.dispose();
+		} catch (Exception e) {
+			System.out.println("Erro ao realizar logout: " + e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao realizar logout: " + e.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void initComponents() {
