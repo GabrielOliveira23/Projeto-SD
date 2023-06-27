@@ -47,15 +47,14 @@ public class RegisterPage extends JFrame {
 
 			System.out.println("Cadastrado com sucesso!");
 			JOptionPane.showMessageDialog(null, "Cadastrado com sucesso!");
+
+			this.loginPage.setVisible(true);
+			dispose();
 		} catch (Exception e) {
 			System.out.println("Erro ao realizar cadastro: " + e.getMessage());
 			JOptionPane.showMessageDialog(null, "Erro ao realizar cadastro: " + e.getMessage(), "Erro",
 					JOptionPane.ERROR_MESSAGE);
-			return;
 		}
-
-		this.loginPage.setVisible(true);
-		dispose();
 	}
 
 	private void initComponents() {
