@@ -6,7 +6,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import client.JsonClientTreatment;
 import client.pages.HomePage;
 import config.ClientLogic;
 import entities.User;
@@ -19,6 +18,8 @@ import java.util.Date;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.text.MaskFormatter;
@@ -55,31 +56,40 @@ public class ListIncidentPage extends JFrame {
 	}
 
 	private void getIncidents() {
-		String faixaKm = "";
+		try {
+			String faixaKm = "";
 
-		if (!minKmField.getText().isEmpty() && !maxKmField.getText().isEmpty())
-			faixaKm = minKmField.getText() + "-" + maxKmField.getText();
+			if (!minKmField.getText().isEmpty() && !maxKmField.getText().isEmpty())
+				faixaKm = minKmField.getText() + "-" + maxKmField.getText();
 
-		if (highwayField.getText().isEmpty()) {
-			System.out.println("Preencha o campo de rodovia!");
-			return;
+			if (highwayField.getText().isEmpty())
+				throw new Exception("Preencha o campo rodovia!");
+
+			Date dataHoraAtual = new Date();
+			String data = new SimpleDateFormat("yyyy-MM-dd").format(dataHoraAtual);
+			data = data.concat(" " + new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual));
+
+			int periodo = GeneralFunctions.getPeriod(data);
+
+			JsonObject response = ClientLogic.getIncidents(
+					userRepository.getToken(), userRepository.getId(),
+					highwayField.getText(), data, faixaKm, periodo);
+			System.out.println("Resposta do servidor: " + response);
+
+			if (response.get("codigo").getAsInt() == 500)
+				throw new Exception(response.get("mensagem").getAsString());
+			else if (response.get("codigo").getAsInt() != 200)
+				throw new Exception("Erro de codigo desconhecido");
+
+			// if (!JsonClientTreatment.responseTreatment(response))
+			// 	return;
+
+			fillTable(response.get("lista_incidentes").getAsJsonArray());
+		} catch (Exception e) {
+			System.out.println("Erro ao pegar lista de incidentes: " + e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao pegar lista de incidentes: " + e.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
 		}
-
-		Date dataHoraAtual = new Date();
-		String data = new SimpleDateFormat("yyyy-MM-dd").format(dataHoraAtual);
-		data = data.concat(" " + new SimpleDateFormat("HH:mm:ss").format(dataHoraAtual));
-
-		int periodo = GeneralFunctions.getPeriod(data);
-
-		JsonObject response = ClientLogic.getIncidents(
-				userRepository.getToken(), userRepository.getId(),
-				highwayField.getText(), data, faixaKm, periodo);
-		System.out.println("Resposta do servidor: " + response);
-
-		if (!JsonClientTreatment.responseTreatment(response))
-			return;
-
-		fillTable(response.get("lista_incidentes").getAsJsonArray());
 	}
 
 	private void fillTable(JsonArray list) {

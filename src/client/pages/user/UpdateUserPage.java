@@ -49,7 +49,7 @@ public class UpdateUserPage extends JFrame {
 			if (response.get("codigo").getAsInt() == 500)
 				throw new Exception(response.get("mensagem").getAsString());
 			else if (response.get("codigo").getAsInt() != 200)
-				throw new Exception(response.get("mensagem").getAsString());
+				throw new Exception("Erro de codigo desconhecido!");
 
 			System.out.println("Atualizado com sucesso!");
 			userRepository.setToken(response.get("token").getAsString());
