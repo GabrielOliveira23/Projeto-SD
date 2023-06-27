@@ -87,20 +87,22 @@ public class IncidentUpdatePage extends JFrame {
 
             System.out.println("Resposta servidor: " + response);
 
-            if (response.get("codigo").getAsInt() == 200) {
-                JOptionPane.showMessageDialog(null, "Incidente atualizado com sucesso!", "Sucesso",
-                        JOptionPane.INFORMATION_MESSAGE);
-            } else {
+            if (response.get("codigo").getAsInt() == 500)
                 throw new Exception(response.get("mensagem").getAsString());
-            }
+            else if (response.get("codigo").getAsInt() != 200)
+                throw new Exception("Erro de codigo desconhecido!");
+
+            System.out.println("Incidente atualizado com sucesso!");
+            JOptionPane.showMessageDialog(null, "Incidente atualizado com sucesso!", "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE);
 
             this.previousPage.setVisible(true);
             this.previousPage.getIncidents();
             dispose();
         } catch (Exception e) {
-            if (e.getMessage() == null || e.getMessage().isEmpty())
-                e = new Exception("Erro ao atualizar incidente!");
-            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            System.out.println("Erro ao atualizar incidente: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar incidente: " + e.getMessage(), "Erro",
+                    JOptionPane.ERROR_MESSAGE);
         }
     }
 

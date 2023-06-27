@@ -62,9 +62,11 @@ public class IncidentReportPage extends JFrame {
 		try {
 			if (highwayField.getText().isEmpty()
 					|| kmField.getText().isEmpty()
-					|| dateField.getText().isEmpty())
+					|| dateField.getText().equals("  /  /    ")
+					|| hourField.getText().equals("  :  "))
 				throw new Exception("Preencha todos os campos!");
-			else if (Integer.parseInt(kmField.getText()) < 0)
+			else if (!kmField.getText().matches("[0-9]+")
+					|| Integer.parseInt(kmField.getText()) < 0)
 				throw new Exception("Km invalido!");
 			else if (!DataVerify.hour(hourField.getText().split(":")[0]))
 				throw new Exception("Hora invalida!");
