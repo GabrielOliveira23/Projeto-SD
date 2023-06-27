@@ -36,7 +36,6 @@ public class IncidentUpdatePage extends JFrame {
     private MaskFormatter highwayMask;
     private String dateRegex;
     private String kmRegex;
-    // private JLabel lblError;
 
     public IncidentUpdatePage(User user, MyIncidentsPage myIncidentPage, int idIncident) {
         super("Atualizar Incidente");
