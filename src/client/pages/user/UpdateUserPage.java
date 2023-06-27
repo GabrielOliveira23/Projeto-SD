@@ -11,19 +11,19 @@ import entities.User;
 import utils.CaesarCrypt;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.SwingConstants;
 
 public class UpdateUserPage extends JFrame {
 	private User userRepository;
 	private JTextField emailField;
 	private JPasswordField passwordField;
 	private JTextField nameField;
-	private JLabel lblError;
 
 	public UpdateUserPage(User user, HomePage homePage) {
 		super("Atualizar Cadastro");
@@ -34,40 +34,32 @@ public class UpdateUserPage extends JFrame {
 	}
 
 	private void confirmForm(HomePage homePage) {
-		if (emailField.getText().isEmpty() && passwordField.getPassword().length == 0
-				&& nameField.getText().isEmpty()) {
-			System.out.println("Preencha pelo menos um dos campos!");
-			this.lblError.setText("Preencha pelo menos um dos campos!");
-			this.lblError.setVisible(true);
-			return;
-		}
-
-		userRepository.setName(nameField.getText());
-		userRepository.setEmail(emailField.getText());
-		userRepository.setPassword(CaesarCrypt.hashed(new String(passwordField.getPassword())));
-
-		JsonObject response = ClientLogic.updateUser(userRepository);
-		System.out.println("Resposta do servidor: " + response);
-
 		try {
-			if (response.get("codigo").getAsInt() == 200) {
-				System.out.println("Atualizado com sucesso!");
-				userRepository.setToken(response.get("token").getAsString());
-			} else if (response.get("codigo").getAsInt() == 500) {
-				System.out.println("Erro ao atualizar!");
-				this.lblError.setText(response.get("mensagem").getAsString());
-				this.lblError.setVisible(true);
-				return;
-			}
-		} catch (Exception e) {
-			System.out.println("Json enviado pelo servidor esta quebrado");
-			this.lblError.setText("Json recebido invalido");
-			this.lblError.setVisible(true);
-			return;
-		}
+			if (emailField.getText().isEmpty() || passwordField.getPassword().length == 0
+					|| nameField.getText().isEmpty())
+				throw new Exception("Preencha todos os campos!");
 
-		homePage.setVisible(true);
-		dispose();
+			userRepository.setName(nameField.getText());
+			userRepository.setEmail(emailField.getText());
+			userRepository.setPassword(CaesarCrypt.hashed(new String(passwordField.getPassword())));
+
+			JsonObject response = ClientLogic.updateUser(userRepository);
+			System.out.println("Resposta do servidor: " + response);
+
+			if (response.get("codigo").getAsInt() == 500)
+				throw new Exception(response.get("mensagem").getAsString());
+			else if (response.get("codigo").getAsInt() != 200)
+				throw new Exception(response.get("mensagem").getAsString());
+
+			System.out.println("Atualizado com sucesso!");
+			userRepository.setToken(response.get("token").getAsString());
+			homePage.setVisible(true);
+			dispose();
+		} catch (Exception e) {
+			System.out.println("Erro ao atualizar usuario: " + e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao atualizar usuario: " + e.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	public void initComponents(HomePage homePage) {
@@ -120,11 +112,5 @@ public class UpdateUserPage extends JFrame {
 		nameField.setColumns(10);
 		nameField.setBounds(190, 40, 215, 25);
 		getContentPane().add(nameField);
-		
-		lblError = new JLabel("Erro");
-		lblError.setHorizontalAlignment(SwingConstants.CENTER);
-		lblError.setBounds(0, 185, 430, 15);
-		lblError.setVisible(false);
-		getContentPane().add(lblError);
 	}
 }

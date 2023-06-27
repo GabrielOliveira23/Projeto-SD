@@ -15,7 +15,7 @@ public class DataVerify {
     private static String listError = "Erro nos campos:";
 
     public static boolean name(String name) {
-        if (name.length() >= 3 && name.length() <= 32 && !name.matches("[0-9]+"))
+        if (name.length() >= 3 && name.length() <= 32 && name.matches("^[a-zA-Z]{3,32}$"))
             return true;
 
         return false;
