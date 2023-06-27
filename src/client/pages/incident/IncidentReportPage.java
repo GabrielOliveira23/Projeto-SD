@@ -6,6 +6,8 @@ import javax.swing.text.MaskFormatter;
 import com.google.gson.JsonObject;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.text.ParseException;
 
@@ -57,40 +59,42 @@ public class IncidentReportPage extends JFrame {
 	}
 
 	private void confirmForm() {
-		if (highwayField.getText().isEmpty()
-				|| kmField.getText().isEmpty()
-				|| dateField.getText().isEmpty()) {
-			System.out.println("Preencha todos os campos!");
-			return;
-		} else if (Integer.parseInt(kmField.getText()) < 0) {
-			System.out.println("Km invalido!");
-			return;
-		} else if (!DataVerify.hour(hourField.getText().split(":")[0])) {
-			System.out.println("Hora invalida!");
-			return;
-		} else if (!DataVerify.minute(hourField.getText().split(":")[1])) {
-			System.out.println("minuto invalida!");
-			return;
-		}
-		
-		JsonObject response = ClientLogic.reportIncident(
-				user.getToken(), user.getId(),
-				getParsedDate(dateField.getText()),
-				highwayField.getText(),
-				Integer.parseInt(kmField.getText()),
-				IncidentTypeEnum.getEnum(incidentTypeBox.getSelectedItem().toString()));
+		try {
+			if (highwayField.getText().isEmpty()
+					|| kmField.getText().isEmpty()
+					|| dateField.getText().isEmpty())
+				throw new Exception("Preencha todos os campos!");
+			else if (Integer.parseInt(kmField.getText()) < 0)
+				throw new Exception("Km invalido!");
+			else if (!DataVerify.hour(hourField.getText().split(":")[0]))
+				throw new Exception("Hora invalida!");
+			else if (!DataVerify.minute(hourField.getText().split(":")[1]))
+				throw new Exception("minuto invalido!");
 
-		System.out.println("Resposta servidor: " + response);
+			JsonObject response = ClientLogic.reportIncident(
+					user.getToken(), user.getId(),
+					getParsedDate(dateField.getText()),
+					highwayField.getText(),
+					Integer.parseInt(kmField.getText()),
+					IncidentTypeEnum.getEnum(incidentTypeBox.getSelectedItem().toString()));
 
-		if (response.get("codigo").getAsInt() == 200) {
+			System.out.println("Resposta servidor: " + response);
+
+			if (response.get("codigo").getAsInt() == 500)
+				throw new Exception(response.get("mensagem").getAsString());
+			else if (response.get("codigo").getAsInt() != 200)
+				throw new Exception("Erro de codigo desconhecido!");
+
 			System.out.println("Cadastrado com sucesso!");
-		} else {
-			System.out.println("Erro ao cadastrar");
-			return;
-		}
+			JOptionPane.showMessageDialog(null, "Incidente cadastrado com sucesso!");
 
-		this.home.setVisible(true);
-		dispose();
+			this.home.setVisible(true);
+			dispose();
+		} catch (Exception e) {
+			System.out.println("Erro ao cadastrar incidente: " + e.getMessage());
+			JOptionPane.showMessageDialog(null, "Erro ao cadastrar incidente: " + e.getMessage(), "Erro",
+					JOptionPane.ERROR_MESSAGE);
+		}
 	}
 
 	private void addIncidents() {

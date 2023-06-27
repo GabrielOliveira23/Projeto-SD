@@ -69,7 +69,7 @@ public class LoggedUsersPage extends JFrame {
                 throw new Exception("Json Invalido");
 
             if (response.get("codigo").getAsInt() == 500)
-                throw new Exception(response.get("message").getAsString());
+                throw new Exception(response.get("mensagem").getAsString());
 
             JsonArray lista = response.get("usuarios").getAsJsonArray();
             

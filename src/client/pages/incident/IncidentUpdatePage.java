@@ -91,7 +91,7 @@ public class IncidentUpdatePage extends JFrame {
                 JOptionPane.showMessageDialog(null, "Incidente atualizado com sucesso!", "Sucesso",
                         JOptionPane.INFORMATION_MESSAGE);
             } else {
-                throw new Exception(response.get("message").getAsString());
+                throw new Exception(response.get("mensagem").getAsString());
             }
 
             this.previousPage.setVisible(true);
