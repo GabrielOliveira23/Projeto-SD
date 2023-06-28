@@ -21,4 +21,10 @@ RA: a2317940
     CaesarCrypt: classe para encriptografia da senha para que transite de forma segura do cliente ao servidor
     
 ## Banco de dados
-    O banco de dados utilizado foi o MongoDB, o conector dele esta definido na pasta libs
+O banco de dados utilizado foi o MongoDB, o conector dele esta definido na pasta libs, para rodar o aplicativo
+de forma que o banco funcione perfeitamente, é necessário baixar o mongoDB e criar uma coleção com o nome de
+projeto-sd, assim não terá erros de conexão.
+
+## Iniciar a Aplicação
+Para rodar o server rode: src/server/AppServer.java
+Para rodar o cliente rode: src/client/AppClient.java
