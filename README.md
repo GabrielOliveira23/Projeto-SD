@@ -1,4 +1,4 @@
-# 📌 Getting Started
+# 📌 Accident Tracker
 
 Welcome to my **Distributed Systems Project**
 
