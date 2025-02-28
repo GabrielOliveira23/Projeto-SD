@@ -1,30 +1,44 @@
-## Getting Started
+# 📌 Getting Started
 
-Bem-vindo ao meu Projeto da disciplina de Sistemas Distribuidos
-Proprietario: Gabriel Leonardo Martins de Oliveira
-RA: a2317940
+Welcome to my **Distributed Systems Project**
 
-## Folder Structure
+👤 **Owner:** Gabriel Leonardo Martins de Oliveira  
 
-`Bibliotecas`:
-    gson-2.10.1 - biblioteca para trabalhar com Json
-    jBCrypt-0.4.1 - biblioteca para utilizar hash e guardar a senha no banco de dados
-    mongo-java-driver - conector com o banco de dados MongoDB
+---
 
-`Classes`:
-    Server: classe que roda o servidor
-    ServerTreatment: classe para tratar as funcoes do Server
-    Client: classe que roda o cliente
-    User: classe entidade que representa o usuario e que executa todas as funcoes e chama conexao com banco
-    UserDB: classe que faz a comunicacao com o banco de dados
-    Database: conexao com o banco de dados
-    CaesarCrypt: classe para encriptografia da senha para que transite de forma segura do cliente ao servidor
-    
-## Banco de dados
-O banco de dados utilizado foi o MongoDB, o conector dele esta definido na pasta libs, para rodar o aplicativo
-de forma que o banco funcione perfeitamente, é necessário baixar o mongoDB e criar uma coleção com o nome de
-projeto-sd, assim não terá erros de conexão.
+## 📂 Folder Structure
 
-## Iniciar a Aplicação
-Para rodar o server rode: src/server/AppServer.java
-Para rodar o cliente rode: src/client/AppClient.java
+### 📚 Libraries
+- 🛠 **gson-2.10.1** → Library for working with JSON
+- 🔐 **jBCrypt-0.4.1** → Library for hashing and securely storing passwords in the database
+- 🗄️ **mongo-java-driver** → Connector for MongoDB database
+
+### 🏗️ Classes
+- **Server** → Runs the server
+- **ServerTreatment** → Handles server functions
+- **Client** → Runs the client
+- **User** → Entity class representing the user, executing functions and calling the database connection
+- **UserDB** → Handles communication with the database
+- **Database** → Establishes database connection
+- **CaesarCrypt** → Encrypts passwords for secure transmission between client and server
+
+---
+
+## 🗄️ Database
+The database used is **MongoDB**. The connector is located in the `libs` folder. 
+
+✅ **Setup Instructions:**
+1. Download and install **MongoDB**.
+2. Create a collection named **`projeto-sd`**.
+3. Ensure the correct database setup to avoid connection errors.
+
+---
+
+## 🚀 Running the Application
+To start the project:
+
+▶️ **Run the Server:** `src/server/AppServer.java`
+
+▶️ **Run the Client:** `src/client/AppClient.java`
+
+💡 **Tip:** Ensure the database is correctly configured before starting the server.
